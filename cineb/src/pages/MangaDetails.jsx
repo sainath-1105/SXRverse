@@ -107,7 +107,7 @@ export default function MangaDetails() {
 
                     <div className="mb-14">
                         <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-6 flex items-center gap-3">
-                            <div className="w-2 h-4 bg-primary rounded-full shadow-[0_0_10px_#00E054]"></div> Synopsis
+                            <div className="w-2 h-4 bg-primary rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div> Synopsis
                         </h3>
                         <p className="text-textMuted leading-relaxed text-sm md:text-xl max-w-4xl opacity-80 tracking-tight">
                             {detail.synopsis}
@@ -118,7 +118,7 @@ export default function MangaDetails() {
                     <div className="mb-14">
                         <div className="flex items-center justify-between mb-8">
                             <h3 className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-3">
-                                <div className="w-2 h-4 bg-accent rounded-full shadow-[0_0_10px_#BC00FF]"></div> Chapters
+                                <div className="w-2 h-4 bg-accent rounded-full shadow-[0_0_10px_rgba(252,165,165,0.3)]"></div> Chapters
                             </h3>
                             <span className="text-[9px] font-medium text-white/20 uppercase tracking-wider">{chapters.length} Available</span>
                         </div>

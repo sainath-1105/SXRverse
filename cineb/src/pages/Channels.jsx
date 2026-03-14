@@ -88,7 +88,7 @@ export default function Channels() {
                             <div className="max-w-2xl">
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="bg-primary px-3 py-1 rounded text-background text-[10px] font-black uppercase tracking-widest shadow-lg">LIVE</div>
-                                    <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded text-white text-[10px] font-black uppercase tracking-widest border border-white/10 flex items-center gap-2">
+                                    <div className="bg-background/60 backdrop-blur-md px-3 py-1 rounded text-white text-[10px] font-black uppercase tracking-widest border border-white/10 flex items-center gap-2">
                                         <Users size={12} className="text-primary" />
                                         12.4K Watching
                                     </div>
@@ -119,7 +119,7 @@ export default function Channels() {
                 {/* Grid Content */}
                 <div className="p-12">
                     <div className="flex items-center gap-4 mb-10">
-                        <div className="w-1.5 h-8 bg-primary rounded-full shadow-[0_0_15px_rgba(255,184,0,0.5)]"></div>
+                        <div className="w-1.5 h-8 bg-primary rounded-full shadow-[0_0_15px_rgba(251,191,36,0.3)]"></div>
                         <h3 className="text-2xl font-bold text-white tracking-tight uppercase">More in {selectedChannel?.name}</h3>
                     </div>
 

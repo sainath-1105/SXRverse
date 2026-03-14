@@ -59,7 +59,7 @@ export default function TVShows() {
         <div className="px-8 max-w-[1600px] mx-auto py-10 flex flex-col md:flex-row gap-12">
             <div className="w-full md:w-72 flex-shrink-0">
                 <div className="bg-card border border-white/5 rounded-[32px] p-8 sticky top-28 shadow-2xl overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_10px_rgba(255,184,0,0.5)]"></div>
+                    <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div>
                     <h2 className="text-xl font-bold text-white mb-8 tracking-tight uppercase">Filters</h2>
 
                     <div className="mb-10">
@@ -114,7 +114,7 @@ export default function TVShows() {
 
             <div className="flex-1">
                 <div className="flex items-center gap-4 mb-14">
-                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
+                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(251,191,36,0.25)]"></div>
                     <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
                         TV Shows
                     </h1>
@@ -134,7 +134,7 @@ export default function TVShows() {
                     <button
                         onClick={() => setPage(p => p + 1)}
                         disabled={loading}
-                        className="bg-white/5 border border-white/10 px-14 py-5 rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-background hover:border-primary hover:shadow-[0_20px_40px_rgba(255,184,0,0.2)] transition-all duration-500 disabled:opacity-20"
+                        className="bg-white/5 border border-white/10 px-14 py-5 rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-background hover:border-primary hover:shadow-[0_20px_40px_rgba(251,191,36,0.2)] transition-all duration-500 disabled:opacity-20"
                     >
                         {loading ? 'Loading...' : 'Load More'}
                     </button>

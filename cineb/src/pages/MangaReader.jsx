@@ -128,7 +128,7 @@ export default function MangaReader() {
     if (loading) return <div className="h-screen bg-background flex items-center justify-center text-primary font-black uppercase tracking-[0.5em] animate-pulse">Initializing Neural Link...</div>;
 
     return (
-        <div className="fixed inset-0 bg-[#020308] z-[100] flex flex-col overflow-hidden text-white font-sans">
+        <div className="fixed inset-0 bg-background z-[100] flex flex-col overflow-hidden text-white font-sans">
             {/* MangaFire-Style Tactical Header */}
             <header
                 className={`fixed top-0 left-0 right-0 h-16 md:h-20 border-b border-white/5 bg-background/90 backdrop-blur-2xl flex items-center justify-between px-4 md:px-8 z-[110] transition-transform duration-500 ${showHeader ? 'translate-y-0' : '-translate-y-full'}`}
@@ -168,7 +168,7 @@ export default function MangaReader() {
             {/* Main Reading Matrix */}
             <div
                 ref={containerRef}
-                className={`flex-1 overflow-y-auto custom-scrollbar flex flex-col items-center bg-[radial-gradient(circle_at_center,_#0a0812_0%,_#020308_100%)] ${readingMode === 'horizontal' ? 'overflow-x-auto snap-x snap-mandatory' : ''}`}
+                className={`flex-1 overflow-y-auto custom-scrollbar flex flex-col items-center bg-[radial-gradient(circle_at_center,_#292524_0%,_#1c1917_100%)] ${readingMode === 'horizontal' ? 'overflow-x-auto snap-x snap-mandatory' : ''}`}
             >
                 {/* HUD Calibration Overlay */}
                 <div className="fixed inset-0 pointer-events-none z-10 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]"></div>
@@ -188,7 +188,7 @@ export default function MangaReader() {
                                     loading="lazy"
                                 />
                                 {/* Neural Scan Line */}
-                                <div className="absolute top-0 left-0 w-full h-[1px] bg-primary/20 shadow-[0_0_20px_#00E054] opacity-0 group-hover:opacity-100 animate-scan pointer-events-none"></div>
+                                <div className="absolute top-0 left-0 w-full h-[1px] bg-primary/20 shadow-[0_0_20px_rgba(251,191,36,0.3)] opacity-0 group-hover:opacity-100 animate-scan pointer-events-none"></div>
 
                                 <div className="mt-4 text-[8px] font-black text-white/20 uppercase tracking-[0.4em] opacity-0 group-hover:opacity-100 transition-opacity">
                                     Page {i + 1}
@@ -229,7 +229,7 @@ export default function MangaReader() {
                 <div className="bg-card/80 backdrop-blur-3xl border border-white/10 px-4 sm:px-8 py-3 sm:py-4 rounded-3xl sm:rounded-[32px] flex items-center gap-4 sm:gap-8 shadow-[0_40px_80px_rgba(0,0,0,0.4)] w-[90vw] sm:w-auto">
                     <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
                         <div className="w-full sm:w-48 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                            <div className="h-full bg-primary transition-all duration-300 shadow-[0_0_15px_#00E054]" style={{ width: `${progress}%` }}></div>
+                            <div className="h-full bg-primary transition-all duration-300 shadow-[0_0_15px_rgba(251,191,36,0.3)]" style={{ width: `${progress}%` }}></div>
                         </div>
                         <span className="text-[8px] font-medium text-white/40 uppercase tracking-wider">Progress: {Math.round(progress)}%</span>
                     </div>

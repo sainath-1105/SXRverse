@@ -21,7 +21,7 @@ export const fetchApi = async (path, params = {}) => {
 };
 
 export const getImageUrl = (path, size = 'w342') => {
-    if (!path) return 'https://via.placeholder.com/160x240?text=No+Image';
+    if (!path) return 'https://placehold.co/160x240?text=No+Image';
     return `${IMG_URL}${size}${path}`;
 };
 

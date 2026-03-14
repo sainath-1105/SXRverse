@@ -81,7 +81,7 @@ export default function Navbar({ onMenuClick }) {
     };
 
     return (
-        <nav className="sticky top-0 h-20 bg-[#020308]/80 backdrop-blur-2xl z-[40] flex items-center justify-between px-4 sm:px-8 border-b border-white/5 transition-all duration-300 w-full shadow-2xl">
+        <nav className="sticky top-0 h-20 bg-background/80 backdrop-blur-2xl z-[40] flex items-center justify-between px-4 sm:px-8 border-b border-white/5 transition-all duration-300 w-full shadow-2xl">
             <div className="flex items-center gap-4 lg:gap-8">
                 <button
                     onClick={onMenuClick}
@@ -95,7 +95,7 @@ export default function Navbar({ onMenuClick }) {
                         <input
                             type="text"
                             placeholder="Enter movie title, series or anime..."
-                            className="bg-[#0a0812]/50 border border-white/5 text-[11px] rounded-2xl pl-11 pr-10 py-3.5 w-[140px] sm:w-64 lg:w-80 focus:outline-none focus:border-primary/30 focus:bg-[#0a0812] transition-all duration-500 text-white placeholder-textMuted/30 focus:sm:w-[420px] shadow-2xl font-medium tracking-tight"
+                            className="bg-card/50 border border-white/5 text-[11px] rounded-2xl pl-11 pr-10 py-3.5 w-[140px] sm:w-64 lg:w-80 focus:outline-none focus:border-primary/30 focus:bg-card transition-all duration-500 text-white placeholder-textMuted/30 focus:sm:w-[420px] shadow-2xl font-medium tracking-tight"
                             value={query}
                             onChange={(e) => {
                                 setQuery(e.target.value);
@@ -116,7 +116,7 @@ export default function Navbar({ onMenuClick }) {
 
                     {/* Suggestions Dropdown */}
                     {showSuggestions && (query.length > 1) && (suggestions.length > 0 || loading) && (
-                        <div className="absolute top-full left-0 right-0 mt-4 bg-[#0a0812]/95 backdrop-blur-3xl border border-white/10 rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-4">
+                        <div className="absolute top-full left-0 right-0 mt-4 bg-card/95 backdrop-blur-3xl border border-white/10 rounded-[24px] shadow-[0_40px_100px_rgba(0,0,0,0.8)] overflow-hidden z-[100] animate-in slide-in-from-top-4">
                             {loading && suggestions.length === 0 ? (
                                 <div className="p-8 text-center text-textMuted text-[10px] font-black uppercase tracking-[0.4em] animate-pulse">Syncing Database...</div>
                             ) : (
@@ -173,7 +173,7 @@ export default function Navbar({ onMenuClick }) {
                     </button>
 
                     {showLangMenu && (
-                        <div className="absolute top-full right-0 mt-3 w-56 bg-[#0a0812]/95 backdrop-blur-3xl border border-white/10 rounded-[20px] shadow-2xl z-[100] py-3 animate-in slide-in-from-top-2">
+                        <div className="absolute top-full right-0 mt-3 w-56 bg-card/95 backdrop-blur-3xl border border-white/10 rounded-[20px] shadow-2xl z-[100] py-3 animate-in slide-in-from-top-2">
                             {languages.map(lang => (
                                 <button
                                     key={lang.code}
@@ -190,7 +190,7 @@ export default function Navbar({ onMenuClick }) {
 
                 <button className="p-3 text-textMuted/40 hover:text-primary transition-all relative shrink-0 bg-white/5 rounded-xl border border-white/5 md:bg-transparent md:border-none md:p-0">
                     <Bell size={18} />
-                    <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-[#020308] shadow-[0_0_10px_#00E054]"></div>
+                    <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-background shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div>
                 </button>
 
                 {user ? (
@@ -212,7 +212,7 @@ export default function Navbar({ onMenuClick }) {
                 ) : (
                     <Link
                         to="/auth"
-                        className="px-6 py-3.5 bg-primary hover:bg-primaryDark text-background rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition shadow-[0_10px_30px_rgba(0,224,84,0.2)] active:scale-95"
+                        className="px-6 py-3.5 bg-primary hover:bg-primaryDark text-background rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition shadow-[0_10px_30px_rgba(251,191,36,0.2)] active:scale-95"
                     >
                         Sign In
                     </Link>

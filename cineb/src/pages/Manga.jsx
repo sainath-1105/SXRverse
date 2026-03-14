@@ -59,14 +59,14 @@ export default function Manga() {
             {/* MangaFire-Style Featured Hero */}
             {items.length > 0 && page === 1 && !searchQuery && (
                 <div className="px-4 md:px-8 mb-16 w-full max-w-[1600px] mx-auto mt-4 md:mt-6">
-                    <div className="h-[50vh] md:h-[65vh] rounded-[32px] md:rounded-[40px] bg-[#0a0812] border border-white/5 flex items-end p-6 sm:p-12 md:p-20 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
+                    <div className="h-[50vh] md:h-[65vh] rounded-[32px] md:rounded-[40px] bg-background border border-white/5 flex items-end p-6 sm:p-12 md:p-20 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
                         <img
                             src={items[0].images?.jpg?.large_image_url}
                             alt={items[0].title}
                             className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 group-hover:scale-105 transition-all duration-[2000ms] ease-out"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#020308] via-[#020308]/60 to-transparent"></div>
-                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary to-accent opacity-50 shadow-[0_0_20px_rgba(0,224,84,0.3)]"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+                        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary to-accent opacity-50 shadow-[0_0_20px_rgba(251,191,36,0.3)]"></div>
 
                         <div className="relative z-10 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-700">
                             <div className="flex items-center gap-3 mb-6">
@@ -109,7 +109,7 @@ export default function Manga() {
                 {/* Filter Sidebar */}
                 <aside className="w-full md:w-72 flex-shrink-0">
                     <div className="bg-card border border-white/5 rounded-[32px] p-8 md:sticky md:top-28 shadow-2xl overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_15px_rgba(0,224,84,0.5)]"></div>
+                        <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_15px_rgba(251,191,36,0.5)]"></div>
                         <h2 className="text-xl font-bold text-white mb-8 tracking-tighter uppercase">Browse</h2>
 
                         <div className="flex md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 gap-3 scrollbar-hide">
@@ -134,7 +134,7 @@ export default function Manga() {
                 <main className="flex-1">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-14">
                         <div className="flex items-center gap-4">
-                            <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(0,224,84,0.4)]"></div>
+                            <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(251,191,36,0.4)]"></div>
                             <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap">
                                 Manga
                             </h1>

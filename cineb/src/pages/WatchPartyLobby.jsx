@@ -218,9 +218,9 @@ export default function WatchPartyLobby() {
 
             {/* Create Room Modal */}
             {showCreateModal && (
-                <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="bg-[#1a1a1a] border border-gray-800 rounded-3xl w-full max-w-2xl relative shadow-2xl my-4 sm:my-8 max-h-[90vh] flex flex-col">
-                        <button onClick={() => setShowCreateModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-white transition">
+                <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+                    <div className="bg-card border border-white/5 rounded-3xl w-full max-w-2xl relative shadow-2xl my-4 sm:my-8 max-h-[90vh] flex flex-col">
+                        <button onClick={() => setShowCreateModal(false)} className="absolute top-6 right-6 text-textMuted hover:text-white transition">
                             <X size={24} />
                         </button>
 
@@ -254,7 +254,7 @@ export default function WatchPartyLobby() {
                                                         onClick={() => handleSelectMedia(item)}
                                                         className="group flex flex-col items-start text-left"
                                                     >
-                                                        <div className="aspect-[2/3] w-full bg-[#0a0a0a] rounded-xl overflow-hidden mb-2 border border-gray-800 transition transform group-hover:scale-105 group-hover:border-[#E50914]">
+                                                        <div className="aspect-[2/3] w-full bg-background rounded-xl overflow-hidden mb-2 border border-white/5 transition transform group-hover:scale-105 group-hover:border-primary">
                                                             <img
                                                                 src={getImageUrl(item.poster_path, 'w185')}
                                                                 alt=""
@@ -284,13 +284,13 @@ export default function WatchPartyLobby() {
                             ) : (
                                 <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                     {/* Selected Media Preview */}
-                                    <div className="bg-[#0a0a0a] p-4 rounded-3xl border border-gray-800 flex flex-col sm:flex-row gap-4 sm:gap-6 relative">
-                                        <button onClick={() => setSelectedMedia(null)} className="absolute top-4 right-4 text-xs font-bold bg-gray-800 hover:bg-gray-700 p-2 rounded-full text-white transition">
+                                    <div className="bg-background p-4 rounded-3xl border border-white/5 flex flex-col sm:flex-row gap-4 sm:gap-6 relative">
+                                        <button onClick={() => setSelectedMedia(null)} className="absolute top-4 right-4 text-xs font-bold bg-white/5 hover:bg-white/10 p-2 rounded-full text-white transition text-textMuted hover:text-white">
                                             <X size={14} />
                                         </button>
                                         <img
                                             src={getImageUrl(selectedMedia.poster_path, 'w185')}
-                                            className="w-24 h-36 rounded-xl object-cover border border-gray-800"
+                                            className="w-24 h-36 rounded-xl object-cover border border-white/10"
                                             alt=""
                                         />
                                         <div className="flex-1 pt-2">
@@ -300,7 +300,7 @@ export default function WatchPartyLobby() {
                                             {selectedMedia.media_type === 'tv' && (
                                                 <div className="flex flex-col gap-2">
                                                     <select
-                                                        className="bg-[#1a1a1a] border border-gray-800 text-xs rounded-lg p-2 outline-none text-white focus:border-[#E50914]"
+                                                        className="bg-background border border-white/10 text-xs rounded-lg p-2 outline-none text-white focus:border-primary/50"
                                                         onChange={(e) => changeSeason(e.target.value)}
                                                         value={selectedSeason}
                                                     >
@@ -320,7 +320,7 @@ export default function WatchPartyLobby() {
                                                 <button
                                                     key={ep.id}
                                                     onClick={() => setSelectedEpisode(ep.episode_number)}
-                                                    className={`aspect-square rounded-xl flex items-center justify-center text-xs font-bold transition-all border ${selectedEpisode === ep.episode_number ? 'bg-[#E50914] text-white border-[#E50914] shadow-lg shadow-[#E50914]/20' : 'bg-[#0a0a0a] border-gray-800 text-gray-400 hover:bg-[#111] hover:text-white'}`}
+                                                    className={`aspect-square rounded-xl flex items-center justify-center text-xs font-bold transition-all border ${selectedEpisode === ep.episode_number ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20' : 'bg-background border-white/5 text-textMuted hover:bg-white/5 hover:text-white'}`}
                                                 >
                                                     E{ep.episode_number}
                                                 </button>
@@ -331,29 +331,29 @@ export default function WatchPartyLobby() {
                                     {/* Room Config */}
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-1">Room Name</label>
+                                            <label className="text-[10px] font-black uppercase tracking-widest text-textMuted/40 ml-1">Room Name</label>
                                             <input
                                                 type="text"
                                                 value={customRoomName}
                                                 onChange={(e) => setCustomRoomName(e.target.value)}
-                                                className="w-full bg-[#0a0a0a] border border-gray-800 text-white rounded-2xl py-3 px-4 outline-none focus:border-[#E50914] mt-1"
+                                                className="w-full bg-background border border-white/5 text-white rounded-2xl py-3 px-4 outline-none focus:border-primary/50 mt-1"
                                             />
                                         </div>
 
-                                        <div className="bg-[#0a0a0a] border border-gray-800 rounded-2xl p-4 flex flex-col gap-4">
+                                        <div className="bg-background border border-white/5 rounded-2xl p-4 flex flex-col gap-4">
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-lg ${isPrivate ? 'bg-[#E50914]/10 text-[#E50914]' : 'bg-gray-800 text-gray-400'}`}>
+                                                    <div className={`p-2 rounded-lg ${isPrivate ? 'bg-accent/10 text-accent' : 'bg-white/5 text-textMuted/40'}`}>
                                                         {isPrivate ? <Lock size={18} /> : <Unlock size={18} />}
                                                     </div>
                                                     <div>
                                                         <p className="text-sm font-bold text-white leading-tight">Make room private</p>
-                                                        <p className="text-[10px] text-gray-500 tracking-tight">Private rooms require a password to join</p>
+                                                        <p className="text-[10px] text-textMuted/40 tracking-tight">Private rooms require a password to join</p>
                                                     </div>
                                                 </div>
                                                 <label className="relative inline-flex items-center cursor-pointer">
                                                     <input type="checkbox" checked={isPrivate} onChange={e => setIsPrivate(e.target.checked)} className="sr-only peer" />
-                                                    <div className="w-11 h-6 bg-gray-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#E50914]"></div>
+                                                    <div className="w-11 h-6 bg-white/5 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                                                 </label>
                                             </div>
 
@@ -365,12 +365,12 @@ export default function WatchPartyLobby() {
                                                             type={showCreatePassword ? "text" : "password"}
                                                             value={createPassword}
                                                             onChange={(e) => setCreatePassword(e.target.value)}
-                                                            className="w-full bg-[#1a1a1a] border border-gray-800 text-white rounded-xl py-3 px-4 outline-none focus:border-[#E50914] pr-10"
+                                                            className="w-full bg-background border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-primary/50 pr-10"
                                                             placeholder="Set secret code"
                                                         />
                                                         <button
                                                             onClick={() => setShowCreatePassword(!showCreatePassword)}
-                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#E50914]"
+                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-primary transition-colors"
                                                         >
                                                             {showCreatePassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                                         </button>

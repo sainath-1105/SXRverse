@@ -27,7 +27,7 @@ export default function Premium4K() {
             {/* Hero Section */}
             {featured && (
                 <div className="px-8 mb-16 w-full max-w-[1600px] mx-auto mt-6">
-                    <div className="h-[60vh] rounded-[40px] bg-background border border-primary/20 flex items-center p-10 sm:p-20 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(255,184,0,0.2)]">
+                    <div className="h-[60vh] rounded-[40px] bg-background border border-primary/20 flex items-center p-10 sm:p-20 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(251,191,36,0.1)]">
                         <img
                             src={getImageUrl(featured.backdrop_path, 'w1280')}
                             alt={featured.title}
@@ -81,7 +81,7 @@ export default function Premium4K() {
             <div className="px-8 max-w-[1600px] mx-auto">
                 <div className="flex items-center justify-between mb-12">
                     <div className="flex items-center gap-4">
-                        <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
+                        <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(251,191,36,0.3)]"></div>
                         <h2 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
                             Premium 4K
                         </h2>
@@ -96,7 +96,7 @@ export default function Premium4K() {
                             <div key={`${item.id}-${idx}`} className="relative group overflow-hidden rounded-[24px]">
                                 <MovieCard item={item} type="movie" />
                                 <div className="absolute top-4 right-4 z-20 pointer-events-none">
-                                    <div className="bg-black/60 backdrop-blur-md border border-primary/30 px-2 py-1 rounded-lg flex items-center gap-1.5 shadow-xl transition-all group-hover:bg-primary group-hover:text-background group-hover:border-primary">
+                                    <div className="bg-background/60 backdrop-blur-md border border-primary/30 px-2 py-1 rounded-lg flex items-center gap-1.5 shadow-xl transition-all group-hover:bg-primary group-hover:text-background group-hover:border-primary">
                                         <Zap size={10} className="fill-current" />
                                         <span className="text-[8px] font-black uppercase tracking-widest">4K</span>
                                     </div>

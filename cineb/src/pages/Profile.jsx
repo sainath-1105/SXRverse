@@ -6,42 +6,34 @@ import { ArrowLeft, Camera, Check, Edit3, Quote, Sparkles, User } from 'lucide-r
 // Pre-built anime/series/movie character avatars
 const AVATAR_CATEGORIES = [
     {
+        name: 'Cozy',
+        avatars: [
+            { id: 'hinata_cozy', name: 'Hinata', image: '/avatars/hinata_cozy.jpg', gradient: 'from-purple-200 to-pink-200', initials: 'HC' },
+            { id: 'girl_bow', name: 'Misty', image: '/avatars/girl_bow.jpg', gradient: 'from-gray-200 to-stone-200', initials: 'GB' },
+            { id: 'army_guy', name: 'Commander', image: '/avatars/army_guy.jpg', gradient: 'from-blue-200 to-indigo-200', initials: 'AG' },
+            { id: 'tanktop_guy', name: 'Slayer', image: '/avatars/tanktop_guy.jpg', gradient: 'from-stone-200 to-gray-200', initials: 'TG' },
+            { id: 'glasses_guy', name: 'Scholar', image: '/avatars/glasses_guy.jpg', gradient: 'from-blue-100 to-cyan-100', initials: 'GG' },
+            { id: 'redhair_guy', name: 'Blaze', image: '/avatars/redhair_guy.jpg', gradient: 'from-red-200 to-orange-200', initials: 'RH' },
+        ]
+    },
+    {
         name: 'Anime',
         avatars: [
-            { id: 'naruto', name: 'Naruto', image: 'https://i.pinimg.com/736x/82/c6/26/82c62645607da6151528628e93297a7d.jpg', gradient: 'from-orange-500 to-yellow-400', initials: 'NA' },
-            { id: 'goku', name: 'Goku', image: 'https://i.pinimg.com/736x/70/4e/69/704e69b07897262f3cd27cc6216f4af4.jpg', gradient: 'from-blue-500 to-cyan-400', initials: 'GK' },
-            { id: 'luffy', name: 'Luffy', image: 'https://i.pinimg.com/736x/43/40/01/43400192e21c877114b74e1d132abb8b.jpg', gradient: 'from-red-500 to-rose-400', initials: 'LF' },
+            { id: 'zoro_wano', name: 'Zoro', image: '/avatars/zoro_wano.jpg', gradient: 'from-green-500 to-emerald-400', initials: 'ZR' },
+            { id: 'luffy_happy', name: 'Luffy', image: '/avatars/luffy_happy.jpg', gradient: 'from-red-500 to-rose-400', initials: 'LF' },
+            { id: 'gojo_chill', name: 'Gojo', image: '/avatars/gojo_chill.jpg', gradient: 'from-cyan-400 to-blue-300', initials: 'GJ' },
+            { id: 'sukuna_red', name: 'Sukuna', image: '/avatars/sukuna_red.jpg', gradient: 'from-red-900 to-gray-900', initials: 'SK' },
             { id: 'mikasa', name: 'Mikasa', image: 'https://i.pinimg.com/736x/29/79/c1/2979c13be6f88836ec3ba096899479b1.jpg', gradient: 'from-purple-600 to-violet-400', initials: 'MK' },
-            { id: 'gojo', name: 'Gojo', image: 'https://i.pinimg.com/736x/cb/d9/38/cbd9387401def896c2a47291122a7f05.jpg', gradient: 'from-cyan-400 to-blue-300', initials: 'GJ' },
-            { id: 'tanjiro', name: 'Tanjiro', image: 'https://i.pinimg.com/736x/f6/32/79/f6327918f6c37466184224c321484674.jpg', gradient: 'from-green-500 to-emerald-400', initials: 'TJ' },
-            { id: 'zoro', name: 'Zoro', image: 'https://i.pinimg.com/736x/88/44/ae/8844ae386fd1073809079ea34e56598c.jpg', gradient: 'from-lime-600 to-green-400', initials: 'ZR' },
             { id: 'levi', name: 'Levi', image: 'https://i.pinimg.com/736x/71/84/0d/71840d874591465bc57c0e527f074218.jpg', gradient: 'from-slate-600 to-gray-400', initials: 'LV' },
         ]
     },
     {
         name: 'Heroes',
         avatars: [
+            { id: 'spiderman_cozy', name: 'Spidey', image: 'https://i.pinimg.com/736x/ec/90/19/ec901967261a8ef14115e5b61e0e8445.jpg', gradient: 'from-red-300 to-blue-300', initials: 'SC' },
             { id: 'ironman', name: 'Iron Man', image: 'https://i.pinimg.com/736x/28/7f/7a/287f7a77517c3852cd8f39572910777a.jpg', gradient: 'from-red-600 to-yellow-500', initials: 'IM' },
             { id: 'batman', name: 'Batman', image: 'https://i.pinimg.com/736x/b2/90/73/b290733a46580f8490a0247690623a85.jpg', gradient: 'from-gray-800 to-gray-600', initials: 'BM' },
-            { id: 'spiderman', name: 'Spider-Man', image: 'https://i.pinimg.com/736x/85/33/c4/8533c460144577889dbf5c38714041b3.jpg', gradient: 'from-red-600 to-blue-600', initials: 'SM' },
-            { id: 'thor', name: 'Thor', image: 'https://i.pinimg.com/736x/55/9b/6c/559b6c0e5a63964d42065873911f9748.jpg', gradient: 'from-blue-700 to-sky-400', initials: 'TH' },
-            { id: 'blackpanther', name: 'Panther', image: 'https://i.pinimg.com/736x/ae/8f/7d/ae8f7d6a591c28479e00662d98f7e7f1.jpg', gradient: 'from-purple-900 to-gray-900', initials: 'BP' },
             { id: 'deadpool', name: 'Deadpool', image: 'https://i.pinimg.com/736x/cb/09/cc/cb09cca307f5963773950d268d374431.jpg', gradient: 'from-red-800 to-red-500', initials: 'DP' },
-            { id: 'flash', name: 'Flash', image: 'https://i.pinimg.com/736x/77/84/c0/7784c07a3c31b8a531f8f3c83713f01c.jpg', gradient: 'from-red-500 to-yellow-400', initials: 'FL' },
-            { id: 'joker', name: 'Joker', image: 'https://i.pinimg.com/736x/4d/93/78/4d9378ca4950e32f58e45e54d5885f81.jpg', gradient: 'from-purple-700 to-green-500', initials: 'JK' },
-        ]
-    },
-    {
-        name: 'Iconic',
-        avatars: [
-            { id: 'walter', name: 'Heisenberg', image: 'https://i.pinimg.com/736x/7b/03/61/7b0361254302c34c679a613567882894.jpg', gradient: 'from-amber-800 to-yellow-600', initials: 'WW' },
-            { id: 'sheldon', name: 'Sheldon', image: 'https://i.pinimg.com/736x/91/3d/82/913d8234854749cb37719632863ec04d.jpg', gradient: 'from-blue-600 to-indigo-400', initials: 'SC' },
-            { id: 'geralt', name: 'Geralt', image: 'https://i.pinimg.com/736x/e4/2c/8c/e42c8c7da19b884968812c77f8842af5.jpg', gradient: 'from-gray-500 to-white', initials: 'GR' },
-            { id: 'eleven', name: 'Eleven', image: 'https://i.pinimg.com/736x/cb/9f/83/cb9f838634a68297034b2f28b4931a28.jpg', gradient: 'from-pink-500 to-rose-400', initials: 'EL' },
-            { id: 'neo', name: 'Neo', image: 'https://i.pinimg.com/736x/55/9a/54/559a5440cb69865764d7df687d885a5a.jpg', gradient: 'from-green-900 to-green-400', initials: 'NE' },
-            { id: 'gandalf', name: 'Gandalf', image: 'https://i.pinimg.com/736x/f6/cb/3d/f6cb3d0c9c3e52f758fa88301880e909.jpg', gradient: 'from-gray-300 to-gray-500', initials: 'GD' },
-            { id: 'yoda', name: 'Yoda', image: 'https://i.pinimg.com/736x/8d/41/47/8d414731a547db98f8695034a706599b.jpg', gradient: 'from-green-700 to-lime-400', initials: 'YD' },
-            { id: 'darthvader', name: 'Vader', image: 'https://i.pinimg.com/736x/cb/e0/75/cbe0757b3e100808a2a0de9ca25b81a7.jpg', gradient: 'from-gray-900 to-red-900', initials: 'DV' },
         ]
     }
 ];
@@ -158,7 +150,7 @@ export default function Profile() {
                     {/* Avatar Preview */}
                     <div className="relative group">
                         <ProfileAvatar user={{ ...user, avatar: selectedAvatar }} size="2xl" />
-                        <div className="absolute inset-0 bg-black/40 rounded-[32px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                        <div className="absolute inset-0 bg-background/40 rounded-[32px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                             <Camera size={28} className="text-white" />
                         </div>
                         {currentAvatarData && (

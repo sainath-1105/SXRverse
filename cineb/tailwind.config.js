@@ -7,14 +7,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#020202',
-        card: '#0A0A0A',
-        cardHover: '#121212',
-        primary: '#3B82F6', // Clean Blue
-        primaryDark: '#2563EB',
-        accent: '#EF4444', // Alert Red
-        textMain: '#FFFFFF',
-        textMuted: '#9CA3AF',
+        background: '#1c1917', // Deep warm stone
+        card: '#292524',       // Warm stone
+        cardHover: '#44403c',  // Lighter stone
+        primary: '#fbbf24',    // Warm Amber/Gold
+        primaryDark: '#d97706',
+        accent: '#fca5a5',     // Soft Coral/Peach
+        textMain: '#fafaf9',   // Warm white
+        textMuted: '#d6d3d1',   // Stone 300
       }
     },
   },

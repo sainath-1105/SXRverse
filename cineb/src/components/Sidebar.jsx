@@ -46,7 +46,7 @@ export default function Sidebar({ isOpen, className }) {
             {/* Logo Section */}
             <div className="h-20 md:h-24 flex items-center px-8 mb-4">
                 <Link to="/" className="flex items-center gap-4 group">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] md:rounded-[18px] bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-black text-xl md:text-2xl shadow-[0_10px_25px_rgba(0,255,133,0.3)] transition-all group-hover:scale-110">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] md:rounded-[18px] bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-black text-xl md:text-2xl shadow-[0_10px_25px_rgba(251,191,36,0.2)] transition-all group-hover:scale-110">
                         ▶
                     </div>
                     <div className="flex flex-col">
@@ -76,7 +76,7 @@ export default function Sidebar({ isOpen, className }) {
                                     `}
                                 >
                                     {isActive(item.path) && (
-                                        <div className="absolute left-0 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_15px_rgba(0,255,133,0.5)]"></div>
+                                        <div className="absolute left-0 w-1 h-6 bg-primary rounded-r-full shadow-[0_0_15px_rgba(251,191,36,0.3)]"></div>
                                     )}
                                     <span className={`transition-all duration-300 ${isActive(item.path) ? 'text-primary scale-110' : 'group-hover:text-primary group-hover:scale-110 group-hover:rotate-3'} ${item.color || ''}`}>
                                         {item.icon}
@@ -85,7 +85,7 @@ export default function Sidebar({ isOpen, className }) {
                                         {item.name}
                                     </span>
                                     {isActive(item.path) && (
-                                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(0,255,133,0.5)] animate-pulse"></div>
+                                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(251,191,36,0.3)] animate-pulse"></div>
                                     )}
                                 </Link>
                             ))}
@@ -95,26 +95,26 @@ export default function Sidebar({ isOpen, className }) {
             </div>
 
             {/* Bottom Status */}
-            <div className="p-6 border-t border-white/5 bg-[#020308]">
+            <div className="p-6 border-t border-white/5 bg-background font-medium">
                 {user ? (
                     <div className="flex flex-col gap-3">
                         <div
                             onClick={() => navigate('/profile')}
-                            className="bg-white/5 border border-white/5 p-4 rounded-3xl flex items-center gap-3 hover:bg-white/10 transition-all cursor-pointer group shadow-2xl relative overflow-hidden"
+                            className="bg-card border border-white/5 p-4 rounded-3xl flex items-center gap-3 hover:bg-white/10 transition-all cursor-pointer group shadow-2xl relative overflow-hidden"
                         >
                             <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 blur-2xl rounded-full"></div>
                             <ProfileAvatar user={user} size="md" className="group-hover:scale-105 transition-transform border border-white/5" />
                             <div className="flex-1 min-w-0">
                                 <p className="text-[11px] font-black text-white truncate group-hover:text-primary transition-colors uppercase tracking-tight">{user.name}</p>
                                 <div className="flex items-center gap-1.5 mt-1">
-                                    <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] px-2 py-0.5 bg-primary/10 rounded-md border border-primary/20">PREMIUM</span>
+                                    <span className="text-[7px] font-black text-primary uppercase tracking-[0.15em] px-2 py-0.5 bg-primary/10 rounded-md border border-primary/20">PREMIUM</span>
                                     <span className="text-[7px] font-bold text-white/30 uppercase tracking-widest">#1105</span>
                                 </div>
                             </div>
                         </div>
                         <button
                             onClick={logout}
-                            className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest border border-red-500/10 group active:scale-95"
+                            className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-accent/5 text-accent hover:bg-accent hover:text-background transition-all text-[9px] font-black uppercase tracking-widest border border-accent/10 group active:scale-95"
                         >
                             <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" /> Sign Out
                         </button>

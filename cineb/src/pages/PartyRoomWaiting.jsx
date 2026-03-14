@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Users, Loader2, Film, MessageCircle, ArrowLeft, Send, Share2 } from 'lucide-react';
+import { Users, Loader2, Film, MessageCircle, ArrowLeft, Send, Share2, X, Check } from 'lucide-react';
 import { io } from 'socket.io-client';
 import Watch from './Watch';
 

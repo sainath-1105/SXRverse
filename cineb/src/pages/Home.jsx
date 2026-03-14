@@ -18,7 +18,7 @@ function Row({ title, fetchUrl, type }) {
         <div className="mb-20 px-4 md:px-8 max-w-[1600px] mx-auto overflow-hidden">
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_#00E054]"></div>
+                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(251,191,36,0.3)]"></div>
                     <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{title}</h2>
                 </div>
                 <Link to={type === 'movie' ? '/movies' : '/tv'} className="text-[10px] font-black uppercase tracking-[0.3em] text-textMuted hover:text-primary transition-all duration-300 flex items-center gap-3 group bg-white/5 px-6 py-3 rounded-full border border-white/5">
@@ -55,7 +55,7 @@ export default function Home() {
             {/* Featured Hero Banner */}
             {featured ? (
                 <div className="px-0 md:px-8 mb-20 w-full max-w-[1600px] mx-auto sm:mt-4 md:mt-8">
-                    <div className="h-[75vh] md:h-[85vh] rounded-none md:rounded-[48px] bg-[#020308] border-b md:border border-white/5 flex items-end p-8 sm:p-12 md:p-24 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
+                    <div className="h-[75vh] md:h-[85vh] rounded-none md:rounded-[48px] bg-background border-b md:border border-white/5 flex items-end p-8 sm:p-12 md:p-24 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
                         {/* Background Image */}
                         <img
                             src={getImageUrl(featured.backdrop_path, 'original')}
@@ -63,12 +63,12 @@ export default function Home() {
                             className="absolute inset-0 w-full h-full object-cover opacity-20 md:opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-[3000ms] ease-out"
                         />
                         {/* Gradient Overlays */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#020308] via-[#020308]/60 to-transparent"></div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#020308] via-transparent to-transparent hidden lg:block"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent hidden lg:block"></div>
 
                         <div className="relative z-10 max-w-5xl animate-in duration-1000">
                             <div className="flex items-center gap-4 mb-8">
-                                <span className="bg-primary text-background px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(0,224,84,0.3)]">
+                                <span className="bg-primary text-background px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(251,191,36,0.3)]">
                                     Trending
                                 </span>
                                 <div className="h-[1px] w-12 bg-white/10"></div>
@@ -93,7 +93,7 @@ export default function Home() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6">
-                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-black py-5 md:py-6 px-10 md:px-16 rounded-[24px] shadow-[0_20px_40px_rgba(0,224,84,0.2)] hover:bg-primaryDark transition-all flex items-center justify-center gap-4 text-[12px] uppercase tracking-widest active:scale-95">
+                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-black py-5 md:py-6 px-10 md:px-16 rounded-[24px] shadow-[0_20px_40px_rgba(251,191,36,0.2)] hover:bg-primaryDark transition-all flex items-center justify-center gap-4 text-[12px] uppercase tracking-widest active:scale-95">
                                     <Play size={20} fill="currentColor" /> Watch Now
                                 </Link>
                                 <button className="bg-white/5 backdrop-blur-3xl text-white font-black py-5 md:py-6 px-10 md:px-16 rounded-[24px] border border-white/10 hover:bg-white/10 transition-all text-[12px] uppercase tracking-widest active:scale-95">
@@ -105,7 +105,7 @@ export default function Home() {
                         {/* Premium Tag Overlay */}
                         <div className="absolute top-12 right-12 hidden md:block">
                             <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-2xl backdrop-blur-xl">
-                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#00E054]"></div>
+                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_rgba(251,191,36,0.5)]"></div>
                                 <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.3em]">PRM-88219</span>
                             </div>
                         </div>
@@ -121,7 +121,7 @@ export default function Home() {
             {history && history.length > 0 && (
                 <div className="mb-20 px-8 max-w-[1600px] mx-auto">
                     <div className="flex items-center gap-4 mb-8">
-                        <div className="w-1.5 h-10 bg-accent rounded-full shadow-[0_0_20px_rgba(239,68,68,0.4)]"></div>
+                        <div className="w-1.5 h-10 bg-accent rounded-full shadow-[0_0_20px_rgba(252,165,165,0.4)]"></div>
                         <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">Resume Stream</h2>
                     </div>
 

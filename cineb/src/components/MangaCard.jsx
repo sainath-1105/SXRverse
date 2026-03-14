@@ -5,7 +5,7 @@ export default function MangaCard({ item }) {
     return (
         <Link
             to={`/manga/${item.mal_id}`}
-            className="group relative bg-[#0a0812] rounded-[28px] overflow-hidden border border-white/5 transition-all duration-700 hover:border-primary/40 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] flex flex-col h-full"
+            className="group relative bg-card rounded-[28px] overflow-hidden border border-white/5 transition-all duration-700 hover:border-primary/40 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] flex flex-col h-full"
         >
             {/* Poster Aspect Ratio 2:3 */}
             <div className="aspect-[2/3.2] relative overflow-hidden">
@@ -14,7 +14,7 @@ export default function MangaCard({ item }) {
                     alt={item.title}
                     className="w-full h-full object-cover transition-all duration-[1500ms] group-hover:scale-110 group-hover:rotate-1"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020308] via-transparent to-transparent opacity-90"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-90"></div>
 
                 {/* Tactical Badges */}
                 <div className="absolute top-4 left-4 z-10">
@@ -58,7 +58,7 @@ export default function MangaCard({ item }) {
             </div>
 
             {/* Premium Scan Line (Decorative) */}
-            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left shadow-[0_0_15px_#00E054]"></div>
+            <div className="absolute bottom-0 left-0 w-full h-[2px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left shadow-[0_0_15px_rgba(251,191,36,0.3)]"></div>
         </Link>
     );
 }
