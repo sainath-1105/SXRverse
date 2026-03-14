@@ -1,0 +1,40 @@
+export const API_KEY = '8265bd1679663a7ea12ac168da84d2e8';
+// Using api.tmdb.org instead of api.themoviedb.org to avoid ISP blocking !
+export const BASE_URL = 'https://api.tmdb.org/3';
+export const IMG_URL = 'https://image.tmdb.org/t/p/';
+
+export const fetchApi = async (path, params = {}) => {
+    const url = new URL(`${BASE_URL}${path}`);
+    url.searchParams.set('api_key', API_KEY);
+    const userLang = localStorage.getItem('app_lang') || 'en-US';
+    url.searchParams.set('language', userLang);
+    Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+
+    try {
+        const res = await fetch(url.toString());
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('API Error:', error);
+        return null;
+    }
+};
+
+export const getImageUrl = (path, size = 'w342') => {
+    if (!path) return 'https://via.placeholder.com/160x240?text=No+Image';
+    return `${IMG_URL}${size}${path}`;
+};
+
+export const fetchManga = async (path, params = {}) => {
+    const url = new URL(`https://api.jikan.moe/v4${path}`);
+    Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+
+    try {
+        const res = await fetch(url.toString());
+        const data = await res.json();
+        return data;
+    } catch (error) {
+        console.error('Manga API Error:', error);
+        return null;
+    }
+};

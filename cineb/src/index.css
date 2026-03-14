@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-textMain antialiased;
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+.text-glow-green {
+  text-shadow: 0 0 15px rgba(0, 255, 133, 0.4);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 15px rgba(188, 0, 255, 0.4);
+}
+
+.bg-glow-green {
+  box-shadow: 0 0 30px rgba(0, 255, 133, 0.15);
+}
+
+.bg-glow-purple {
+  box-shadow: 0 0 30px rgba(188, 0, 255, 0.15);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-in 0.5s ease forwards;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes scan {
+  0% {
+    top: 0;
+  }
+
+  100% {
+    top: 100%;
+  }
+}
+
+.animate-scan {
+  animation: scan 3s linear infinite;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+}
