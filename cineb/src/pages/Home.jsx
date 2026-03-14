@@ -73,10 +73,10 @@ export default function Home() {
                                     Now Trending
                                 </span>
                                 <div className="h-[1px] w-8 md:w-12 bg-white/10"></div>
-                                <span className="text-[8px] md:text-[10px] font-black text-white/30 uppercase tracking-[0.2em] hidden sm:inline text-glow-purple">Vault Entry #771</span>
+                                <span className="text-[8px] md:text-[10px] font-black text-white/30 uppercase tracking-[0.2em] hidden sm:inline ">Vault Entry #771</span>
                             </div>
 
-                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 md:mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl text-glow-green italic uppercase">{featured.title || featured.name}</h1>
+                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 md:mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl  italic uppercase">{featured.title || featured.name}</h1>
 
                             <div className="flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-6 md:mb-10 flex-wrap">
                                 <div className="flex items-center gap-2 bg-primary/20 text-primary border border-primary/20 px-2 py-0.5 rounded-lg">

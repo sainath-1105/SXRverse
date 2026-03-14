@@ -48,12 +48,12 @@ export default function Auth() {
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_15px_rgba(0,224,84,0.5)]"></div>
 
                 <div className="flex justify-center mb-8">
-                    <div className="w-20 h-20 rounded-[24px] bg-primary/10 flex items-center justify-center text-primary shadow-inner bg-glow-green">
+                    <div className="w-20 h-20 rounded-[24px] bg-primary/10 flex items-center justify-center text-primary shadow-inner ">
                         {isLogin ? <LogIn size={32} /> : <UserPlus size={32} />}
                     </div>
                 </div>
 
-                <h2 className="text-3xl font-black text-white text-center mb-2 uppercase tracking-tighter leading-none text-glow-green italic">
+                <h2 className="text-3xl font-black text-white text-center mb-2 uppercase tracking-tighter leading-none  italic">
                     {isLogin ? 'Access Portal' : 'Citizen Registry'}
                 </h2>
                 <p className="text-center text-textMuted/60 mb-10 text-[10px] font-black uppercase tracking-widest leading-loose">

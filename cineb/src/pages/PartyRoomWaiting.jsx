@@ -85,42 +85,50 @@ export default function PartyRoomWaiting() {
         navigate('/party');
     };
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
     return (
-        <div className="flex flex-col h-screen bg-background text-white overflow-hidden -m-8 md:-m-12">
+        <div className="flex flex-col h-screen bg-background text-white overflow-hidden">
             {/* Top Bar */}
-            <div className="h-16 px-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-card/50 backdrop-blur-xl">
-                <div className="flex items-center gap-4">
-                    <button onClick={handleBack} className="p-2 hover:bg-white/5 rounded-xl transition text-textMuted hover:text-white">
-                        <ArrowLeft size={20} />
+            <div className="h-16 px-4 md:px-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-card/50 backdrop-blur-xl z-20">
+                <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
+                    <button onClick={handleBack} className="p-2 hover:bg-white/5 rounded-xl transition text-textMuted hover:text-white shrink-0">
+                        <ArrowLeft size={18} />
                     </button>
-                    <div className="h-6 w-[1px] bg-white/10 mx-2"></div>
-                    <div>
-                        <h1 className="text-lg font-black tracking-tighter flex items-center gap-2">
-                            PREMIUM <span className="text-primary bg-primary/10 px-3 py-1 rounded-full text-[10px] tracking-widest">{roomCode}</span>
+                    <div className="h-6 w-[1px] bg-white/10 mx-1 md:mx-2 shrink-0"></div>
+                    <div className="truncate">
+                        <h1 className="text-sm md:text-lg font-black tracking-tighter flex items-center gap-2 truncate">
+                            PARTY <span className="text-primary bg-primary/10 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[8px] md:text-[10px] tracking-widest">{roomCode}</span>
                         </h1>
-                        <div className="flex items-center gap-1.5 text-[9px] text-textMuted font-black uppercase tracking-widest">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <div className="flex items-center gap-1.5 text-[7px] md:text-[9px] text-textMuted font-black uppercase tracking-widest whitespace-nowrap">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
                             {viewers.length} Attendees
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                     <button
                         onClick={handleInvite}
-                        className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition border border-white/5 text-textMuted hover:text-white"
+                        className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition border border-white/5 text-textMuted hover:text-white"
                     >
-                        <Share2 size={14} /> Invite
+                        <Share2 size={12} /> <span className="hidden sm:inline">Invite</span>
                     </button>
                     {isHost && (
-                        <Link to="/" className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primaryDark text-background rounded-xl text-[10px] font-black uppercase tracking-widest transition shadow-lg shadow-primary/20">
-                            <Film size={14} /> Library
+                        <Link to="/" className="flex items-center gap-2 px-3 md:px-5 py-2 md:py-2.5 bg-primary hover:bg-primaryDark text-background rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition shadow-lg shadow-primary/20">
+                            <Film size={12} /> <span className="hidden sm:inline">Library</span>
                         </Link>
                     )}
+                    <button
+                        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                        className={`md:hidden p-2 rounded-xl transition ${isSidebarOpen ? 'bg-primary text-background' : 'bg-white/5 text-textMuted'}`}
+                    >
+                        <MessageCircle size={18} />
+                    </button>
                 </div>
             </div>
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden relative">
                 {/* Main Content Area: Player or Waiting */}
                 <div className="flex-1 flex flex-col min-w-0 bg-background relative">
                     {playingVideo ? (
@@ -128,26 +136,26 @@ export default function PartyRoomWaiting() {
                             <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} />
                         </div>
                     ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center p-12 text-center bg-[radial-gradient(circle_at_center,_#0F121E_0%,_#07090F_100%)]">
-                            <div className="relative mb-8">
+                        <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-[radial-gradient(circle_at_center,_#0F121E_0%,_#07090F_100%)] overflow-y-auto">
+                            <div className="relative mb-6 md:mb-8 shrink-0">
                                 <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full"></div>
-                                <div className="relative w-24 h-24 bg-card border border-white/10 rounded-[32px] flex items-center justify-center text-primary shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
-                                    <Loader2 className="animate-spin" size={40} />
+                                <div className="relative w-20 h-20 md:w-24 md:h-24 bg-card border border-white/10 rounded-[28px] md:rounded-[32px] flex items-center justify-center text-primary shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+                                    <Loader2 className="animate-spin" size={32} />
                                 </div>
                             </div>
-                            <h2 className="text-3xl font-black mb-3 tracking-tighter uppercase text-white">Curating Selection</h2>
-                            <p className="text-textMuted max-w-sm font-bold uppercase tracking-[0.2em] text-[10px] leading-loose">
+                            <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tighter uppercase text-white">Curating Selection</h2>
+                            <p className="text-textMuted max-w-sm font-bold uppercase tracking-[0.2em] text-[8px] md:text-[10px] leading-loose">
                                 {isHost
                                     ? "Select a masterpiece from the library to begin the synchronization."
                                     : "Take a seat. The host is currently selecting the feature presentation."}
                             </p>
 
                             {isHost && (
-                                <div className="mt-12 flex gap-4">
-                                    <Link to="/movies" className="px-10 py-4 bg-white text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition">
+                                <div className="mt-8 md:mt-12 flex gap-3 md:gap-4 shrink-0">
+                                    <Link to="/movies" className="px-6 md:px-10 py-3 md:py-4 bg-white text-black rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:scale-105 active:scale-95 transition">
                                         Movies
                                     </Link>
-                                    <Link to="/anime" className="px-10 py-4 bg-primary/10 border border-primary/20 text-primary rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-primary/20 hover:scale-105 active:scale-95 transition">
+                                    <Link to="/anime" className="px-6 md:px-10 py-3 md:py-4 bg-primary/10 border border-primary/20 text-primary rounded-xl md:rounded-2xl font-black text-[10px] md:text-xs uppercase tracking-widest hover:bg-primary/20 hover:scale-105 active:scale-95 transition">
                                         Anime
                                     </Link>
                                 </div>
@@ -157,7 +165,11 @@ export default function PartyRoomWaiting() {
                 </div>
 
                 {/* Sidebar: Chat & Participants */}
-                <div className="w-80 border-l border-white/5 bg-background flex flex-col shrink-0">
+                <div className={`
+                    absolute inset-y-0 right-0 z-10 w-full sm:w-80 border-l border-white/5 bg-background flex flex-col shrink-0
+                    transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
+                    ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+                `}>
                     <div className="p-4 flex gap-2 border-b border-white/5">
                         <button
                             onClick={() => setActiveTab('chat')}
@@ -176,14 +188,14 @@ export default function PartyRoomWaiting() {
                     <div className="flex-1 overflow-hidden relative">
                         {activeTab === 'chat' ? (
                             <div className="h-full flex flex-col">
-                                <div className="flex-1 overflow-y-auto p-4 space-y-6 custom-scrollbar pb-10">
+                                <div className="flex-1 overflow-y-auto p-4 space-y-4 md:space-y-6 custom-scrollbar pb-10">
                                     {messages.map((msg, i) => (
                                         <div key={i} className={`flex flex-col ${msg.author === username ? 'items-end' : 'items-start'}`}>
                                             <div className="flex items-center gap-1.5 mb-1.5 px-1">
                                                 <span className="text-[8px] font-black uppercase tracking-widest text-textMuted/60">{msg.author}</span>
                                                 <span className="text-[8px] text-textMuted/40 italic">{msg.time}</span>
                                             </div>
-                                            <div className={`px-4 py-3 rounded-2xl text-[11px] leading-relaxed max-w-[90%] font-bold ${msg.author === username ? 'bg-primary text-background' : 'bg-card text-white border border-white/5'}`}>
+                                            <div className={`px-4 py-2.5 md:py-3 rounded-2xl text-[10px] md:text-[11px] leading-relaxed max-w-[90%] font-bold ${msg.author === username ? 'bg-primary text-background' : 'bg-card text-white border border-white/5'}`}>
                                                 {msg.message}
                                             </div>
                                         </div>
@@ -198,7 +210,7 @@ export default function PartyRoomWaiting() {
                                             value={currentMsg}
                                             onChange={(e) => setCurrentMsg(e.target.value)}
                                             placeholder="Whisper message..."
-                                            className="w-full bg-card border border-white/5 text-white rounded-2xl py-3 pl-4 pr-12 outline-none focus:border-primary/50 transition text-[11px] font-bold"
+                                            className="w-full bg-card border border-white/5 text-white rounded-2xl py-3 pl-4 pr-12 outline-none focus:border-primary/50 transition text-[10px] md:text-[11px] font-bold"
                                         />
                                         <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-background transition hover:scale-110 active:scale-95">
                                             <Send size={14} />
@@ -211,7 +223,7 @@ export default function PartyRoomWaiting() {
                                 <p className="text-[10px] font-black text-textMuted uppercase tracking-widest mb-2 px-2">Watching now ({viewers.length})</p>
                                 {viewers.map((u, i) => (
                                     <div key={i} className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5 group transition-all hover:bg-white/5">
-                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-card to-background flex items-center justify-center text-white font-black text-sm relative border border-white/10 group-hover:border-primary/50 transition-colors shadow-inner">
+                                        <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-card to-background flex items-center justify-center text-white font-black text-xs md:text-sm relative border border-white/10 group-hover:border-primary/50 transition-colors shadow-inner">
                                             {u.username.charAt(0).toUpperCase()}
                                             {u.isHost && (
                                                 <div className="absolute -top-1 -right-1 bg-primary text-background p-0.5 rounded-full shadow-lg border-2 border-background">

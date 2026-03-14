@@ -10,7 +10,7 @@ export default function MovieCard({ item, type }) {
     const rating = ratingNum ? ratingNum.toFixed(1) : 'N/A';
 
     // Conditional colors for the badge
-    const ratingColor = ratingNum >= 8.0 ? 'text-primary border-primary/30 bg-primary/10 bg-glow-green' :
+    const ratingColor = ratingNum >= 8.0 ? 'text-primary border-primary/30 bg-primary/10 ' :
         ratingNum >= 6.0 ? 'text-yellow-500 border-yellow-500/30 bg-yellow-500/10' :
             ratingNum > 0 ? 'text-red-500 border-red-500/30 bg-red-500/10' :
                 'text-gray-500 border-gray-500/30 bg-gray-500/10';
@@ -47,11 +47,11 @@ export default function MovieCard({ item, type }) {
             </div>
 
             <div className="p-4 md:p-5 bg-gradient-to-b from-card to-background">
-                <h3 className="text-xs md:text-sm font-black truncate text-white uppercase tracking-tighter group-hover:text-primary transition-colors duration-300 text-glow-green">{title}</h3>
+                <h3 className="text-xs md:text-sm font-black truncate text-white uppercase tracking-tighter group-hover:text-primary transition-colors duration-300 ">{title}</h3>
                 <div className="flex items-center justify-between mt-2 md:mt-3">
                     <span className="text-[9px] md:text-[11px] font-bold text-textMuted uppercase tracking-widest">{date}</span>
                     <div className="h-[1px] w-4 bg-white/10"></div>
-                    <span className="text-[9px] md:text-[11px] font-black text-accent uppercase tracking-[0.2em] text-glow-purple">PREMIUM 4K</span>
+                    <span className="text-[9px] md:text-[11px] font-black text-accent uppercase tracking-[0.2em] ">PREMIUM 4K</span>
                 </div>
             </div>
         </Link>

@@ -79,14 +79,14 @@ export default function MangaDetails() {
                 {/* Content Section */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-6 flex-wrap">
-                        <span className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] text-glow-green">
+                        <span className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ">
                             {detail.type} Archive
                         </span>
                         <div className="h-[1px] w-8 bg-white/10 hidden sm:block"></div>
                         <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Ranked #{detail.rank}</span>
                     </div>
 
-                    <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-none uppercase break-words italic text-glow-green">
+                    <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-none uppercase break-words italic ">
                         {detail.title}
                     </h1>
 
@@ -99,7 +99,7 @@ export default function MangaDetails() {
                             <Clock size={12} />
                             <span>{detail.status}</span>
                         </div>
-                        <div className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-xl text-glow-purple">
+                        <div className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-xl ">
                             <List size={12} />
                             <span>{chapters.length || detail.chapters || '??'} Segments</span>
                         </div>

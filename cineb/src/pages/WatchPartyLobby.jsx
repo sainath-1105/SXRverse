@@ -219,12 +219,12 @@ export default function WatchPartyLobby() {
             {/* Create Room Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="bg-[#1a1a1a] border border-gray-800 rounded-3xl w-full max-w-2xl relative shadow-2xl my-8">
+                    <div className="bg-[#1a1a1a] border border-gray-800 rounded-3xl w-full max-w-2xl relative shadow-2xl my-4 sm:my-8 max-h-[90vh] flex flex-col">
                         <button onClick={() => setShowCreateModal(false)} className="absolute top-6 right-6 text-gray-400 hover:text-white transition">
                             <X size={24} />
                         </button>
 
-                        <div className="p-8">
+                        <div className="p-4 sm:p-8 overflow-y-auto">
                             <h2 className="text-2xl font-black mb-1 uppercase tracking-tighter">New Watch Party</h2>
                             {!selectedMedia ? (
                                 <div className="mt-6">
@@ -247,7 +247,7 @@ export default function WatchPartyLobby() {
                                                 <p>Searching titles...</p>
                                             </div>
                                         ) : searchResults.length > 0 ? (
-                                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                                                 {searchResults.map(item => (
                                                     <button
                                                         key={item.id}
@@ -284,7 +284,7 @@ export default function WatchPartyLobby() {
                             ) : (
                                 <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                                     {/* Selected Media Preview */}
-                                    <div className="bg-[#0a0a0a] p-4 rounded-3xl border border-gray-800 flex gap-6 relative">
+                                    <div className="bg-[#0a0a0a] p-4 rounded-3xl border border-gray-800 flex flex-col sm:flex-row gap-4 sm:gap-6 relative">
                                         <button onClick={() => setSelectedMedia(null)} className="absolute top-4 right-4 text-xs font-bold bg-gray-800 hover:bg-gray-700 p-2 rounded-full text-white transition">
                                             <X size={14} />
                                         </button>
@@ -315,7 +315,7 @@ export default function WatchPartyLobby() {
 
                                     {/* Episodes Grid if TV */}
                                     {selectedMedia.media_type === 'tv' && episodesList.length > 0 && (
-                                        <div className="grid grid-cols-5 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                                        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                             {episodesList.map(ep => (
                                                 <button
                                                     key={ep.id}

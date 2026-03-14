@@ -74,10 +74,10 @@ export default function Manga() {
                                     Highly Anticipated
                                 </span>
                                 <div className="h-[1px] w-12 bg-white/10"></div>
-                                <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em] text-glow-purple italic">Neural Vault #019</span>
+                                <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.3em]  italic">Neural Vault #019</span>
                             </div>
 
-                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-[0.9] text-glow-green italic uppercase drop-shadow-2xl">{items[0].title}</h1>
+                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-[0.9]  italic uppercase drop-shadow-2xl">{items[0].title}</h1>
 
                             <div className="flex flex-wrap items-center gap-6 text-[10px] font-black uppercase tracking-widest mb-10 opacity-70">
                                 <div className="flex items-center gap-2 text-primary">
@@ -111,7 +111,7 @@ export default function Manga() {
                 <aside className="w-full md:w-72 flex-shrink-0">
                     <div className="bg-card border border-white/5 rounded-[32px] p-8 md:sticky md:top-28 shadow-2xl overflow-hidden group">
                         <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_15px_rgba(0,224,84,0.5)]"></div>
-                        <h2 className="text-xl font-black text-white mb-8 tracking-tighter uppercase italic text-glow-green">Index Categories</h2>
+                        <h2 className="text-xl font-black text-white mb-8 tracking-tighter uppercase italic ">Index Categories</h2>
 
                         <div className="flex md:flex-col overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 gap-3 scrollbar-hide">
                             <label className="hidden md:block text-[10px] font-black text-textMuted uppercase tracking-[0.2em] mb-4 ml-1">Archive Type</label>

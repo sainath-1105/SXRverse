@@ -9,10 +9,10 @@ import ChatPanel from '../components/ChatPanel';
 import { io } from 'socket.io-client';
 
 const SERVERS = [
-    { name: 'Server 1', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.me/embed/movie?tmdb=${id}` : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}` },
-    { name: 'Server 2', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.to/embed/movie/${id}` : `https://vidsrc.to/embed/tv/${id}/${s}/${e}` },
-    { name: 'Server 3', url: (id, t, s, e) => t === 'movie' ? `https://embed.su/embed/movie/${id}` : `https://embed.su/embed/tv/${id}/${s}/${e}` },
-    { name: 'Server 4', url: (id, t, s, e) => t === 'movie' ? `https://vidlink.pro/movie/${id}` : `https://vidlink.pro/tv/${id}/${s}/${e}` },
+    { name: 'Server 1', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.me/embed/movie?tmdb=${id}&autoplay=1` : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}&autoplay=1` },
+    { name: 'Server 2', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.to/embed/movie/${id}?autoplay=1` : `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { name: 'Server 3', url: (id, t, s, e) => t === 'movie' ? `https://embed.su/embed/movie/${id}?autoplay=1` : `https://embed.su/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { name: 'Server 4', url: (id, t, s, e) => t === 'movie' ? `https://vidlink.pro/movie/${id}?autoplay=true` : `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
 ];
 
 export default function Watch({ explicitType, explicitId }) {
@@ -172,7 +172,7 @@ export default function Watch({ explicitType, explicitId }) {
                         <ArrowLeft size={18} /> {explicitType ? 'Exit Party Room' : 'Back'}
                     </button>
                     {!showChat && !explicitType && (
-                        <button onClick={() => setShowChat(true)} className="flex items-center gap-2 bg-primary/10 text-primary font-black text-[10px] uppercase tracking-widest px-5 py-2.5 border border-primary/20 shadow-[0_10px_20px_rgba(0,255,133,0.1)] rounded-xl hover:bg-primary hover:text-background transition-all text-glow-green">
+                        <button onClick={() => setShowChat(true)} className="flex items-center gap-2 bg-primary/10 text-primary font-black text-[10px] uppercase tracking-widest px-5 py-2.5 border border-primary/20 shadow-[0_10px_20px_rgba(0,255,133,0.1)] rounded-xl hover:bg-primary hover:text-background transition-all ">
                             <Users size={16} /> Party Hub
                         </button>
                     )}
@@ -182,14 +182,14 @@ export default function Watch({ explicitType, explicitId }) {
                 <div className="rounded-2xl overflow-hidden bg-black aspect-video border border-gray-800 shadow-2xl relative mb-4">
                     {/* Watch Party Prompt Overlay */}
                     {showPartyPrompt && (
-                        <div className="absolute inset-0 z-50 bg-background/90 backdrop-blur-md flex items-center justify-center">
-                            <div className="bg-card border border-white/5 p-10 rounded-[40px] text-center max-w-sm w-full mx-4 shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative overflow-hidden group">
+                        <div className="absolute inset-0 z-50 bg-background/90 backdrop-blur-md flex items-center justify-center p-4">
+                            <div className="bg-card border border-white/5 p-6 md:p-10 rounded-[30px] md:rounded-[40px] text-center max-w-sm w-full shadow-[0_40px_100px_rgba(0,0,0,0.8)] relative overflow-hidden group">
                                 <div className="absolute inset-0 bg-primary/5 blur-3xl rounded-full"></div>
                                 <div className="relative z-10">
-                                    <div className="w-20 h-20 bg-primary/10 rounded-[24px] flex items-center justify-center text-primary mx-auto mb-6 shadow-inner border border-primary/20 bg-glow-green">
+                                    <div className="w-20 h-20 bg-primary/10 rounded-[24px] flex items-center justify-center text-primary mx-auto mb-6 shadow-inner border border-primary/20 ">
                                         <Users size={32} />
                                     </div>
-                                    <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter leading-none italic text-glow-green">Watch Party</h2>
+                                    <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter leading-none italic ">Watch Party</h2>
                                     <p className="text-textMuted text-[10px] font-black uppercase tracking-widest mb-10 mt-2 leading-relaxed">Broadcast to frequency <span className="text-primary">{sessionStorage.getItem('wp_room')}</span>?</p>
 
                                     <div className="flex flex-col gap-4">
@@ -238,7 +238,7 @@ export default function Watch({ explicitType, explicitId }) {
                             )}
                         </button>
                     ))}
-                    <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-xl border border-accent/20 text-[8px] font-black uppercase tracking-[0.2em] text-glow-purple">
+                    <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-xl border border-accent/20 text-[8px] font-black uppercase tracking-[0.2em] ">
                         <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></div>
                         Encrypted Feed
                     </div>
@@ -277,7 +277,7 @@ export default function Watch({ explicitType, explicitId }) {
 
                     <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                            <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none italic text-glow-green">{detail.title || detail.name}</h1>
+                            <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none italic ">{detail.title || detail.name}</h1>
                             <button
                                 onClick={() => toggleWatchlist(detail, type)}
                                 className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all border shrink-0 ${inList ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}

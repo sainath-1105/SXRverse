@@ -49,7 +49,7 @@ export default function Sidebar({ isOpen, className }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xl md:text-2xl font-black text-white leading-none tracking-tighter uppercase whitespace-nowrap">SXRverse</span>
-                        <span className="text-[10px] font-black text-primary tracking-[0.3em] leading-none mt-1.5 uppercase opacity-80 text-glow-green">Premium</span>
+                        <span className="text-[10px] font-black text-primary tracking-[0.3em] leading-none mt-1.5 uppercase opacity-80 ">Premium</span>
                     </div>
                 </Link>
             </div>

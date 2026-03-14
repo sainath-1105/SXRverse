@@ -11,22 +11,6 @@
   }
 }
 
-.text-glow-green {
-  text-shadow: 0 0 15px rgba(0, 255, 133, 0.4);
-}
-
-.text-glow-purple {
-  text-shadow: 0 0 15px rgba(188, 0, 255, 0.4);
-}
-
-.bg-glow-green {
-  box-shadow: 0 0 30px rgba(0, 255, 133, 0.15);
-}
-
-.bg-glow-purple {
-  box-shadow: 0 0 30px rgba(188, 0, 255, 0.15);
-}
-
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;

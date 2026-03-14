@@ -29,7 +29,7 @@ export default function Search() {
         <div className="px-8 max-w-[1600px] mx-auto py-10">
             <div className="flex items-center gap-4 mb-14">
                 <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(0,224,84,0.4)]"></div>
-                <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap italic text-glow-green">
+                <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap italic ">
                     Search <span className="text-white/20 text-2xl font-black">/ {query}</span>
                 </h1>
             </div>

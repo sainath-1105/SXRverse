@@ -197,7 +197,7 @@ export default function MangaReader() {
                         ))
                     ) : (
                         <div className="py-20 text-center w-full">
-                            <h3 className="text-xl font-black text-white/40 uppercase tracking-widest text-glow-green">Neural Feed Blocked / Not Found</h3>
+                            <h3 className="text-xl font-black text-white/40 uppercase tracking-widest ">Neural Feed Blocked / Not Found</h3>
                         </div>
                     )}
 
@@ -206,7 +206,7 @@ export default function MangaReader() {
                         <div className="w-24 h-24 rounded-[40px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-10 animate-pulse shadow-2xl shadow-primary/10">
                             <BookOpen size={40} />
                         </div>
-                        <h2 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase italic text-glow-green">Sector Concluded</h2>
+                        <h2 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase italic ">Sector Concluded</h2>
                         <p className="text-textMuted font-black uppercase tracking-[0.3em] text-[10px] max-w-xs leading-loose mb-12">The next transmission is pending. Frequency update required.</p>
 
                         <div className="flex flex-col sm:flex-row gap-6 w-full px-8 sm:w-auto">
@@ -226,9 +226,9 @@ export default function MangaReader() {
 
             {/* MangaFire floating Page HUD */}
             <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] transition-transform duration-500 ${showHeader ? 'translate-y-0' : 'translate-y-20'}`}>
-                <div className="bg-card/80 backdrop-blur-3xl border border-white/10 px-8 py-4 rounded-[32px] flex items-center gap-8 shadow-[0_40px_80px_rgba(0,0,0,0.4)]">
-                    <div className="flex flex-col items-center gap-1.5">
-                        <div className="w-48 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div className="bg-card/80 backdrop-blur-3xl border border-white/10 px-4 sm:px-8 py-3 sm:py-4 rounded-3xl sm:rounded-[32px] flex items-center gap-4 sm:gap-8 shadow-[0_40px_80px_rgba(0,0,0,0.4)] w-[90vw] sm:w-auto">
+                    <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
+                        <div className="w-full sm:w-48 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
                             <div className="h-full bg-primary transition-all duration-300 shadow-[0_0_15px_#00E054]" style={{ width: `${progress}%` }}></div>
                         </div>
                         <span className="text-[7px] font-black text-white/40 uppercase tracking-[0.4em] italic">Depth: {Math.round(progress)}%</span>
@@ -236,13 +236,13 @@ export default function MangaReader() {
 
                     <div className="h-8 w-[1px] bg-white/10"></div>
 
-                    <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5 items-center">
+                    <div className="hidden sm:flex bg-white/5 p-1 rounded-2xl border border-white/5 items-center">
                         <button onClick={() => setZoom(Math.max(50, zoom - 10))} className="p-2 text-textMuted hover:text-white transition-colors">－</button>
                         <span className="px-4 text-[10px] font-black text-white tabular-nums">{zoom}%</span>
                         <button onClick={() => setZoom(Math.min(200, zoom + 10))} className="p-2 text-textMuted hover:text-white transition-colors">＋</button>
                     </div>
 
-                    <button className="p-3 bg-primary text-background rounded-2xl shadow-xl hover:scale-105 transition-all text-glow-green">
+                    <button className="p-3 bg-primary text-background rounded-2xl shadow-xl hover:scale-105 transition-all ">
                         <Maximize2 size={16} />
                     </button>
                 </div>
@@ -255,7 +255,7 @@ export default function MangaReader() {
                     <div className="relative w-80 md:w-[450px] bg-background border-l border-white/10 h-full flex flex-col shadow-[-40px_0_100px_rgba(0,0,0,0.8)] animate-in slide-in-from-right duration-500">
                         <div className="p-8 border-b border-white/5 flex items-center justify-between">
                             <div>
-                                <h3 className="text-xl font-black text-white tracking-widest uppercase italic text-glow-green">Chapter Index</h3>
+                                <h3 className="text-xl font-black text-white tracking-widest uppercase italic ">Chapter Index</h3>
                                 <p className="text-[9px] text-textMuted font-black uppercase tracking-widest mt-1 opacity-60">Neural Uplink Stable</p>
                             </div>
                             <button onClick={() => setIsSidebarOpen(false)} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-textMuted hover:text-white transition-all">
@@ -274,7 +274,7 @@ export default function MangaReader() {
                                     className={`w-full text-left p-6 rounded-3xl border transition-all duration-300 flex items-center justify-between group ${currentChapter?.id === ch.id ? 'bg-primary border-primary text-background shadow-2xl shadow-primary/20 scale-[1.02]' : 'bg-card/50 border-white/5 text-textMuted hover:border-white/20 hover:text-white hover:bg-white/5'}`}
                                 >
                                     <div className="flex flex-col">
-                                        <div className={`text-[11px] font-black uppercase tracking-widest ${currentChapter?.id === ch.id ? 'text-background' : 'text-primary text-glow-green'}`}>
+                                        <div className={`text-[11px] font-black uppercase tracking-widest ${currentChapter?.id === ch.id ? 'text-background' : 'text-primary '}`}>
                                             CH. {ch.attributes.chapter || '0'}
                                         </div>
                                         <div className="text-[10px] font-bold mt-1 opacity-80 uppercase tracking-tight truncate max-w-[200px]">

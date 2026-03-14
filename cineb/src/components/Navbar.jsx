@@ -159,12 +159,12 @@ export default function Navbar({ onMenuClick }) {
                     )}
                 </div>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 sm:gap-6">
                 {/* Language Switcher */}
                 <div className="relative" ref={langMenuRef}>
                     <button
                         onClick={() => setShowLangMenu(!showLangMenu)}
-                        className="flex items-center gap-2 text-textMuted hover:text-white transition-all bg-white/5 border border-white/5 px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest"
+                        className="flex items-center gap-1.5 md:gap-2 text-textMuted hover:text-white transition-all bg-white/5 border border-white/5 px-2.5 sm:px-3 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest"
                     >
                         <span>{currentLang.flag}</span>
                         <span className="hidden lg:inline">{currentLang.name}</span>
@@ -188,13 +188,14 @@ export default function Navbar({ onMenuClick }) {
 
                 <div className="h-4 w-[1px] bg-white/10 hidden sm:block"></div>
 
-                <button className="text-textMuted hover:text-primary transition-all relative">
-                    <Bell size={20} />
-                    <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-primary rounded-full border-2 border-background shadow-[0_0_8px_rgba(0,255,133,0.5)]"></div>
+                <button className="text-textMuted hover:text-primary transition-all relative shrink-0">
+                    <Bell size={18} />
+                    <div className="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full border-2 border-background shadow-[0_0_8px_rgba(0,255,133,0.5)]"></div>
                 </button>
-                <div className="h-4 w-[1px] bg-white/10"></div>
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 bg-primary/10 px-4 py-2 rounded-full border border-primary/20 text-glow-green">
-                    Level 07 Member
+
+                <div className="hidden sm:flex h-4 w-[1px] bg-white/10"></div>
+                <div className="hidden sm:block text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 bg-primary/10 px-3 md:px-4 py-2 rounded-full border border-primary/20 ">
+                    Lv. 07
                 </div>
             </div>
         </nav>
