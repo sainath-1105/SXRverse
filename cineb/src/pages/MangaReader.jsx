@@ -140,7 +140,7 @@ export default function MangaReader() {
                     <div className="min-w-0">
                         <h1 className="text-[10px] md:text-sm font-black text-white uppercase tracking-widest leading-none mb-1 truncate max-w-[150px] md:max-w-[300px]">{detail?.title}</h1>
                         <div className="flex items-center gap-2">
-                            <span className="text-[7px] md:text-[9px] text-primary font-black uppercase tracking-[0.2em] opacity-80">
+                            <span className="text-[7px] md:text-[9px] text-primary font-bold uppercase tracking-wider">
                                 Chapter {currentChapter?.attributes.chapter || '0'}
                             </span>
                         </div>
@@ -160,7 +160,7 @@ export default function MangaReader() {
                         className="p-3 md:p-4 bg-white/5 hover:bg-white/10 text-white rounded-xl md:rounded-2xl border border-white/5 transition-all flex items-center gap-2 md:gap-3 group"
                     >
                         <List size={18} className="group-hover:rotate-12 transition-transform" />
-                        <span className="text-[9px] font-black uppercase tracking-widest hidden md:block">Chapters Feed</span>
+                        <span className="text-[9px] font-bold uppercase tracking-wider hidden md:block">Chapters</span>
                     </button>
                 </div>
             </header>
@@ -191,13 +191,13 @@ export default function MangaReader() {
                                 <div className="absolute top-0 left-0 w-full h-[1px] bg-primary/20 shadow-[0_0_20px_#00E054] opacity-0 group-hover:opacity-100 animate-scan pointer-events-none"></div>
 
                                 <div className="mt-4 text-[8px] font-black text-white/20 uppercase tracking-[0.4em] opacity-0 group-hover:opacity-100 transition-opacity">
-                                    [ Page Segment {i + 1} // Calibrated ]
+                                    Page {i + 1}
                                 </div>
                             </div>
                         ))
                     ) : (
                         <div className="py-20 text-center w-full">
-                            <h3 className="text-xl font-black text-white/40 uppercase tracking-widest ">Neural Feed Blocked / Not Found</h3>
+                            <h3 className="text-xl font-bold text-white/40 uppercase tracking-widest ">Content Not Found</h3>
                         </div>
                     )}
 
@@ -206,18 +206,18 @@ export default function MangaReader() {
                         <div className="w-24 h-24 rounded-[40px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mb-10 animate-pulse shadow-2xl shadow-primary/10">
                             <BookOpen size={40} />
                         </div>
-                        <h2 className="text-5xl font-black text-white mb-6 tracking-tighter uppercase italic ">Sector Concluded</h2>
-                        <p className="text-textMuted font-black uppercase tracking-[0.3em] text-[10px] max-w-xs leading-loose mb-12">The next transmission is pending. Frequency update required.</p>
+                        <h2 className="text-5xl font-bold text-white mb-6 tracking-tighter uppercase">Finished</h2>
+                        <p className="text-textMuted font-medium uppercase tracking-wider text-[11px] max-w-xs leading-loose mb-12">You've reached the end of this chapter.</p>
 
                         <div className="flex flex-col sm:flex-row gap-6 w-full px-8 sm:w-auto">
                             <button onClick={() => navigate(-1)} className="px-12 py-5 bg-white text-black rounded-3xl font-black text-[11px] uppercase tracking-widest hover:scale-105 transition-all shadow-2xl active:scale-95">
-                                Archive Access
+                                View All Chapters
                             </button>
                             <button
                                 onClick={() => containerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
                                 className="px-12 py-5 bg-white/5 border border-white/10 text-white rounded-3xl font-black text-[11px] uppercase tracking-widest hover:bg-white/10 transition-all active:scale-95"
                             >
-                                Re-sync Sector
+                                Reload Page
                             </button>
                         </div>
                     </div>
@@ -231,7 +231,7 @@ export default function MangaReader() {
                         <div className="w-full sm:w-48 h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
                             <div className="h-full bg-primary transition-all duration-300 shadow-[0_0_15px_#00E054]" style={{ width: `${progress}%` }}></div>
                         </div>
-                        <span className="text-[7px] font-black text-white/40 uppercase tracking-[0.4em] italic">Depth: {Math.round(progress)}%</span>
+                        <span className="text-[8px] font-medium text-white/40 uppercase tracking-wider">Progress: {Math.round(progress)}%</span>
                     </div>
 
                     <div className="h-8 w-[1px] bg-white/10"></div>
@@ -242,7 +242,7 @@ export default function MangaReader() {
                         <button onClick={() => setZoom(Math.min(200, zoom + 10))} className="p-2 text-textMuted hover:text-white transition-colors">＋</button>
                     </div>
 
-                    <button className="p-3 bg-primary text-background rounded-2xl shadow-xl hover:scale-105 transition-all ">
+                    <button className="p-3 bg-primary text-background rounded-xl shadow-xl hover:scale-105 transition-all ">
                         <Maximize2 size={16} />
                     </button>
                 </div>
@@ -255,8 +255,8 @@ export default function MangaReader() {
                     <div className="relative w-80 md:w-[450px] bg-background border-l border-white/10 h-full flex flex-col shadow-[-40px_0_100px_rgba(0,0,0,0.8)] animate-in slide-in-from-right duration-500">
                         <div className="p-8 border-b border-white/5 flex items-center justify-between">
                             <div>
-                                <h3 className="text-xl font-black text-white tracking-widest uppercase italic ">Chapter Index</h3>
-                                <p className="text-[9px] text-textMuted font-black uppercase tracking-widest mt-1 opacity-60">Neural Uplink Stable</p>
+                                <h3 className="text-xl font-bold text-white tracking-widest uppercase">Chapters</h3>
+                                <p className="text-[10px] text-textMuted font-medium tracking-wide mt-1">Select a chapter to start reading</p>
                             </div>
                             <button onClick={() => setIsSidebarOpen(false)} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-textMuted hover:text-white transition-all">
                                 <ArrowLeft size={20} className="rotate-180" />
@@ -278,7 +278,7 @@ export default function MangaReader() {
                                             CH. {ch.attributes.chapter || '0'}
                                         </div>
                                         <div className="text-[10px] font-bold mt-1 opacity-80 uppercase tracking-tight truncate max-w-[200px]">
-                                            {ch.attributes.title || 'Untitled Segment'}
+                                            {ch.attributes.title || 'Chapter ' + ch.attributes.chapter}
                                         </div>
                                     </div>
                                     <div className={`w-8 h-8 rounded-xl flex items-center justify-center transition-all ${currentChapter?.id === ch.id ? 'bg-background/20' : 'bg-white/5 group-hover:bg-primary/20'}`}>

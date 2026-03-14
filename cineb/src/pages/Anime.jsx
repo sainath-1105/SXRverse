@@ -32,8 +32,8 @@ export default function Anime() {
         <div className="px-8 max-w-[1600px] mx-auto py-10">
             <div className="flex items-center gap-4 mb-14">
                 <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
-                <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap">
-                    Anime <span className="text-white/20 text-2xl font-black">/ Collection</span>
+                <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
+                    Anime
                 </h1>
             </div>
 
@@ -53,7 +53,7 @@ export default function Anime() {
                     disabled={loading}
                     className="bg-white/5 border border-white/10 px-14 py-5 rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-background hover:border-primary hover:shadow-[0_20px_40px_rgba(255,184,0,0.2)] transition-all duration-500 disabled:opacity-20"
                 >
-                    {loading ? 'Analyzing...' : 'Dispatch Extra Findings'}
+                    {loading ? 'Loading...' : 'Load More'}
                 </button>
             </div>
         </div>

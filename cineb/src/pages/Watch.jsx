@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchApi, getImageUrl } from '../api';
 import { PlayCircle, ArrowLeft, Server, Film, List, Heart, SkipBack, SkipForward, Users, Globe } from 'lucide-react';
@@ -9,13 +9,13 @@ import ChatPanel from '../components/ChatPanel';
 import { io } from 'socket.io-client';
 
 const SERVERS = [
-    { name: 'Server 1', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.me/embed/movie?tmdb=${id}&autoplay=1` : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}&autoplay=1` },
-    { name: 'Server 2', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.to/embed/movie/${id}?autoplay=1` : `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { name: 'Server 3', url: (id, t, s, e) => t === 'movie' ? `https://embed.su/embed/movie/${id}?autoplay=1` : `https://embed.su/embed/tv/${id}/${s}/${e}?autoplay=1` },
-    { name: 'Server 4', url: (id, t, s, e) => t === 'movie' ? `https://vidlink.pro/movie/${id}?autoplay=true` : `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
+    { name: 'Vidlink', url: (id, t, s, e) => t === 'movie' ? `https://vidlink.pro/movie/${id}?autoplay=true` : `https://vidlink.pro/tv/${id}/${s}/${e}?autoplay=true` },
+    { name: 'Embed', url: (id, t, s, e) => t === 'movie' ? `https://embed.su/embed/movie/${id}?autoplay=1` : `https://embed.su/embed/tv/${id}/${s}/${e}?autoplay=1` },
+    { name: 'VidSrc', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.me/embed/movie?tmdb=${id}&autoplay=1` : `https://vidsrc.me/embed/tv?tmdb=${id}&sea=${s}&epi=${e}&autoplay=1` },
+    { name: 'VidSrc 2', url: (id, t, s, e) => t === 'movie' ? `https://vidsrc.to/embed/movie/${id}?autoplay=1` : `https://vidsrc.to/embed/tv/${id}/${s}/${e}?autoplay=1` },
 ];
 
-export default function Watch({ explicitType, explicitId }) {
+export default function Watch({ explicitType, explicitId, startTime, partyRoom, isHost: partyIsHost, username: partyUsername }) {
     const params = useParams();
     const type = explicitType || params.type;
     const id = explicitId || params.id;
@@ -26,10 +26,11 @@ export default function Watch({ explicitType, explicitId }) {
 
     const [season, setSeason] = useState(1);
     const [episode, setEpisode] = useState(1);
-    const [activeServer, setActiveServer] = useState(3); // Default to Server 4
+    const [activeServer, setActiveServer] = useState(0); // Default to Vidlink (cleanest)
     const [episodesList, setEpisodesList] = useState([]);
     const [showChat, setShowChat] = useState(false);
     const [showPartyPrompt, setShowPartyPrompt] = useState(false);
+    const [adShieldClicks, setAdShieldClicks] = useState(0);
 
     const { toggleWatchlist, isInWatchlist } = useWatchlist();
     const { history, addToHistory } = useContinueWatching();
@@ -132,13 +133,57 @@ export default function Watch({ explicitType, explicitId }) {
 
     const url = SERVERS[activeServer].url(id, type, season, episode);
 
+    // Host: periodically send estimated time to server so late joiners get current position
+    const partyTimeRef = useRef(startTime || 0);
+    const partyStartedAtRef = useRef(Date.now());
+
+    useEffect(() => {
+        if (!partyRoom || !partyIsHost) return;
+
+        // Track time since video started in this session
+        partyTimeRef.current = startTime || 0;
+        partyStartedAtRef.current = Date.now();
+
+        const partySocket = io(import.meta.env.VITE_API_URL);
+        partySocket.on('connect', () => {
+            partySocket.emit('join_room', { room: partyRoom, username: partyUsername });
+        });
+
+        // Send time updates every 10 seconds
+        const interval = setInterval(() => {
+            const elapsed = (Date.now() - partyStartedAtRef.current) / 1000;
+            const currentTime = Math.floor(partyTimeRef.current + elapsed);
+            partySocket.emit('time_update', {
+                room: partyRoom,
+                currentTime,
+                isPlaying: true
+            });
+        }, 10000);
+
+        return () => {
+            clearInterval(interval);
+            partySocket.disconnect();
+        };
+    }, [partyRoom, partyIsHost, partyUsername, id, type]);
+
     if (explicitType) {
+        // Build URL with time offset for party mode
+        let partyUrl = url;
+        if (startTime && startTime > 0) {
+            // Add time offset - different embed providers use different params
+            // vidsrc.me, embed.su support #t=seconds, vidlink supports &t=seconds
+            const separator = partyUrl.includes('?') ? '&' : '?';
+            partyUrl = `${partyUrl}${separator}t=${startTime}`;
+        }
+
         return (
             <div className="w-full h-full bg-black relative">
                 <iframe
-                    src={url}
+                    src={partyUrl}
                     className="w-full h-full border-none"
                     allow="autoplay; fullscreen; encrypted-media"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+                    referrerPolicy="no-referrer"
                     title="Video Player"
                 ></iframe>
             </div>
@@ -169,11 +214,11 @@ export default function Watch({ explicitType, explicitId }) {
                         }}
                         className="flex items-center gap-2 text-textMuted hover:text-white transition-colors"
                     >
-                        <ArrowLeft size={18} /> {explicitType ? 'Exit Party Room' : 'Back'}
+                        <ArrowLeft size={18} /> {explicitType ? 'Exit Party' : 'Back'}
                     </button>
                     {!showChat && !explicitType && (
                         <button onClick={() => setShowChat(true)} className="flex items-center gap-2 bg-primary/10 text-primary font-black text-[10px] uppercase tracking-widest px-5 py-2.5 border border-primary/20 shadow-[0_10px_20px_rgba(0,255,133,0.1)] rounded-xl hover:bg-primary hover:text-background transition-all ">
-                            <Users size={16} /> Party Hub
+                            <Users size={16} /> Party Mode
                         </button>
                     )}
                 </div>
@@ -189,8 +234,8 @@ export default function Watch({ explicitType, explicitId }) {
                                     <div className="w-20 h-20 bg-primary/10 rounded-[24px] flex items-center justify-center text-primary mx-auto mb-6 shadow-inner border border-primary/20 ">
                                         <Users size={32} />
                                     </div>
-                                    <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter leading-none italic ">Watch Party</h2>
-                                    <p className="text-textMuted text-[10px] font-black uppercase tracking-widest mb-10 mt-2 leading-relaxed">Broadcast to frequency <span className="text-primary">{sessionStorage.getItem('wp_room')}</span>?</p>
+                                    <h2 className="text-2xl font-bold text-white mb-2">Watch Party</h2>
+                                    <p className="text-textMuted text-[12px] mb-8 mt-2">Start a watch party for room <span className="text-primary font-bold">{sessionStorage.getItem('wp_room')}</span>?</p>
 
                                     <div className="flex flex-col gap-4">
                                         <button
@@ -210,10 +255,31 @@ export default function Watch({ explicitType, explicitId }) {
                             </div>
                         </div>
                     )}
+                    {/* Ad Shield - absorbs first 2 clicks that usually trigger ads */}
+                    {adShieldClicks < 2 && (
+                        <div
+                            className="absolute inset-0 z-40 cursor-pointer group/shield"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setAdShieldClicks(prev => prev + 1);
+                            }}
+                        >
+                            <div className="absolute inset-0 bg-black/10 group-hover/shield:bg-black/0 transition-colors"></div>
+                            {adShieldClicks === 0 && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-black uppercase tracking-[0.3em] px-8 py-4 rounded-2xl border border-primary/30 animate-pulse shadow-[0_0_30px_rgba(0,224,84,0.2)]">
+                                        Click to Unlock Player
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     <iframe
                         src={SERVERS[activeServer].url(id, type, season, episode)}
                         className="w-full h-full border-none"
                         allow="autoplay; fullscreen; encrypted-media"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+                        referrerPolicy="no-referrer"
                         title="Video Player"
                     ></iframe>
                 </div>
@@ -222,25 +288,25 @@ export default function Watch({ explicitType, explicitId }) {
                 <div className="flex flex-wrap items-center gap-2 mb-8 bg-card border border-white/5 p-3 rounded-2xl shadow-xl">
                     <div className="flex items-center gap-2 mr-2 px-3 border-r border-white/10">
                         <Server size={14} className="text-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-textMuted mb-0.5">Frequency</span>
+                        <span className="text-[11px] font-medium text-textMuted">Server Selection</span>
                     </div>
                     {SERVERS.map((srv, idx) => (
                         <button
                             key={idx}
-                            onClick={() => setActiveServer(idx)}
-                            className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2 ${activeServer === idx ? 'bg-primary text-background shadow-lg shadow-primary/20' : 'bg-white/5 text-textMuted hover:text-white hover:bg-white/10'}`}
+                            onClick={() => { setActiveServer(idx); setAdShieldClicks(0); }}
+                            className={`px-4 py-2 rounded-xl text-[11px] font-medium transition-all flex items-center gap-2 ${activeServer === idx ? 'bg-primary text-background shadow-lg shadow-primary/20' : 'bg-white/5 text-textMuted hover:text-white hover:bg-white/10'}`}
                         >
                             {srv.name}
-                            {idx === 3 && (
+                            {idx === 0 && (
                                 <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black ${activeServer === idx ? 'bg-background text-primary' : 'bg-primary/20 text-primary'}`}>
                                     DUB
                                 </span>
                             )}
                         </button>
                     ))}
-                    <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-accent/10 text-accent rounded-xl border border-accent/20 text-[8px] font-black uppercase tracking-[0.2em] ">
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></div>
-                        Encrypted Feed
+                    <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-xl border border-emerald-500/20 text-[10px] font-medium">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        HD Stream Active
                     </div>
                 </div>
 
@@ -277,20 +343,20 @@ export default function Watch({ explicitType, explicitId }) {
 
                     <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                            <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none italic ">{detail.title || detail.name}</h1>
+                            <h1 className="text-2xl md:text-4xl font-bold text-white leading-tight">{detail.title || detail.name}</h1>
                             <button
                                 onClick={() => toggleWatchlist(detail, type)}
-                                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest transition-all border shrink-0 ${inList ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}
+                                className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-[11px] transition-all border shrink-0 ${inList ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20' : 'bg-white/5 text-white border-white/10 hover:bg-white/10'}`}
                             >
                                 <Heart size={14} className={inList ? 'fill-current' : ''} />
-                                {inList ? 'In Saved Vault' : 'Secure to Vault'}
+                                {inList ? 'In Watchlist' : 'Add to Watchlist'}
                             </button>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-3 md:gap-5 text-[9px] md:text-[10px] font-black uppercase tracking-widest mb-6 py-2 border-y border-white/5">
-                            <span className="flex items-center gap-1.5 text-primary"><Film size={12} /> {type}</span>
+                            <span className="flex items-center gap-1.5 text-primary text-[11px]"><Film size={12} /> {type.toUpperCase()}</span>
                             <span className="text-white/20">•</span>
-                            <span className="bg-primary/10 text-primary px-2 py-0.5 rounded border border-primary/20">{detail.vote_average?.toFixed(1)} CRITIC</span>
+                            <span className="bg-primary/10 text-primary px-2.5 py-1 rounded-lg border border-primary/20 font-bold">{detail.vote_average?.toFixed(1)} IMDB</span>
                             <span className="text-white/20">•</span>
                             <span className="text-textMuted">{(detail.release_date || detail.first_air_date || '').slice(0, 4)}</span>
                             {detail.runtime && (

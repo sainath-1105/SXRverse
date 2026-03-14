@@ -45,8 +45,8 @@ export default function Channels() {
                             <Radio size={20} className="animate-pulse" />
                         </div>
                         <div>
-                            <h2 className="text-sm font-black text-white uppercase tracking-widest leading-none">Live Guide</h2>
-                            <p className="text-[10px] text-textMuted font-black uppercase tracking-[0.2em] mt-1.5 opacity-60">Linear Feed</p>
+                            <h2 className="text-sm font-bold text-white uppercase tracking-wider leading-none">Channels</h2>
+                            <p className="text-[10px] text-textMuted font-medium uppercase tracking-wider mt-1.5 opacity-60">Browse by Genre</p>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function Channels() {
                             </div>
                             <div className="text-left">
                                 <p className="text-xs font-black uppercase tracking-widest">{g.name}</p>
-                                <p className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 opacity-60 ${selectedChannel?.id === g.id ? 'text-background' : 'text-primary'}`}>On Air</p>
+                                <p className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 opacity-60 ${selectedChannel?.id === g.id ? 'text-background' : 'text-primary'}`}>Now Playing</p>
                             </div>
                             {selectedChannel?.id === g.id && (
                                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-background animate-pulse shadow-[0_0_8px_white]"></div>
@@ -90,11 +90,11 @@ export default function Channels() {
                                     <div className="bg-primary px-3 py-1 rounded text-background text-[10px] font-black uppercase tracking-widest shadow-lg">LIVE</div>
                                     <div className="bg-black/60 backdrop-blur-md px-3 py-1 rounded text-white text-[10px] font-black uppercase tracking-widest border border-white/10 flex items-center gap-2">
                                         <Users size={12} className="text-primary" />
-                                        12.4K TUNED IN
+                                        12.4K Watching
                                     </div>
                                 </div>
                                 <h1 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase drop-shadow-2xl">{activeHero.name}</h1>
-                                <p className="text-textMuted text-xs font-bold leading-relaxed line-clamp-2 max-w-xl uppercase tracking-widest opacity-80">{activeHero.overview}</p>
+                                <p className="text-textMuted text-xs font-medium leading-relaxed line-clamp-2 max-w-xl tracking-wide opacity-80">{activeHero.overview}</p>
                             </div>
                             <div className="flex items-center gap-4">
                                 <Link to={`/watch/tv/${activeHero.id}`} className="w-16 h-16 rounded-full bg-primary text-background flex items-center justify-center shadow-2xl hover:bg-primaryDark transition-all hover:scale-110 transform active:scale-95 group">
@@ -120,7 +120,7 @@ export default function Channels() {
                 <div className="p-12">
                     <div className="flex items-center gap-4 mb-10">
                         <div className="w-1.5 h-8 bg-primary rounded-full shadow-[0_0_15px_rgba(255,184,0,0.5)]"></div>
-                        <h3 className="text-2xl font-black text-white tracking-widest uppercase">Upcoming in {selectedChannel?.name}</h3>
+                        <h3 className="text-2xl font-bold text-white tracking-tight uppercase">More in {selectedChannel?.name}</h3>
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8">

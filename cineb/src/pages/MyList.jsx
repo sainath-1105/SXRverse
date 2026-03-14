@@ -9,8 +9,8 @@ export default function MyList() {
         <div className="px-8 max-w-[1600px] mx-auto py-10">
             <div className="flex items-center gap-4 mb-14">
                 <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
-                <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap">
-                    Curated <span className="text-white/20 text-2xl font-black">/ My Vault</span>
+                <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
+                    My List
                 </h1>
             </div>
 
@@ -22,8 +22,8 @@ export default function MyList() {
                             <Plus size={40} className="text-primary" />
                         </div>
                     </div>
-                    <h3 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase">Vault Vacant</h3>
-                    <p className="text-textMuted max-w-sm font-bold uppercase tracking-widest text-[10px] leading-loose">Your personal archives are currently unoccupied. Begin cataloging masterpieces for immediate retrieval.</p>
+                    <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase">List is Empty</h3>
+                    <p className="text-textMuted max-w-sm font-medium uppercase tracking-wider text-[11px] leading-relaxed">Add movies and shows to your list to find them here later.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-8 gap-y-12">

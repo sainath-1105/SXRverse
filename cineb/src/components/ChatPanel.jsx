@@ -59,7 +59,7 @@ export default function ChatPanel({ room, onClose }) {
             <div className="p-4 border-b border-white/5 flex items-center justify-between bg-card">
                 <h3 className="text-xs font-black text-white flex items-center gap-2 uppercase tracking-[0.2em]">
                     <Users size={18} className="text-primary" />
-                    Lounge <span className="text-[10px] bg-background/50 px-2.5 py-1 rounded-full text-textMuted tracking-normal lowercase">{room}</span>
+                    Chat <span className="text-[10px] bg-background/50 px-2.5 py-1 rounded-full text-textMuted tracking-normal lowercase">{room}</span>
                 </h3>
                 <button onClick={onClose} className="text-textMuted hover:text-white transition"><X size={18} /></button>
             </div>
@@ -69,17 +69,17 @@ export default function ChatPanel({ room, onClose }) {
                     <div className="w-20 h-20 bg-primary/10 rounded-[24px] flex items-center justify-center mb-6 text-primary shadow-inner">
                         <Users size={32} />
                     </div>
-                    <h4 className="text-white font-black text-lg mb-2 uppercase tracking-tighter">Enter the Lounge</h4>
-                    <p className="text-[10px] text-textMuted font-bold uppercase tracking-widest leading-loose mb-10">Synchronized conversation await. State your identity.</p>
+                    <h4 className="text-white font-bold text-lg mb-2 uppercase tracking-tighter">Join Chat</h4>
+                    <p className="text-[11px] text-textMuted font-medium uppercase tracking-wider leading-relaxed mb-10">Enter your name to start chatting.</p>
                     <form onSubmit={joinRoom} className="w-full flex flex-col gap-4">
                         <input
                             type="text"
-                            placeholder="State your name..."
+                            placeholder="Your name..."
                             disabled={joined}
                             className="bg-card border border-white/5 text-white text-xs font-black uppercase tracking-widest rounded-2xl p-4 outline-none focus:border-primary/50 text-center"
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                        <button type="submit" className="bg-primary hover:bg-primaryDark text-background font-black text-xs uppercase tracking-widest py-4 rounded-2xl transition shadow-xl shadow-primary/20 active:scale-95">Authorize Access</button>
+                        <button type="submit" className="bg-primary hover:bg-primaryDark text-background font-bold text-xs uppercase tracking-wider py-4 rounded-2xl transition shadow-xl shadow-primary/20 active:scale-95">Join Chat</button>
                     </form>
                 </div>
             ) : (
@@ -100,7 +100,7 @@ export default function ChatPanel({ room, onClose }) {
                         <input
                             type="text"
                             value={currentMessage}
-                            placeholder="Whisper..."
+                            placeholder="Type a message..."
                             onChange={(e) => setCurrentMessage(e.target.value)}
                             className="flex-1 bg-background border border-white/5 text-white text-[11px] font-bold rounded-full px-5 outline-none focus:border-primary/50"
                         />

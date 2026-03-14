@@ -60,23 +60,23 @@ export default function TVShows() {
             <div className="w-full md:w-72 flex-shrink-0">
                 <div className="bg-card border border-white/5 rounded-[32px] p-8 sticky top-28 shadow-2xl overflow-hidden group">
                     <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_10px_rgba(255,184,0,0.5)]"></div>
-                    <h2 className="text-xl font-black text-white mb-8 tracking-tight uppercase tracking-tighter">Series Vault</h2>
+                    <h2 className="text-xl font-bold text-white mb-8 tracking-tight uppercase">Filters</h2>
 
                     <div className="mb-10">
-                        <label className="block text-[10px] font-black text-textMuted uppercase tracking-[0.2em] mb-3 ml-1">Sort Strategy</label>
+                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Sort By</label>
                         <select
                             className="w-full bg-background border border-white/5 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl focus:ring-0 focus:border-primary/50 block p-4 outline-none cursor-pointer hover:bg-white/5 transition-all"
                             value={sort}
                             onChange={(e) => setSort(e.target.value)}
                         >
-                            <option value="popularity.desc">Trending Today</option>
-                            <option value="vote_average.desc">Top Fan Rated</option>
+                            <option value="popularity.desc">Most Popular</option>
+                            <option value="vote_average.desc">Top Rated</option>
                             <option value="first_air_date.desc">New Releases</option>
                         </select>
                     </div>
 
                     <div className="mb-10">
-                        <label className="block text-[10px] font-black text-textMuted uppercase tracking-[0.2em] mb-3 ml-1">Language</label>
+                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Language</label>
                         <select
                             className="w-full bg-background border border-white/5 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl focus:ring-0 focus:border-primary/50 block p-4 outline-none cursor-pointer hover:bg-white/5 transition-all"
                             value={language}
@@ -90,7 +90,7 @@ export default function TVShows() {
                     </div>
 
                     <div>
-                        <label className="block text-[10px] font-black text-textMuted uppercase tracking-[0.2em] mb-3 ml-1">Genres</label>
+                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Genres</label>
                         <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto pr-3 custom-scrollbar">
                             <button
                                 onClick={() => setSelectedGenre('')}
@@ -115,8 +115,8 @@ export default function TVShows() {
             <div className="flex-1">
                 <div className="flex items-center gap-4 mb-14">
                     <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
-                    <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap">
-                        Series <span className="text-white/20 text-2xl font-black">/ Vault</span>
+                    <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
+                        TV Shows
                     </h1>
                 </div>
 
@@ -136,10 +136,10 @@ export default function TVShows() {
                         disabled={loading}
                         className="bg-white/5 border border-white/10 px-14 py-5 rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-background hover:border-primary hover:shadow-[0_20px_40px_rgba(255,184,0,0.2)] transition-all duration-500 disabled:opacity-20"
                     >
-                        {loading ? 'Analyzing...' : 'Dispatch Extra Findings'}
+                        {loading ? 'Loading...' : 'Load More'}
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

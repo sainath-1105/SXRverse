@@ -1,13 +1,15 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Home, Tv, Film, Users, LayoutGrid, Heart, History,
     Settings, LogOut, Radio, MonitorPlay, Zap, BookOpen
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ProfileAvatar } from '../pages/Profile';
 
 export default function Sidebar({ isOpen, className }) {
     const { user, logout } = useAuth();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const sections = [
         {
@@ -49,7 +51,7 @@ export default function Sidebar({ isOpen, className }) {
                     </div>
                     <div className="flex flex-col">
                         <span className="text-xl md:text-2xl font-black text-white leading-none tracking-tighter uppercase whitespace-nowrap">SXRverse</span>
-                        <span className="text-[10px] font-black text-primary tracking-[0.3em] leading-none mt-1.5 uppercase opacity-80 ">Premium</span>
+                        <span className="text-[10px] font-bold text-primary tracking-wider leading-none mt-1.5 uppercase opacity-80">Premium</span>
                     </div>
                 </Link>
             </div>
@@ -58,7 +60,7 @@ export default function Sidebar({ isOpen, className }) {
             <div className="flex-1 px-5 space-y-8 md:space-y-10 overflow-y-auto custom-scrollbar pb-10 mt-4">
                 {sections.map((section) => (
                     <div key={section.title}>
-                        <p className="px-5 text-[10px] font-black text-textMuted/40 uppercase tracking-[0.25em] mb-4">
+                        <p className="px-5 text-[10px] font-bold text-textMuted/40 uppercase tracking-wider mb-4">
                             {section.title}
                         </p>
                         <div className="space-y-1">
@@ -69,7 +71,7 @@ export default function Sidebar({ isOpen, className }) {
                                     className={`
                                         flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 group relative
                                         ${isActive(item.path)
-                                            ? 'bg-white/5 text-white font-black shadow-inner shadow-white/[0.02]'
+                                            ? 'bg-white/5 text-white font-bold shadow-inner shadow-white/[0.02]'
                                             : 'text-textMuted hover:text-white hover:bg-white/[0.03]'}
                                     `}
                                 >
@@ -95,16 +97,24 @@ export default function Sidebar({ isOpen, className }) {
             {/* Bottom Status */}
             <div className="p-6 border-t border-white/5 bg-gradient-to-t from-black/50 to-transparent">
                 {user ? (
-                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 animate-in">
+                    <div
+                        onClick={() => navigate('/profile')}
+                        className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] hover:border-white/10 transition-all group"
+                    >
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-background font-black shadow-lg">
-                                {user.name.charAt(0).toUpperCase()}
-                            </div>
+                            <ProfileAvatar user={user} size="md" />
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-black text-white truncate">{user.name}</p>
-                                <p className="text-[9px] font-black text-primary uppercase tracking-widest mt-0.5 opacity-80">Premium Member</p>
+                                <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors">{user.name}</p>
+                                {user.slogan ? (
+                                    <p className="text-[9px] font-medium text-textMuted uppercase tracking-wider mt-0.5 opacity-60 truncate">{user.slogan}</p>
+                                ) : (
+                                    <p className="text-[9px] font-medium text-primary uppercase tracking-wider mt-0.5 opacity-80">Edit Profile</p>
+                                )}
                             </div>
-                            <button onClick={logout} className="text-textMuted hover:text-primary transition-colors p-2">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); logout(); }}
+                                className="text-textMuted hover:text-red-500 transition-colors p-2"
+                            >
                                 <LogOut size={18} />
                             </button>
                         </div>
@@ -112,7 +122,7 @@ export default function Sidebar({ isOpen, className }) {
                 ) : (
                     <Link
                         to="/auth"
-                        className="w-full py-4 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-background rounded-2xl transition-all font-black text-sm flex items-center justify-center gap-2 shadow-xl shadow-primary/10 active:scale-95"
+                        className="w-full py-4 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-background rounded-2xl transition-all font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-primary/10 active:scale-95"
                     >
                         Sign In
                     </Link>

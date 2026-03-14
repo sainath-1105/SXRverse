@@ -18,11 +18,11 @@ function Row({ title, fetchUrl, type }) {
         <div className="mb-14 px-8 max-w-[1600px] mx-auto overflow-hidden">
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_12px_rgba(0,255,133,0.5)]"></div>
-                    <h2 className="text-2xl font-black text-white tracking-tight uppercase italic">{title}</h2>
+                    <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.5)]"></div>
+                    <h2 className="text-2xl font-bold text-white tracking-tight uppercase">{title}</h2>
                 </div>
-                <Link to={type === 'movie' ? '/movies' : '/anime'} className="text-[10px] font-black uppercase tracking-[0.2em] text-textMuted hover:text-primary transition-all duration-300 flex items-center gap-2 group">
-                    View Network <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <Link to={type === 'movie' ? '/movies' : '/anime'} className="text-[11px] font-bold uppercase tracking-wider text-textMuted hover:text-primary transition-all duration-300 flex items-center gap-2 group">
+                    View All <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
 
@@ -69,14 +69,14 @@ export default function Home() {
 
                         <div className="relative z-10 max-w-4xl animate-in">
                             <div className="flex items-center gap-3 mb-4 md:mb-6">
-                                <span className="bg-primary text-background px-3 md:px-4 py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase tracking-[0.25em] shadow-lg shadow-primary/20">
-                                    Now Trending
+                                <span className="bg-primary text-background px-3 md:px-4 py-1 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-wider shadow-lg shadow-primary/20">
+                                    Trending Now
                                 </span>
                                 <div className="h-[1px] w-8 md:w-12 bg-white/10"></div>
-                                <span className="text-[8px] md:text-[10px] font-black text-white/30 uppercase tracking-[0.2em] hidden sm:inline ">Vault Entry #771</span>
+                                <span className="text-[10px] md:text-[11px] font-medium text-white/30 uppercase tracking-wider hidden sm:inline ">CineB Featured</span>
                             </div>
 
-                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 md:mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl  italic uppercase">{featured.title || featured.name}</h1>
+                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 md:mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl uppercase">{featured.title || featured.name}</h1>
 
                             <div className="flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-6 md:mb-10 flex-wrap">
                                 <div className="flex items-center gap-2 bg-primary/20 text-primary border border-primary/20 px-2 py-0.5 rounded-lg">
@@ -94,7 +94,7 @@ export default function Home() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-black py-3 md:py-4.5 px-8 md:px-12 rounded-xl md:rounded-2xl shadow-xl shadow-primary/10 hover:bg-primaryDark transition-all flex items-center justify-center gap-3 text-xs md:text-sm">
+                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-bold py-3 md:py-4.5 px-8 md:px-12 rounded-xl md:rounded-2xl shadow-xl shadow-primary/10 hover:bg-primaryDark transition-all flex items-center justify-center gap-3 text-[13px] md:text-[14px]">
                                     <Play size={18} fill="currentColor" /> Watch Now
                                 </Link>
                                 <button className="bg-white/5 backdrop-blur-xl text-white font-black py-3 md:py-4.5 px-8 md:px-12 rounded-xl md:rounded-2xl border border-white/10 hover:bg-white/10 transition-all text-xs md:text-sm">
@@ -114,8 +114,8 @@ export default function Home() {
             {history && history.length > 0 && (
                 <div className="mb-14 px-8 max-w-[1600px] mx-auto">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1.5 h-6 bg-accent rounded-full shadow-[0_0_12px_rgba(188,0,255,0.5)]"></div>
-                        <h2 className="text-2xl font-black text-white tracking-tight uppercase italic">Resuming Playback</h2>
+                        <div className="w-1.5 h-6 bg-accent rounded-full shadow-[0_0_12px_rgba(239,68,68,0.5)]"></div>
+                        <h2 className="text-2xl font-bold text-white tracking-tight uppercase">Continue Watching</h2>
                     </div>
 
                     <div className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide snap-x">

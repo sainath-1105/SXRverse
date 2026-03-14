@@ -59,6 +59,31 @@ export function AuthProvider({ children }) {
         }
     };
 
+    const updateProfile = async (updates) => {
+        try {
+            const token = localStorage.getItem('sxr_token');
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(updates)
+            });
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Update failed');
+            }
+
+            setUser(data.user);
+            localStorage.setItem('sxr_user', JSON.stringify(data.user));
+            return data.user;
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const logout = () => {
         setUser(null);
         localStorage.removeItem('sxr_user');
@@ -66,7 +91,7 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, signup, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, signup, logout, updateProfile, loading }}>
             {children}
         </AuthContext.Provider>
     );

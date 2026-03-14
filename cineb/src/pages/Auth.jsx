@@ -53,11 +53,11 @@ export default function Auth() {
                     </div>
                 </div>
 
-                <h2 className="text-3xl font-black text-white text-center mb-2 uppercase tracking-tighter leading-none  italic">
-                    {isLogin ? 'Access Portal' : 'Citizen Registry'}
+                <h2 className="text-3xl font-bold text-white text-center mb-2 uppercase tracking-tighter leading-none">
+                    {isLogin ? 'Sign In' : 'Create Account'}
                 </h2>
-                <p className="text-center text-textMuted/60 mb-10 text-[10px] font-black uppercase tracking-widest leading-loose">
-                    {isLogin ? 'Enter credentials to resume your journey.' : 'Enlist now to begin hosting private sessions.'}
+                <p className="text-center text-textMuted/60 mb-10 text-[11px] font-medium uppercase tracking-wider leading-relaxed">
+                    {isLogin ? 'Enter your credentials to continue.' : 'Create an account to start watching.'}
                 </p>
 
                 {error && <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-sm text-center mb-6">{error}</div>}
@@ -103,7 +103,7 @@ export default function Auth() {
                         disabled={loading}
                         className="w-full bg-primary text-background font-black py-4.5 mt-6 rounded-2xl hover:bg-primaryDark transition shadow-xl shadow-primary/20 disabled:opacity-20 uppercase tracking-[0.2em] text-xs"
                     >
-                        {loading ? 'Authorizing...' : isLogin ? 'Infiltrate' : 'Establish'}
+                        {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Sign Up'}
                     </button>
                 </form>
 

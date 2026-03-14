@@ -18,6 +18,7 @@ import History from './pages/History';
 import Manga from './pages/Manga';
 import MangaDetails from './pages/MangaDetails';
 import MangaReader from './pages/MangaReader';
+import Profile from './pages/Profile';
 import { AuthProvider } from './context/AuthContext';
 import { useLocation } from 'react-router-dom';
 
@@ -74,6 +75,7 @@ function AppContent() {
             <Route path="/party/room/:roomCode" element={<PartyRoomWaiting />} />
             <Route path="/watch/:type/:id" element={<Watch />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
       </div>

@@ -29,8 +29,8 @@ export default function Search() {
         <div className="px-8 max-w-[1600px] mx-auto py-10">
             <div className="flex items-center gap-4 mb-14">
                 <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(0,224,84,0.4)]"></div>
-                <h1 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap italic ">
-                    Search <span className="text-white/20 text-2xl font-black">/ {query}</span>
+                <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
+                    Search <span className="text-white/20 text-2xl font-bold">/ {query}</span>
                 </h1>
             </div>
 
@@ -48,8 +48,8 @@ export default function Search() {
                             <SearchIcon size={40} className="text-primary/50" />
                         </div>
                     </div>
-                    <h3 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase">No Results Found</h3>
-                    <p className="text-textMuted max-w-sm font-bold uppercase tracking-widest text-[10px] leading-loose">We couldn't find anything matching your search. Try different keywords.</p>
+                    <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase">No Results Found</h3>
+                    <p className="text-textMuted max-w-sm font-medium uppercase tracking-wider text-[11px] leading-relaxed">We couldn't find anything matching your search. Try different keywords.</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6 md:gap-8 gap-y-10 md:gap-y-12">

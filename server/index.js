@@ -32,7 +32,7 @@ const findByEmail = (email) => users.find(u => u.email === email);
 
 const createUser = (name, email, hashedPassword) => {
     const id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-    const user = { id, name, email, password: hashedPassword };
+    const user = { id, name, email, password: hashedPassword, avatar: '', slogan: '' };
     users.push(user);
     saveUsers();
     return user;
@@ -58,7 +58,7 @@ app.post('/api/auth/signup', async (req, res) => {
         const user = createUser(name, email, hashedPassword);
 
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
-        res.status(201).json({ user: { id: user.id, name, email }, token });
+        res.status(201).json({ user: { id: user.id, name, email, avatar: '', slogan: '' }, token });
     } catch (err) {
         console.error('Signup error:', err);
         res.status(500).json({ error: 'Server error' });
@@ -80,9 +80,33 @@ app.post('/api/auth/login', async (req, res) => {
         if (!validPassword) return res.status(400).json({ error: 'Invalid credentials' });
 
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
-        res.json({ user: { id: user.id, name: user.name, email: user.email }, token });
+        res.json({ user: { id: user.id, name: user.name, email: user.email, avatar: user.avatar || '', slogan: user.slogan || '' }, token });
     } catch (err) {
         console.error('Login error:', err);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
+// ── Profile Update ────────────────────────────────────────────────────────────
+app.put('/api/auth/profile', (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) return res.status(401).json({ error: 'No token provided' });
+
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const user = users.find(u => u.id === decoded.id);
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const { name, avatar, slogan } = req.body;
+        if (name !== undefined) user.name = name;
+        if (avatar !== undefined) user.avatar = avatar;
+        if (slogan !== undefined) user.slogan = slogan;
+        saveUsers();
+
+        res.json({ user: { id: user.id, name: user.name, email: user.email, avatar: user.avatar || '', slogan: user.slogan || '' } });
+    } catch (err) {
+        console.error('Profile update error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
@@ -105,7 +129,10 @@ app.post('/api/rooms', (req, res) => {
         viewers: 0,
         users: {},
         media: media,
-        playing: media || null
+        playing: media || null,
+        currentTime: 0,
+        isPlaying: false,
+        lastTimeUpdate: Date.now()
     };
 
     const publicRooms = Object.values(activeRooms).map(r => ({
@@ -173,8 +200,20 @@ io.on('connection', (socket) => {
             }));
             io.emit('rooms_updated', publicRooms);
 
+            // Send current video state with estimated time to new joiner
             if (activeRooms[data.room].playing) {
-                socket.emit('video_sync', activeRooms[data.room].playing);
+                const room = activeRooms[data.room];
+                let estimatedTime = room.currentTime || 0;
+                // If the video is currently playing, add elapsed time since last update
+                if (room.isPlaying && room.lastTimeUpdate) {
+                    const elapsed = (Date.now() - room.lastTimeUpdate) / 1000;
+                    estimatedTime += elapsed;
+                }
+                socket.emit('video_sync', {
+                    ...room.playing,
+                    currentTime: Math.floor(estimatedTime),
+                    isPlaying: room.isPlaying
+                });
             }
 
             const roomUsers = Object.entries(activeRooms[data.room].users).map(([id, name]) => ({
@@ -204,6 +243,9 @@ io.on('connection', (socket) => {
     socket.on('sync_play', (data) => {
         const room = activeRooms[data.room];
         if (room && socket.username === room.hostName) {
+            room.currentTime = data.currentTime || 0;
+            room.isPlaying = true;
+            room.lastTimeUpdate = Date.now();
             socket.to(data.room).emit('receive_sync_play', data);
         }
     });
@@ -211,7 +253,20 @@ io.on('connection', (socket) => {
     socket.on('sync_pause', (data) => {
         const room = activeRooms[data.room];
         if (room && socket.username === room.hostName) {
+            room.currentTime = data.currentTime || 0;
+            room.isPlaying = false;
+            room.lastTimeUpdate = Date.now();
             socket.to(data.room).emit('receive_sync_pause', data);
+        }
+    });
+
+    // Host periodically sends time updates to keep server in sync
+    socket.on('time_update', (data) => {
+        const room = activeRooms[data.room];
+        if (room && socket.username === room.hostName) {
+            room.currentTime = data.currentTime || 0;
+            room.isPlaying = data.isPlaying !== false;
+            room.lastTimeUpdate = Date.now();
         }
     });
 
@@ -220,7 +275,10 @@ io.on('connection', (socket) => {
         if (room && socket.username === room.hostName) {
             console.log(`Host starting video ${data.type} ${data.id} in room ${data.room}`);
             room.playing = { type: data.type, id: data.id };
-            io.to(data.room).emit('video_sync', data);
+            room.currentTime = 0;
+            room.isPlaying = true;
+            room.lastTimeUpdate = Date.now();
+            io.to(data.room).emit('video_sync', { ...data, currentTime: 0, isPlaying: true });
         }
     });
 

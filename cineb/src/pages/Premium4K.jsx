@@ -49,15 +49,15 @@ export default function Premium4K() {
 
                             <h1 className="text-4xl sm:text-6xl font-black text-white mb-6 tracking-tighter leading-none">{featured.title}</h1>
                             <p className="text-textMuted text-sm lg:text-base mb-10 line-clamp-3 leading-relaxed max-w-lg">
-                                Experience {featured.title} like never before. Remastered in stunning 4K resolution with enhanced color depth and premium audio calibration for the ultimate theater experience.
+                                Watch {featured.title} in stunning 4K Ultra HD with enhanced audio for the ultimate viewing experience.
                             </p>
 
                             <div className="flex items-center gap-4">
                                 <Link to={`/watch/movie/${featured.id}`} className="bg-primary text-background font-black py-4 px-10 rounded-2xl flex items-center gap-3 shadow-xl hover:bg-primaryDark transition-all group">
                                     <Play size={20} fill="currentColor" className="group-hover:scale-110 transition-transform" /> WATCH NOW
                                 </Link>
-                                <div className="flex items-center gap-2 text-white/40 font-black text-[10px] uppercase tracking-widest bg-white/5 border border-white/10 px-6 py-4 rounded-2xl">
-                                    Bitrate: 85 Mbps
+                                <div className="flex items-center gap-2 text-white/40 font-bold text-[10px] uppercase tracking-wider bg-white/5 border border-white/10 px-6 py-4 rounded-2xl">
+                                    4K • HDR
                                 </div>
                             </div>
                         </div>
@@ -82,8 +82,8 @@ export default function Premium4K() {
                 <div className="flex items-center justify-between mb-12">
                     <div className="flex items-center gap-4">
                         <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(255,184,0,0.4)]"></div>
-                        <h2 className="text-4xl font-black text-white tracking-tighter uppercase whitespace-nowrap">
-                            Premium <span className="text-white/20 text-2xl font-black">/ 4K Movies</span>
+                        <h2 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
+                            Premium 4K
                         </h2>
                     </div>
                 </div>

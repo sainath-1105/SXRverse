@@ -1,13 +1,16 @@
-import { Search, Bell, Menu, X, Star, Film, Tv } from 'lucide-react';
+import { Search, Bell, Menu, X, Star, Film, Tv, LogOut } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 import { fetchApi, getImageUrl } from '../api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { ProfileAvatar } from '../pages/Profile';
 
 export default function Navbar({ onMenuClick }) {
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
     const [loading, setLoading] = useState(false);
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const suggestionsRef = useRef(null);
     const [showLangMenu, setShowLangMenu] = useState(false);
@@ -91,8 +94,8 @@ export default function Navbar({ onMenuClick }) {
                         <Search size={16} className="absolute left-4 text-textMuted group-focus-within:text-primary transition-colors duration-300" />
                         <input
                             type="text"
-                            placeholder="Discover masterpiece..."
-                            className="bg-white/5 border border-white/5 text-[11px] rounded-[14px] pl-11 pr-10 py-3 w-full md:w-64 lg:w-80 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300 text-white placeholder-textMuted/40 focus:md:w-[420px] shadow-inner font-bold uppercase tracking-widest"
+                            placeholder="Search movies, TV shows..."
+                            className="bg-white/5 border border-white/5 text-[12px] rounded-xl pl-11 pr-10 py-3 w-full md:w-64 lg:w-80 focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all duration-300 text-white placeholder-textMuted/50 focus:md:w-[420px] shadow-inner font-medium tracking-tight"
                             value={query}
                             onChange={(e) => {
                                 setQuery(e.target.value);
@@ -115,7 +118,7 @@ export default function Navbar({ onMenuClick }) {
                     {showSuggestions && (query.length > 1) && (suggestions.length > 0 || loading) && (
                         <div className="absolute top-full left-0 right-0 mt-2 bg-background/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2">
                             {loading && suggestions.length === 0 ? (
-                                <div className="p-6 text-center text-textMuted text-[10px] font-black uppercase tracking-widest animate-pulse">Scanning frequencies...</div>
+                                <div className="p-6 text-center text-textMuted text-[11px] font-medium animate-pulse">Searching...</div>
                             ) : (
                                 <div className="py-2">
                                     {suggestions.map((item) => (
@@ -132,7 +135,7 @@ export default function Navbar({ onMenuClick }) {
                                                 />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-white text-[11px] font-black uppercase tracking-tight truncate leading-none mb-1.5">{item.title || item.name}</p>
+                                                <p className="text-white text-[13px] font-semibold truncate leading-none mb-1.5">{item.title || item.name}</p>
                                                 <div className="flex items-center gap-3">
                                                     <span className="text-[8px] font-black text-primary/80 uppercase tracking-widest flex items-center gap-1">
                                                         {item.media_type === 'movie' ? <Film size={10} /> : <Tv size={10} />}
@@ -141,7 +144,7 @@ export default function Navbar({ onMenuClick }) {
                                                     <span className="text-white/20 text-[8px]">•</span>
                                                     <span className="text-[8px] font-black text-textMuted uppercase tracking-widest flex items-center gap-1">
                                                         <Star size={10} className="fill-primary text-primary" />
-                                                        {item.vote_average?.toFixed(1)}
+                                                        {item.vote_average?.toFixed(1)} Rating
                                                     </span>
                                                 </div>
                                             </div>
@@ -194,9 +197,34 @@ export default function Navbar({ onMenuClick }) {
                 </button>
 
                 <div className="hidden sm:flex h-4 w-[1px] bg-white/10"></div>
-                <div className="hidden sm:block text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-primary/80 bg-primary/10 px-3 md:px-4 py-2 rounded-full border border-primary/20 ">
-                    Lv. 07
-                </div>
+
+                {user ? (
+                    <div className="flex items-center gap-4">
+                        <Link
+                            to="/profile"
+                            className="hidden sm:flex items-center gap-2 group"
+                        >
+                            <div className="text-right hidden lg:block">
+                                <p className="text-[11px] font-bold text-white group-hover:text-primary transition-colors">{user.name}</p>
+                                <p className="text-[8px] font-bold text-primary uppercase tracking-[0.2em] opacity-80">Premium</p>
+                            </div>
+                            <ProfileAvatar user={user} size="md" className="group-hover:scale-105 transition-transform border border-white/10" />
+                        </Link>
+                        <button
+                            onClick={logout}
+                            className="md:hidden p-2 text-textMuted hover:text-red-500 transition-colors"
+                        >
+                            <LogOut size={18} />
+                        </button>
+                    </div>
+                ) : (
+                    <Link
+                        to="/auth"
+                        className="px-6 py-2.5 bg-primary hover:bg-primaryDark text-background rounded-xl text-[10px] font-black uppercase tracking-widest transition shadow-lg shadow-primary/20"
+                    >
+                        Sign In
+                    </Link>
+                )}
             </div>
         </nav>
     );

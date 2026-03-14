@@ -29,7 +29,11 @@ export default function PartyRoomWaiting() {
 
         socket.on('video_sync', (data) => {
             if (data.type && data.id) {
-                setPlayingVideo({ type: data.type, id: data.id });
+                setPlayingVideo({
+                    type: data.type,
+                    id: data.id,
+                    currentTime: data.currentTime || 0
+                });
             }
         });
 
@@ -98,11 +102,11 @@ export default function PartyRoomWaiting() {
                     <div className="h-6 w-[1px] bg-white/10 mx-1 md:mx-2 shrink-0"></div>
                     <div className="truncate">
                         <h1 className="text-sm md:text-lg font-black tracking-tighter flex items-center gap-2 truncate">
-                            PARTY <span className="text-primary bg-primary/10 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[8px] md:text-[10px] tracking-widest">{roomCode}</span>
+                            ROOM <span className="text-primary bg-primary/10 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-[12px] font-bold">{roomCode}</span>
                         </h1>
                         <div className="flex items-center gap-1.5 text-[7px] md:text-[9px] text-textMuted font-black uppercase tracking-widest whitespace-nowrap">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
-                            {viewers.length} Attendees
+                            {viewers.length} Viewers
                         </div>
                     </div>
                 </div>
@@ -133,21 +137,21 @@ export default function PartyRoomWaiting() {
                 <div className="flex-1 flex flex-col min-w-0 bg-background relative">
                     {playingVideo ? (
                         <div className="flex-1 bg-black flex flex-col overflow-hidden">
-                            <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} />
+                            <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} />
                         </div>
                     ) : (
-                        <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-[radial-gradient(circle_at_center,_#0F121E_0%,_#07090F_100%)] overflow-y-auto">
+                        <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-background overflow-y-auto">
                             <div className="relative mb-6 md:mb-8 shrink-0">
                                 <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full"></div>
                                 <div className="relative w-20 h-20 md:w-24 md:h-24 bg-card border border-white/10 rounded-[28px] md:rounded-[32px] flex items-center justify-center text-primary shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                                     <Loader2 className="animate-spin" size={32} />
                                 </div>
                             </div>
-                            <h2 className="text-2xl md:text-3xl font-black mb-3 tracking-tighter uppercase text-white">Curating Selection</h2>
-                            <p className="text-textMuted max-w-sm font-bold uppercase tracking-[0.2em] text-[8px] md:text-[10px] leading-loose">
+                            <h2 className="text-2xl md:text-3xl font-bold mb-3 text-white">Select a Video</h2>
+                            <p className="text-textMuted max-w-sm text-[11px] md:text-[13px] leading-relaxed">
                                 {isHost
-                                    ? "Select a masterpiece from the library to begin the synchronization."
-                                    : "Take a seat. The host is currently selecting the feature presentation."}
+                                    ? "Browse the library and pick a movie or show to start the party."
+                                    : "Waiting for the host to select a movie or show to play."}
                             </p>
 
                             {isHost && (
@@ -181,7 +185,7 @@ export default function PartyRoomWaiting() {
                             onClick={() => setActiveTab('info')}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition ${activeTab === 'info' ? 'bg-primary text-background shadow-lg shadow-primary/20' : 'bg-white/5 text-textMuted hover:text-white'}`}
                         >
-                            <Users size={14} /> Lounge
+                            <Users size={14} /> Viewers
                         </button>
                     </div>
 
@@ -192,8 +196,8 @@ export default function PartyRoomWaiting() {
                                     {messages.map((msg, i) => (
                                         <div key={i} className={`flex flex-col ${msg.author === username ? 'items-end' : 'items-start'}`}>
                                             <div className="flex items-center gap-1.5 mb-1.5 px-1">
-                                                <span className="text-[8px] font-black uppercase tracking-widest text-textMuted/60">{msg.author}</span>
-                                                <span className="text-[8px] text-textMuted/40 italic">{msg.time}</span>
+                                                <span className="text-[10px] font-bold text-textMuted/60">{msg.author}</span>
+                                                <span className="text-[10px] text-textMuted/40">{msg.time}</span>
                                             </div>
                                             <div className={`px-4 py-2.5 md:py-3 rounded-2xl text-[10px] md:text-[11px] leading-relaxed max-w-[90%] font-bold ${msg.author === username ? 'bg-primary text-background' : 'bg-card text-white border border-white/5'}`}>
                                                 {msg.message}
@@ -209,7 +213,7 @@ export default function PartyRoomWaiting() {
                                             type="text"
                                             value={currentMsg}
                                             onChange={(e) => setCurrentMsg(e.target.value)}
-                                            placeholder="Whisper message..."
+                                            placeholder="Type a message..."
                                             className="w-full bg-card border border-white/5 text-white rounded-2xl py-3 pl-4 pr-12 outline-none focus:border-primary/50 transition text-[10px] md:text-[11px] font-bold"
                                         />
                                         <button className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-background transition hover:scale-110 active:scale-95">
@@ -220,7 +224,7 @@ export default function PartyRoomWaiting() {
                             </div>
                         ) : (
                             <div className="p-4 space-y-4 h-full overflow-y-auto custom-scrollbar">
-                                <p className="text-[10px] font-black text-textMuted uppercase tracking-widest mb-2 px-2">Watching now ({viewers.length})</p>
+                                <p className="text-[11px] font-bold text-textMuted uppercase tracking-wider mb-2 px-2">Online ({viewers.length})</p>
                                 {viewers.map((u, i) => (
                                     <div key={i} className="flex items-center gap-3 bg-white/[0.03] p-3 rounded-2xl border border-white/5 group transition-all hover:bg-white/5">
                                         <div className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-card to-background flex items-center justify-center text-white font-black text-xs md:text-sm relative border border-white/10 group-hover:border-primary/50 transition-colors shadow-inner">
@@ -232,20 +236,20 @@ export default function PartyRoomWaiting() {
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-xs font-black text-white truncate flex items-center gap-2">
+                                            <p className="text-xs font-bold text-white truncate flex items-center gap-2">
                                                 {u.username}
-                                                {u.isHost && <span className="text-[7px] bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded uppercase tracking-[0.2em]">Host</span>}
+                                                {u.isHost && <span className="text-[7px] bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded uppercase font-bold">Host</span>}
                                             </p>
-                                            <p className="text-[8px] text-textMuted font-black uppercase tracking-widest opacity-60">Citizen Status</p>
+                                            <p className="text-[9px] text-textMuted font-medium uppercase tracking-wide opacity-60">Verified Member</p>
                                         </div>
 
                                         {isHost && !u.isHost && (
                                             <button
                                                 onClick={() => handleKick(u.id, u.username)}
                                                 className="opacity-0 group-hover:opacity-100 p-2 rounded-lg bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all transform scale-90 group-hover:scale-100"
-                                                title="Dismiss Citizen"
+                                                title="Remove User"
                                             >
-                                                <EyeOff size={14} />
+                                                <X size={14} />
                                             </button>
                                         )}
                                     </div>

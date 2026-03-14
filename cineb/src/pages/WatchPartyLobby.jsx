@@ -193,23 +193,23 @@ export default function WatchPartyLobby() {
                 <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
                     <div className="bg-card border border-white/5 p-8 rounded-3xl max-w-sm w-full shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
                         <Lock size={40} className="text-primary mx-auto mb-4" />
-                        <h3 className="text-xl font-black text-center mb-2 uppercase tracking-tighter">Private Party</h3>
-                        <p className="text-textMuted text-center text-xs mb-6 font-bold uppercase tracking-widest">Entering restricted area</p>
+                        <h3 className="text-xl font-bold text-center mb-2 uppercase tracking-tighter">Private Party</h3>
+                        <p className="text-textMuted text-center text-[11px] mb-6 font-medium">This room is password protected</p>
 
                         {passwordError && <p className="text-primary text-[10px] font-black uppercase text-center mb-4 tracking-widest">{passwordError}</p>}
 
                         <form onSubmit={submitPasswordPrompt}>
                             <input
                                 type="password"
-                                placeholder="Access Secret"
+                                placeholder="Enter Password"
                                 value={joinPassword}
                                 onChange={e => setJoinPassword(e.target.value)}
                                 className="w-full bg-background/50 border border-white/5 text-white rounded-2xl p-4 outline-none focus:border-primary/50 mb-6 text-center tracking-widest"
                                 autoFocus
                             />
                             <div className="flex gap-3">
-                                <button type="button" onClick={() => setPromptRoom(null)} className="flex-1 px-4 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-black text-xs transition uppercase tracking-widest">Abort</button>
-                                <button type="submit" className="flex-1 px-4 py-4 rounded-2xl bg-primary hover:bg-primaryDark text-background font-black text-xs transition uppercase tracking-widest shadow-lg shadow-primary/20">Enter</button>
+                                <button type="button" onClick={() => setPromptRoom(null)} className="flex-1 px-4 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] transition uppercase tracking-wider">Cancel</button>
+                                <button type="submit" className="flex-1 px-4 py-4 rounded-2xl bg-primary hover:bg-primaryDark text-background font-bold text-[11px] transition uppercase tracking-wider shadow-lg shadow-primary/20">Join Room</button>
                             </div>
                         </form>
                     </div>
@@ -225,7 +225,7 @@ export default function WatchPartyLobby() {
                         </button>
 
                         <div className="p-4 sm:p-8 overflow-y-auto">
-                            <h2 className="text-2xl font-black mb-1 uppercase tracking-tighter">New Watch Party</h2>
+                            <h2 className="text-2xl font-bold mb-1 uppercase tracking-tighter">Create Room</h2>
                             {!selectedMedia ? (
                                 <div className="mt-6">
                                     <div className="relative group">
@@ -359,7 +359,7 @@ export default function WatchPartyLobby() {
 
                                             {isPrivate && (
                                                 <div className="animate-in slide-in-from-top-2 duration-300 border-t border-gray-800/50 pt-4">
-                                                    <label className="text-[10px] font-black uppercase tracking-widest text-[#E50914] ml-1">Room Password</label>
+                                                    <label className="text-[11px] font-bold uppercase tracking-wider text-primary ml-1">Room Password</label>
                                                     <div className="relative mt-1">
                                                         <input
                                                             type={showCreatePassword ? "text" : "password"}
@@ -383,9 +383,9 @@ export default function WatchPartyLobby() {
 
                                     <button
                                         onClick={handleCreateRoom}
-                                        className="w-full bg-primary hover:bg-primaryDark text-background py-4.5 rounded-2xl font-black text-lg shadow-xl shadow-primary/20 transition active:scale-[0.98] mt-4 uppercase tracking-widest"
+                                        className="w-full bg-primary hover:bg-primaryDark text-background py-4.5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 transition active:scale-[0.98] mt-4 uppercase tracking-wider"
                                     >
-                                        Create Room
+                                        Create Party
                                     </button>
                                 </div>
                             )}
@@ -397,8 +397,8 @@ export default function WatchPartyLobby() {
             {/* Header / Nav */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
                 <div className="text-center md:text-left">
-                    <h1 className="text-3xl md:text-4xl font-black text-white tracking-tighter mb-2 uppercase">Watch Party</h1>
-                    <p className="text-textMuted text-[10px] md:text-sm font-black uppercase tracking-widest opacity-60 italic">Synchronous Media Relay active</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tighter mb-2 uppercase">Watch Party</h1>
+                    <p className="text-textMuted text-[11px] md:text-sm font-medium uppercase tracking-wider opacity-60">Watch movies together in real-time</p>
                 </div>
                 <div className="flex items-center justify-center md:justify-end gap-3">
                     <button
@@ -414,17 +414,17 @@ export default function WatchPartyLobby() {
                             setSelectedMedia(null);
                             setSearchQuery('');
                         }}
-                        className="bg-primary hover:bg-primaryDark text-background px-8 py-3.5 rounded-2xl font-black flex items-center gap-2 transition shadow-lg shadow-primary/20 uppercase tracking-widest text-xs"
+                        className="bg-primary hover:bg-primaryDark text-background px-8 py-3.5 rounded-2xl font-bold flex items-center gap-2 transition shadow-lg shadow-primary/20 uppercase tracking-wider text-[11px]"
                     >
-                        <Plus size={20} /> New Party
+                        <Plus size={20} /> Create Room
                     </button>
                 </div>
             </div>
 
-            {/* Room Filters/Categories (Aesthetics) */}
+            {/* Room Filters */}
             <div className="mb-10 flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-background font-black text-[10px] uppercase tracking-widest transition">Live Sessions</button>
-                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-white/5 text-textMuted font-bold text-[10px] uppercase tracking-widest hover:bg-white/10 transition">Most Popular</button>
+                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-background font-bold text-[10px] uppercase tracking-wider transition">Active Parties</button>
+                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-white/5 text-textMuted font-bold text-[10px] uppercase tracking-wider hover:bg-white/10 transition">Popular</button>
             </div>
 
             {/* Room Grid */}
@@ -436,8 +436,8 @@ export default function WatchPartyLobby() {
                             <Users size={40} className="text-primary" />
                         </div>
                     </div>
-                    <h3 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase">No Active Rooms</h3>
-                    <p className="text-textMuted max-w-sm font-bold uppercase tracking-widest text-[10px] leading-loose">Waiting for the first show to begin. Start your own room to watch with friends!</p>
+                    <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase">No Active Rooms</h3>
+                    <p className="text-textMuted max-w-sm font-medium uppercase tracking-wider text-[11px] leading-relaxed">There are no parties active right now. Why not start your own?</p>
 
                     <button
                         onClick={() => {
@@ -445,7 +445,7 @@ export default function WatchPartyLobby() {
                             setSelectedMedia(null);
                             setSearchQuery('');
                         }}
-                        className="mt-10 px-10 py-5 bg-primary text-background rounded-[24px] font-black hover:scale-105 transition shadow-2xl shadow-primary/30 uppercase tracking-[0.2em] text-xs"
+                        className="mt-10 px-10 py-5 bg-primary text-background rounded-[24px] font-bold hover:scale-105 transition shadow-2xl shadow-primary/30 uppercase tracking-wider text-xs"
                     >
                         Create a Room
                     </button>
@@ -478,34 +478,34 @@ export default function WatchPartyLobby() {
                                     )}
                                     <div className="bg-background/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white border border-white/10 shadow-lg flex items-center gap-2">
                                         <Users size={14} className="text-primary/70" />
-                                        <span className="text-xs font-black">{room.viewers}</span>
+                                        <span className="text-xs font-bold">{room.viewers}</span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* Content */}
                             <div className="p-6 pt-0 relative mt-[-10px]">
-                                <h3 className="text-lg font-black text-white leading-tight mb-1 truncate group-hover:text-primary transition uppercase tracking-tighter">{room.roomName}</h3>
+                                <h3 className="text-lg font-bold text-white leading-tight mb-1 truncate group-hover:text-primary transition uppercase tracking-tight">{room.roomName}</h3>
                                 {room.media ? (
-                                    <p className="text-[10px] font-black text-textMuted mb-4 flex items-center gap-2 uppercase tracking-widest truncate">
+                                    <p className="text-[11px] font-bold text-textMuted mb-4 flex items-center gap-2 uppercase tracking-wide truncate">
                                         <span className="w-1 h-3 bg-primary rounded-full"></span>
                                         {room.media.title || room.media.name}
                                     </p>
                                 ) : (
-                                    <p className="text-[10px] font-black text-textMuted mb-4 uppercase tracking-widest">Awaiting Film...</p>
+                                    <p className="text-[11px] font-bold text-textMuted mb-4 uppercase tracking-wide">Selecting Movie...</p>
                                 )}
 
                                 <div className="flex items-center justify-between mt-auto">
                                     <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-[10px] font-black border border-white/5 text-primary">
+                                        <div className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-[10px] font-bold border border-white/5 text-primary">
                                             {room.host.charAt(0).toUpperCase()}
                                         </div>
-                                        <span className="text-[9px] uppercase tracking-widest font-black text-textMuted/60 italic">Host: {room.host}</span>
+                                        <span className="text-[10px] uppercase tracking-wider font-bold text-textMuted/60">Host: {room.host}</span>
                                     </div>
 
                                     <button
                                         onClick={() => handleJoinClickFromList(room)}
-                                        className="bg-primary hover:bg-primaryDark text-background px-5 py-2.5 rounded-xl font-black text-xs flex items-center gap-2 transition active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-widest"
+                                        className="bg-primary hover:bg-primaryDark text-background px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-wider"
                                     >
                                         <LogIn size={14} /> Join
                                     </button>
