@@ -18,40 +18,43 @@ export default function MovieCard({ item, type }) {
     const poster = getImageUrl(item.poster_path, 'w342');
 
     return (
-        <Link to={`/watch/${t}/${item.id}`} className="group relative block w-full overflow-hidden rounded-[28px] bg-card border border-white/5 transition-all duration-500 hover:scale-[1.05] hover:-translate-y-2 cursor-pointer shadow-2xl hover:shadow-primary/5 group">
-            <div className="relative aspect-[2/3] w-full bg-black overflow-hidden">
+        <Link to={`/watch/${t}/${item.id}`} className="group relative block w-full overflow-hidden rounded-[24px] bg-[#0a0812] border border-white/5 transition-all duration-700 hover:scale-[1.03] hover:-translate-y-2 cursor-pointer shadow-2xl hover:shadow-primary/10">
+            <div className="relative aspect-[2/3] w-full bg-[#020308] overflow-hidden">
                 <img
                     src={poster}
                     alt={title}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-all duration-[1500ms] group-hover:scale-110 opacity-80 group-hover:opacity-100"
                     loading="lazy"
                 />
 
-                {/* Badge Overlay */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
-                    <div className="bg-black/60 backdrop-blur-md border border-white/10 text-white/70 px-3 py-1 rounded-full font-black text-[8px] uppercase tracking-[0.2em] shadow-xl">
+                {/* Media Type Badge */}
+                <div className="absolute top-4 left-4 z-20">
+                    <div className="bg-[#020308]/60 backdrop-blur-xl border border-white/10 text-white/50 px-3 py-1.5 rounded-xl font-black text-[7px] uppercase tracking-[0.3em] shadow-2xl">
                         {t}
                     </div>
                 </div>
 
-                <div className={`absolute top-4 right-4 backdrop-blur-md border px-3 py-1 rounded-xl font-black text-[10px] flex items-center gap-1.5 z-20 shadow-xl ${ratingColor}`}>
+                {/* Rating Badge */}
+                <div className={`absolute top-4 right-4 backdrop-blur-xl border px-3 py-1.5 rounded-xl font-black text-[9px] flex items-center gap-1.5 z-20 shadow-2xl ${ratingColor}`}>
                     <Star size={10} className="fill-current" /> {rating}
                 </div>
 
                 {/* Hover Play Button Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[1px]">
-                    <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-background shadow-[0_0_40px_rgba(0,255,133,0.6)] transform scale-50 group-hover:scale-100 transition-all duration-500 ease-out">
-                        <Play size={28} className="fill-current translate-x-0.5" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020308] via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700 flex items-center justify-center backdrop-blur-[1px]">
+                    <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-background shadow-[0_0_50px_rgba(0,224,84,0.4)] transform scale-50 group-hover:scale-100 transition-all duration-500 ease-out">
+                        <Play size={24} className="fill-current translate-x-0.5" />
                     </div>
                 </div>
             </div>
 
-            <div className="p-4 md:p-5 bg-gradient-to-b from-card to-background">
-                <h3 className="text-xs md:text-sm font-black truncate text-white uppercase tracking-tighter group-hover:text-primary transition-colors duration-300 ">{title}</h3>
-                <div className="flex items-center justify-between mt-2 md:mt-3">
-                    <span className="text-[9px] md:text-[11px] font-bold text-textMuted uppercase tracking-widest">{date}</span>
-                    <div className="h-[1px] w-4 bg-white/10"></div>
-                    <span className="text-[9px] md:text-[11px] font-black text-accent uppercase tracking-[0.2em] ">PREMIUM 4K</span>
+            <div className="p-5 bg-gradient-to-b from-[#0a0812] to-[#020308]">
+                <h3 className="text-[13px] font-black truncate text-white uppercase tracking-tight group-hover:text-primary transition-colors duration-500 italic">{title}</h3>
+                <div className="flex items-center justify-between mt-3">
+                    <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">{date}</span>
+                    <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-primary/40 rounded-full"></div>
+                        <span className="text-[8px] font-bold text-white/20 uppercase tracking-[0.3em]">H265</span>
+                    </div>
                 </div>
             </div>
         </Link>

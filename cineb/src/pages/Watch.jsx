@@ -30,7 +30,7 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
     const [episodesList, setEpisodesList] = useState([]);
     const [showChat, setShowChat] = useState(false);
     const [showPartyPrompt, setShowPartyPrompt] = useState(false);
-    const [adShieldClicks, setAdShieldClicks] = useState(0);
+
 
     const { toggleWatchlist, isInWatchlist } = useWatchlist();
     const { history, addToHistory } = useContinueWatching();
@@ -177,13 +177,15 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
         }
 
         return (
-            <div className="w-full h-full bg-black relative">
+            <div className="w-full h-full bg-black relative flex items-center justify-center">
+                {/* Loader for iframe background */}
+                <div className="absolute inset-0 flex items-center justify-center bg-[#020308]">
+                    <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                </div>
                 <iframe
                     src={partyUrl}
-                    className="w-full h-full border-none"
-                    allow="autoplay; fullscreen; encrypted-media"
-                    sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-                    referrerPolicy="no-referrer"
+                    className="w-full h-full border-none relative z-10"
+                    allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                     title="Video Player"
                 ></iframe>
             </div>
@@ -255,58 +257,45 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
                             </div>
                         </div>
                     )}
-                    {/* Ad Shield - absorbs first 2 clicks that usually trigger ads */}
-                    {adShieldClicks < 2 && (
-                        <div
-                            className="absolute inset-0 z-40 cursor-pointer group/shield"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setAdShieldClicks(prev => prev + 1);
-                            }}
-                        >
-                            <div className="absolute inset-0 bg-black/10 group-hover/shield:bg-black/0 transition-colors"></div>
-                            {adShieldClicks === 0 && (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-black uppercase tracking-[0.3em] px-8 py-4 rounded-2xl border border-primary/30 animate-pulse shadow-[0_0_30px_rgba(0,224,84,0.2)]">
-                                        Click to Unlock Player
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
+
+                    {/* Loader for iframe background */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-[#020308]">
+                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                    </div>
                     <iframe
                         src={SERVERS[activeServer].url(id, type, season, episode)}
-                        className="w-full h-full border-none"
-                        allow="autoplay; fullscreen; encrypted-media"
-                        sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
-                        referrerPolicy="no-referrer"
+                        className="w-full h-full border-none relative z-10"
+                        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
                         title="Video Player"
                     ></iframe>
                 </div>
 
-                {/* Server Selection UI */}
-                <div className="flex flex-wrap items-center gap-2 mb-8 bg-card border border-white/5 p-3 rounded-2xl shadow-xl">
-                    <div className="flex items-center gap-2 mr-2 px-3 border-r border-white/10">
-                        <Server size={14} className="text-primary" />
-                        <span className="text-[11px] font-medium text-textMuted">Server Selection</span>
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-card/50 backdrop-blur-xl border border-white/5 p-4 rounded-2xl shadow-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-2 mr-2 px-3 border-r border-white/10">
+                            <Server size={14} className="text-primary" />
+                            <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Matrix</span>
+                        </div>
+                        {SERVERS.map((srv, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => { setActiveServer(idx); }}
+                                className={`px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all flex items-center gap-2 ${activeServer === idx ? 'bg-primary text-background shadow-lg shadow-primary/20 scale-[1.02]' : 'bg-white/5 text-textMuted hover:text-white hover:bg-white/10 hover:translate-y-[-1px]'}`}
+                            >
+                                {srv.name}
+                                {idx === 0 && (
+                                    <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black ${activeServer === idx ? 'bg-background text-primary' : 'bg-primary/20 text-primary'}`}>
+                                        HQ
+                                    </span>
+                                )}
+                            </button>
+                        ))}
                     </div>
-                    {SERVERS.map((srv, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => { setActiveServer(idx); setAdShieldClicks(0); }}
-                            className={`px-4 py-2 rounded-xl text-[11px] font-medium transition-all flex items-center gap-2 ${activeServer === idx ? 'bg-primary text-background shadow-lg shadow-primary/20' : 'bg-white/5 text-textMuted hover:text-white hover:bg-white/10'}`}
-                        >
-                            {srv.name}
-                            {idx === 0 && (
-                                <span className={`px-1.5 py-0.5 rounded-md text-[7px] font-black ${activeServer === idx ? 'bg-background text-primary' : 'bg-primary/20 text-primary'}`}>
-                                    DUB
-                                </span>
-                            )}
-                        </button>
-                    ))}
-                    <div className="ml-auto flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-500 rounded-xl border border-emerald-500/20 text-[10px] font-medium">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                        HD Stream Active
+
+                    <div className="flex items-center gap-3 px-4 py-2 bg-primary/5 rounded-xl border border-primary/10 shadow-inner">
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#00E054]"></div>
+                        <span className="text-[9px] font-black text-primary uppercase tracking-[0.3em]">SXR-PRM-1105</span>
                     </div>
                 </div>
 

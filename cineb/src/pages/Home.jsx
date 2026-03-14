@@ -15,20 +15,20 @@ function Row({ title, fetchUrl, type }) {
     }, [fetchUrl]);
 
     return (
-        <div className="mb-14 px-8 max-w-[1600px] mx-auto overflow-hidden">
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                    <div className="w-1.5 h-6 bg-primary rounded-full shadow-[0_0_12px_rgba(59,130,246,0.5)]"></div>
-                    <h2 className="text-2xl font-bold text-white tracking-tight uppercase">{title}</h2>
+        <div className="mb-20 px-4 md:px-8 max-w-[1600px] mx-auto overflow-hidden">
+            <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_#00E054]"></div>
+                    <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">{title}</h2>
                 </div>
-                <Link to={type === 'movie' ? '/movies' : '/anime'} className="text-[11px] font-bold uppercase tracking-wider text-textMuted hover:text-primary transition-all duration-300 flex items-center gap-2 group">
-                    View All <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                <Link to={type === 'movie' ? '/movies' : '/tv'} className="text-[10px] font-black uppercase tracking-[0.3em] text-textMuted hover:text-primary transition-all duration-300 flex items-center gap-3 group bg-white/5 px-6 py-3 rounded-full border border-white/5">
+                    Explore <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
 
-            <div className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide snap-x">
+            <div className="flex overflow-x-auto gap-6 pb-10 scrollbar-hide snap-x -mx-4 px-4 md:mx-0 md:px-0">
                 {items.map((item, idx) => (
-                    <div key={`${item.id}-${idx}`} className="snap-start w-40 sm:w-48 lg:w-56 flex-shrink-0 transition-transform duration-500 hover:scale-105">
+                    <div key={`${item.id}-${idx}`} className="snap-start w-44 sm:w-56 lg:w-64 flex-shrink-0 transition-all duration-500 hover:scale-105">
                         <MovieCard item={item} type={type} />
                     </div>
                 ))}
@@ -44,7 +44,6 @@ export default function Home() {
     useEffect(() => {
         fetchApi('/trending/all/day').then(data => {
             if (data && data.results && data.results.length > 0) {
-                // Find first item with a backdrop image
                 const item = data.results.find(i => i.backdrop_path);
                 if (item) setFeatured(item);
             }
@@ -52,75 +51,83 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="pb-10">
+        <div className="pb-20">
             {/* Featured Hero Banner */}
             {featured ? (
-                <div className="px-4 md:px-8 mb-16 w-full max-w-[1600px] mx-auto mt-4 md:mt-6">
-                    <div className="h-[60vh] md:h-[75vh] rounded-[32px] md:rounded-[40px] bg-background border border-white/5 flex items-end p-6 sm:p-12 md:p-20 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
+                <div className="px-0 md:px-8 mb-20 w-full max-w-[1600px] mx-auto sm:mt-4 md:mt-8">
+                    <div className="h-[75vh] md:h-[85vh] rounded-none md:rounded-[48px] bg-[#020308] border-b md:border border-white/5 flex items-end p-8 sm:p-12 md:p-24 relative overflow-hidden group shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]">
                         {/* Background Image */}
                         <img
-                            src={getImageUrl(featured.backdrop_path, 'w1280')}
+                            src={getImageUrl(featured.backdrop_path, 'original')}
                             alt={featured.title || featured.name}
-                            className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-[2000ms] ease-out"
+                            className="absolute inset-0 w-full h-full object-cover opacity-20 md:opacity-30 group-hover:opacity-40 group-hover:scale-105 transition-all duration-[3000ms] ease-out"
                         />
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent"></div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-transparent hidden md:block"></div>
+                        {/* Gradient Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#020308] via-[#020308]/60 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#020308] via-transparent to-transparent hidden lg:block"></div>
 
-                        <div className="relative z-10 max-w-4xl animate-in">
-                            <div className="flex items-center gap-3 mb-4 md:mb-6">
-                                <span className="bg-primary text-background px-3 md:px-4 py-1 rounded-full text-[10px] md:text-[11px] font-bold uppercase tracking-wider shadow-lg shadow-primary/20">
-                                    Trending Now
+                        <div className="relative z-10 max-w-5xl animate-in duration-1000">
+                            <div className="flex items-center gap-4 mb-8">
+                                <span className="bg-primary text-background px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-[0_10px_30px_rgba(0,224,84,0.3)]">
+                                    Trending
                                 </span>
-                                <div className="h-[1px] w-8 md:w-12 bg-white/10"></div>
-                                <span className="text-[10px] md:text-[11px] font-medium text-white/30 uppercase tracking-wider hidden sm:inline ">CineB Featured</span>
+                                <div className="h-[1px] w-12 bg-white/10"></div>
+                                <span className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em]">SXR Premium Direct</span>
                             </div>
 
-                            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-4 md:mb-6 tracking-tighter leading-[0.9] drop-shadow-2xl uppercase">{featured.title || featured.name}</h1>
+                            <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white mb-6 tracking-tighter leading-[0.85] drop-shadow-2xl uppercase italic">{featured.title || featured.name}</h1>
 
-                            <div className="flex items-center gap-4 md:gap-6 text-[8px] md:text-[10px] font-black uppercase tracking-widest mb-6 md:mb-10 flex-wrap">
-                                <div className="flex items-center gap-2 bg-primary/20 text-primary border border-primary/20 px-2 py-0.5 rounded-lg">
+                            <div className="flex items-center gap-6 text-[10px] font-black uppercase tracking-[0.3em] mb-12 flex-wrap opacity-60">
+                                <div className="flex items-center gap-2 text-primary">
                                     <span className="text-xs">★</span>
                                     <span>{featured.vote_average?.toFixed(1)}</span>
                                 </div>
-                                <span className="text-white/20">•</span>
-                                <span className="text-textMuted/80">{(featured.release_date || featured.first_air_date || '').slice(0, 4)}</span>
-                                <span className="text-white/20">•</span>
-                                <span className="text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-lg">{featured.media_type}</span>
+                                <span className="text-white/20">/</span>
+                                <span className="text-white">{(featured.release_date || featured.first_air_date || '').slice(0, 4)}</span>
+                                <span className="text-white/20">/</span>
+                                <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-lg">{featured.media_type}</span>
                             </div>
 
-                            <p className="text-textMuted mb-8 md:mb-12 line-clamp-2 leading-relaxed text-xs md:text-lg md:w-2/3 opacity-80">
+                            <p className="text-textMuted mb-16 line-clamp-3 leading-relaxed text-sm md:text-xl md:w-2/3 opacity-80 tracking-tight font-medium">
                                 {featured.overview}
                             </p>
 
-                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-bold py-3 md:py-4.5 px-8 md:px-12 rounded-xl md:rounded-2xl shadow-xl shadow-primary/10 hover:bg-primaryDark transition-all flex items-center justify-center gap-3 text-[13px] md:text-[14px]">
-                                    <Play size={18} fill="currentColor" /> Watch Now
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-6">
+                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-primary text-background font-black py-5 md:py-6 px-10 md:px-16 rounded-[24px] shadow-[0_20px_40px_rgba(0,224,84,0.2)] hover:bg-primaryDark transition-all flex items-center justify-center gap-4 text-[12px] uppercase tracking-widest active:scale-95">
+                                    <Play size={20} fill="currentColor" /> Watch Now
                                 </Link>
-                                <button className="bg-white/5 backdrop-blur-xl text-white font-black py-3 md:py-4.5 px-8 md:px-12 rounded-xl md:rounded-2xl border border-white/10 hover:bg-white/10 transition-all text-xs md:text-sm">
-                                    Add to My List
+                                <button className="bg-white/5 backdrop-blur-3xl text-white font-black py-5 md:py-6 px-10 md:px-16 rounded-[24px] border border-white/10 hover:bg-white/10 transition-all text-[12px] uppercase tracking-widest active:scale-95">
+                                    + Watchlist
                                 </button>
+                            </div>
+                        </div>
+
+                        {/* Premium Tag Overlay */}
+                        <div className="absolute top-12 right-12 hidden md:block">
+                            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-2xl backdrop-blur-xl">
+                                <div className="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_10px_#00E054]"></div>
+                                <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.3em]">PRM-88219</span>
                             </div>
                         </div>
                     </div>
                 </div>
             ) : (
-                <div className="px-4 md:px-8 mb-16 w-full max-w-[1600px] mx-auto mt-4 md:mt-6">
-                    <div className="h-[60vh] md:h-[75vh] rounded-[32px] md:rounded-[40px] bg-card/50 border border-white/5 animate-pulse"></div>
+                <div className="px-0 md:px-8 mb-20 w-full max-w-[1600px] mx-auto sm:mt-4 md:mt-8">
+                    <div className="h-[75vh] md:h-[85vh] rounded-none md:rounded-[48px] bg-card/50 border border-white/5 animate-pulse"></div>
                 </div>
             )}
 
             {/* Continue Watching */}
             {history && history.length > 0 && (
-                <div className="mb-14 px-8 max-w-[1600px] mx-auto">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="w-1.5 h-6 bg-accent rounded-full shadow-[0_0_12px_rgba(239,68,68,0.5)]"></div>
-                        <h2 className="text-2xl font-bold text-white tracking-tight uppercase">Continue Watching</h2>
+                <div className="mb-20 px-8 max-w-[1600px] mx-auto">
+                    <div className="flex items-center gap-4 mb-8">
+                        <div className="w-1.5 h-10 bg-accent rounded-full shadow-[0_0_20px_rgba(239,68,68,0.4)]"></div>
+                        <h2 className="text-3xl font-black text-white tracking-tighter uppercase italic">Resume Stream</h2>
                     </div>
 
-                    <div className="flex overflow-x-auto gap-5 pb-6 scrollbar-hide snap-x">
+                    <div className="flex overflow-x-auto gap-6 pb-10 scrollbar-hide snap-x -mx-8 px-8 md:mx-0 md:px-0">
                         {history.map((item, idx) => (
-                            <div key={`history-${item.id}-${idx}`} className="snap-start w-40 sm:w-48 lg:w-56 flex-shrink-0 relative">
+                            <div key={`history-${item.id}-${idx}`} className="snap-start w-44 sm:w-56 lg:w-64 flex-shrink-0 relative transition-transform duration-500 hover:scale-105">
                                 <MovieCard item={item} type={item.media_type} />
                             </div>
                         ))}
@@ -128,9 +135,10 @@ export default function Home() {
                 </div>
             )}
 
-            <Row title="Trending Movies" fetchUrl="/trending/movie/day" type="movie" />
-            <Row title="Trending Shows" fetchUrl="/trending/tv/day" type="tv" />
-            <Row title="Top Rated Movies" fetchUrl="/movie/top_rated" type="movie" />
+            <Row title="Trending Cinema" fetchUrl="/trending/movie/day" type="movie" />
+            <Row title="Direct TV" fetchUrl="/trending/tv/day" type="tv" />
+            <Row title="Classics" fetchUrl="/movie/top_rated" type="movie" />
         </div>
     );
 }
+

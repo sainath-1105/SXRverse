@@ -95,34 +95,34 @@ export default function Sidebar({ isOpen, className }) {
             </div>
 
             {/* Bottom Status */}
-            <div className="p-6 border-t border-white/5 bg-gradient-to-t from-black/50 to-transparent">
+            <div className="p-6 border-t border-white/5 bg-[#020308]">
                 {user ? (
-                    <div
-                        onClick={() => navigate('/profile')}
-                        className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.06] hover:border-white/10 transition-all group"
-                    >
-                        <div className="flex items-center gap-3">
-                            <ProfileAvatar user={user} size="md" />
+                    <div className="flex flex-col gap-3">
+                        <div
+                            onClick={() => navigate('/profile')}
+                            className="bg-white/5 border border-white/5 p-4 rounded-3xl flex items-center gap-3 hover:bg-white/10 transition-all cursor-pointer group shadow-2xl relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 w-12 h-12 bg-primary/5 blur-2xl rounded-full"></div>
+                            <ProfileAvatar user={user} size="md" className="group-hover:scale-105 transition-transform border border-white/5" />
                             <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-white truncate group-hover:text-primary transition-colors">{user.name}</p>
-                                {user.slogan ? (
-                                    <p className="text-[9px] font-medium text-textMuted uppercase tracking-wider mt-0.5 opacity-60 truncate">{user.slogan}</p>
-                                ) : (
-                                    <p className="text-[9px] font-medium text-primary uppercase tracking-wider mt-0.5 opacity-80">Edit Profile</p>
-                                )}
+                                <p className="text-[11px] font-black text-white truncate group-hover:text-primary transition-colors uppercase tracking-tight">{user.name}</p>
+                                <div className="flex items-center gap-1.5 mt-1">
+                                    <span className="text-[7px] font-black text-primary uppercase tracking-[0.2em] px-2 py-0.5 bg-primary/10 rounded-md border border-primary/20">PREMIUM</span>
+                                    <span className="text-[7px] font-bold text-white/30 uppercase tracking-widest">#1105</span>
+                                </div>
                             </div>
-                            <button
-                                onClick={(e) => { e.stopPropagation(); logout(); }}
-                                className="text-textMuted hover:text-red-500 transition-colors p-2"
-                            >
-                                <LogOut size={18} />
-                            </button>
                         </div>
+                        <button
+                            onClick={logout}
+                            className="flex items-center justify-center gap-3 w-full py-4 rounded-2xl bg-red-500/5 text-red-500 hover:bg-red-500 hover:text-white transition-all text-[9px] font-black uppercase tracking-widest border border-red-500/10 group active:scale-95"
+                        >
+                            <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" /> Sign Out
+                        </button>
                     </div>
                 ) : (
                     <Link
                         to="/auth"
-                        className="w-full py-4 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-background rounded-2xl transition-all font-bold text-sm flex items-center justify-center gap-2 shadow-xl shadow-primary/10 active:scale-95"
+                        className="w-full flex items-center justify-center gap-3 py-5 bg-primary hover:bg-primaryDark text-background rounded-3xl font-black text-[11px] uppercase tracking-widest transition shadow-lg shadow-primary/20 active:scale-95"
                     >
                         Sign In
                     </Link>
