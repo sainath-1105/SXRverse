@@ -3,10 +3,10 @@ services:
     name: sxrverse-server
     env: node
     rootDir: server
-    buildCommand: npm install
+    buildCommand: npm install --build-from-source
     startCommand: node index.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 3001
+      - key: NODE_VERSION
+        value: 20.19.0
