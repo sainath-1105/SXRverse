@@ -2,9 +2,10 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
-const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 
@@ -12,24 +13,34 @@ const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-cineb-key-1234';
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-sxrverse-key-1234';
 
+// ── Pure-JS JSON "Database" (no native deps) ──────────────────────────────────
+const DB_PATH = path.join(__dirname, 'users.json');
 
-// Setup SQLite DB
-const db = new sqlite3.Database('./users.db', (err) => {
-    if (err) console.error('Database connection error:', err);
-    else {
-        console.log('Connected to SQLite database.');
-        db.run(`CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )`);
-    }
-});
+let users = [];
+if (fs.existsSync(DB_PATH)) {
+    try { users = JSON.parse(fs.readFileSync(DB_PATH, 'utf8')); }
+    catch (e) { users = []; }
+}
 
-// Auth Routes
+const saveUsers = () => {
+    fs.writeFileSync(DB_PATH, JSON.stringify(users, null, 2));
+};
+
+const findByEmail = (email) => users.find(u => u.email === email);
+
+const createUser = (name, email, hashedPassword) => {
+    const id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+    const user = { id, name, email, password: hashedPassword };
+    users.push(user);
+    saveUsers();
+    return user;
+};
+
+console.log(`SXRverse DB loaded — ${users.length} users.`);
+
+// ── Auth Routes ───────────────────────────────────────────────────────────────
 app.post('/api/auth/signup', async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -38,30 +49,23 @@ app.post('/api/auth/signup', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
 
-        // Check if user already exists
-        db.get('SELECT email FROM users WHERE email = ?', [email], async (err, row) => {
-            if (err) return res.status(500).json({ error: 'Database error' });
-            if (row) return res.status(400).json({ error: 'Email already exists' });
+        if (findByEmail(email)) {
+            return res.status(400).json({ error: 'Email already exists' });
+        }
 
-            // Hash password and save
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+        const user = createUser(name, email, hashedPassword);
 
-            const stmt = db.prepare('INSERT INTO users (name, email, password) VALUES (?, ?, ?)');
-            stmt.run([name, email, hashedPassword], function (err) {
-                if (err) return res.status(500).json({ error: 'Failed to create user' });
-
-                const token = jwt.sign({ id: this.lastID }, JWT_SECRET, { expiresIn: '7d' });
-                res.status(201).json({ user: { id: this.lastID, name, email }, token });
-            });
-            stmt.finalize();
-        });
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+        res.status(201).json({ user: { id: user.id, name, email }, token });
     } catch (err) {
+        console.error('Signup error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-app.post('/api/auth/login', (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -69,22 +73,21 @@ app.post('/api/auth/login', (req, res) => {
             return res.status(400).json({ error: 'Email and password are required' });
         }
 
-        db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
-            if (err) return res.status(500).json({ error: 'Database error' });
-            if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+        const user = findByEmail(email);
+        if (!user) return res.status(400).json({ error: 'Invalid credentials' });
 
-            const validPassword = await bcrypt.compare(password, user.password);
-            if (!validPassword) return res.status(400).json({ error: 'Invalid credentials' });
+        const validPassword = await bcrypt.compare(password, user.password);
+        if (!validPassword) return res.status(400).json({ error: 'Invalid credentials' });
 
-            const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
-            res.json({ user: { id: user.id, name: user.name, email: user.email }, token });
-        });
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+        res.json({ user: { id: user.id, name: user.name, email: user.email }, token });
     } catch (err) {
+        console.error('Login error:', err);
         res.status(500).json({ error: 'Server error' });
     }
 });
 
-// Watch Party Rooms Tracker
+// ── Watch Party Rooms ─────────────────────────────────────────────────────────
 const activeRooms = {};
 
 app.post('/api/rooms', (req, res) => {
@@ -100,22 +103,27 @@ app.post('/api/rooms', (req, res) => {
         hostName: host,
         password: password || '',
         viewers: 0,
-        users: {}, // { socketId: username }
+        users: {},
         media: media,
         playing: media || null
     };
 
-    // Broadcast updated rooms list stripped of passwords
-    const publicRooms = Object.values(activeRooms).map(r => ({ id: r.id, roomName: r.roomName, host: r.hostName, hasPassword: !!r.password, viewers: r.viewers, media: r.media }));
+    const publicRooms = Object.values(activeRooms).map(r => ({
+        id: r.id, roomName: r.roomName, host: r.hostName,
+        hasPassword: !!r.password, viewers: r.viewers, media: r.media
+    }));
     io.emit('rooms_updated', publicRooms);
 
-    // Reaper for unjoined rooms: If no one joins within 60 seconds, purge it.
+    // Purge unjoined rooms after 60 seconds
     setTimeout(() => {
         if (activeRooms[roomId] && activeRooms[roomId].viewers <= 0) {
             console.log(`Self-purging unjoined room: ${roomId}`);
             delete activeRooms[roomId];
-            const updatedRooms = Object.values(activeRooms).map(r => ({ id: r.id, roomName: r.roomName, host: r.hostName, hasPassword: !!r.password, viewers: r.viewers, media: r.media }));
-            io.emit('rooms_updated', updatedRooms);
+            const updated = Object.values(activeRooms).map(r => ({
+                id: r.id, roomName: r.roomName, host: r.hostName,
+                hasPassword: !!r.password, viewers: r.viewers, media: r.media
+            }));
+            io.emit('rooms_updated', updated);
         }
     }, 60000);
 
@@ -124,12 +132,8 @@ app.post('/api/rooms', (req, res) => {
 
 app.get('/api/rooms', (req, res) => {
     const publicRooms = Object.values(activeRooms).map(r => ({
-        id: r.id,
-        roomName: r.roomName,
-        host: r.host,
-        hasPassword: !!r.password,
-        viewers: r.viewers,
-        media: r.media
+        id: r.id, roomName: r.roomName, host: r.hostName,
+        hasPassword: !!r.password, viewers: r.viewers, media: r.media
     }));
     res.json(publicRooms);
 });
@@ -143,13 +147,11 @@ app.post('/api/rooms/verify', (req, res) => {
     res.json({ success: true });
 });
 
+// ── Socket.io ─────────────────────────────────────────────────────────────────
 const server = http.createServer(app);
 
 const io = new Server(server, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    }
+    cors: { origin: CORS_ORIGIN, methods: ['GET', 'POST'] }
 });
 
 io.on('connection', (socket) => {
@@ -159,30 +161,28 @@ io.on('connection', (socket) => {
         socket.join(data.room);
         socket.roomId = data.room;
         socket.username = data.username || `Guest_${socket.id.substring(0, 4)}`;
-        console.log(`User ${socket.username} joined room: ${data.room}`);
+        console.log(`${socket.username} joined room: ${data.room}`);
 
         if (activeRooms[data.room]) {
             activeRooms[data.room].viewers += 1;
             activeRooms[data.room].users[socket.id] = socket.username;
 
-            const publicRooms = Object.values(activeRooms).map(r => ({ id: r.id, roomName: r.roomName, host: r.hostName, hasPassword: !!r.password, viewers: r.viewers, media: r.media }));
+            const publicRooms = Object.values(activeRooms).map(r => ({
+                id: r.id, roomName: r.roomName, host: r.hostName,
+                hasPassword: !!r.password, viewers: r.viewers, media: r.media
+            }));
             io.emit('rooms_updated', publicRooms);
 
-            // Sync video if one is playing
             if (activeRooms[data.room].playing) {
                 socket.emit('video_sync', activeRooms[data.room].playing);
             }
 
-            // Update user list in room
             const roomUsers = Object.entries(activeRooms[data.room].users).map(([id, name]) => ({
-                id,
-                username: name,
-                isHost: name === activeRooms[data.room].hostName
+                id, username: name, isHost: name === activeRooms[data.room].hostName
             }));
             io.to(data.room).emit('room_users', roomUsers);
         }
 
-        // Announce to others in room
         socket.to(data.room).emit('receive_message', {
             author: 'System',
             message: `${socket.username} has joined the Watch Party! 🎉`,
@@ -194,7 +194,6 @@ io.on('connection', (socket) => {
         const room = activeRooms[data.room];
         if (room && socket.username === room.hostName) {
             io.to(data.userId).emit('kicked');
-            console.log(`Host kicked user ${data.userId} from room ${data.room}`);
         }
     });
 
@@ -202,7 +201,6 @@ io.on('connection', (socket) => {
         socket.to(data.room).emit('receive_message', data);
     });
 
-    // Sync basic actions - HOST ONLY
     socket.on('sync_play', (data) => {
         const room = activeRooms[data.room];
         if (room && socket.username === room.hostName) {
@@ -217,7 +215,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // Host Video Starter Relay - HOST ONLY
     socket.on('start_video', (data) => {
         const room = activeRooms[data.room];
         if (room && socket.username === room.hostName) {
@@ -236,32 +233,26 @@ io.on('connection', (socket) => {
             delete room.users[socket.id];
 
             if (room.viewers <= 0) {
-                console.log(`Room ${socket.roomId} is empty. Deleting immediately.`);
+                console.log(`Room ${socket.roomId} is empty. Deleting.`);
                 delete activeRooms[socket.roomId];
             } else {
-                // Update user list for remaining users
                 const roomUsers = Object.entries(room.users).map(([id, name]) => ({
-                    id,
-                    username: name,
-                    isHost: name === room.hostName
+                    id, username: name, isHost: name === room.hostName
                 }));
                 io.to(socket.roomId).emit('room_users', roomUsers);
             }
 
             const publicRooms = Object.values(activeRooms).map(r => ({
-                id: r.id,
-                roomName: r.roomName,
-                host: r.hostName,
-                hasPassword: !!r.password,
-                viewers: r.viewers,
-                media: r.media
+                id: r.id, roomName: r.roomName, host: r.hostName,
+                hasPassword: !!r.password, viewers: r.viewers, media: r.media
             }));
             io.emit('rooms_updated', publicRooms);
         }
     });
 });
 
+// ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`SXRverse Socket Server running on port ${PORT}`);
+    console.log(`SXRverse server running on port ${PORT}`);
 });
