@@ -83,7 +83,7 @@ export default function Watch({ explicitType, explicitId }) {
         const wpRoom = sessionStorage.getItem('wp_room');
         const username = sessionStorage.getItem('wp_username') || "Guest";
         if (wpRoom) {
-            const tempSocket = io('http://localhost:3001');
+            const tempSocket = io(import.meta.env.VITE_API_URL);
             tempSocket.on('connect', () => {
                 // We must join the room so the server associates this socket with our username/host status
                 tempSocket.emit('join_room', { room: wpRoom, username });

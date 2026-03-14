@@ -37,14 +37,14 @@ export default function WatchPartyLobby() {
     const { user } = useAuth();
 
     useEffect(() => {
-        socket = io('http://localhost:3001');
+        socket = io(import.meta.env.VITE_API_URL);
 
         socket.on('rooms_updated', (rooms) => {
             setActiveRooms(rooms);
         });
 
         // Initial fetch
-        fetch('http://localhost:3001/api/rooms')
+        fetch(`${import.meta.env.VITE_API_URL}/api/rooms`)
             .then(res => res.json())
             .then(data => setActiveRooms(data))
             .catch(console.error);
@@ -57,7 +57,7 @@ export default function WatchPartyLobby() {
     };
 
     const handleRefresh = () => {
-        fetch('http://localhost:3001/api/rooms')
+        fetch(`${import.meta.env.VITE_API_URL}/api/rooms`)
             .then(res => res.json())
             .then(data => setActiveRooms(data))
             .catch(console.error);
@@ -105,7 +105,7 @@ export default function WatchPartyLobby() {
         };
 
         try {
-            const res = await fetch('http://localhost:3001/api/rooms', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -136,7 +136,7 @@ export default function WatchPartyLobby() {
         const finalUsername = getFinalUsername();
 
         try {
-            const res = await fetch('http://localhost:3001/api/rooms/verify', {
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/rooms/verify`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ room: code.toUpperCase(), password: pass })

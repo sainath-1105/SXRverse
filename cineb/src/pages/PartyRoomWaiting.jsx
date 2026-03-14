@@ -21,7 +21,7 @@ export default function PartyRoomWaiting() {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        socket = io('http://localhost:3001');
+        socket = io(import.meta.env.VITE_API_URL);
 
         socket.on('connect', () => {
             socket.emit('join_room', { room: roomCode, username });

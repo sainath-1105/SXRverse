@@ -7,10 +7,13 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
-app.use(cors());
+
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
-const JWT_SECRET = 'super-secret-cineb-key-1234'; // In production, move.
+const JWT_SECRET = process.env.JWT_SECRET || 'super-secret-cineb-key-1234';
+
 
 // Setup SQLite DB
 const db = new sqlite3.Database('./users.db', (err) => {
@@ -258,7 +261,7 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-    console.log(`WatchParty Socket Server running on port ${PORT}`);
+    console.log(`SXRverse Socket Server running on port ${PORT}`);
 });

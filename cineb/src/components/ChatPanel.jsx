@@ -12,7 +12,7 @@ export default function ChatPanel({ room, onClose }) {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        socket = io('http://localhost:3001');
+        socket = io(import.meta.env.VITE_API_URL);
 
         socket.on('receive_message', (data) => {
             setMessages((list) => [...list, data]);
