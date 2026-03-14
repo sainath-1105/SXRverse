@@ -242,7 +242,7 @@ io.on('connection', (socket) => {
 
     socket.on('sync_play', (data) => {
         const room = activeRooms[data.room];
-        if (room && socket.username === room.hostName) {
+        if (room && socket.username?.toLowerCase() === room.hostName?.toLowerCase()) {
             room.currentTime = data.currentTime || 0;
             room.isPlaying = true;
             room.lastTimeUpdate = Date.now();
@@ -252,7 +252,7 @@ io.on('connection', (socket) => {
 
     socket.on('sync_pause', (data) => {
         const room = activeRooms[data.room];
-        if (room && socket.username === room.hostName) {
+        if (room && socket.username?.toLowerCase() === room.hostName?.toLowerCase()) {
             room.currentTime = data.currentTime || 0;
             room.isPlaying = false;
             room.lastTimeUpdate = Date.now();
@@ -263,16 +263,34 @@ io.on('connection', (socket) => {
     // Host periodically sends time updates to keep server in sync
     socket.on('time_update', (data) => {
         const room = activeRooms[data.room];
-        if (room && socket.username === room.hostName) {
+        if (room && socket.username?.toLowerCase() === room.hostName?.toLowerCase()) {
             room.currentTime = data.currentTime || 0;
             room.isPlaying = data.isPlaying !== false;
             room.lastTimeUpdate = Date.now();
+
+            // Broadcast sync to all viewers
+            socket.to(data.room).emit('video_sync', {
+                type: room.playing?.type,
+                id: room.playing?.id,
+                currentTime: room.currentTime,
+                isPlaying: room.isPlaying
+            });
+        }
+    });
+
+    socket.on('kick_user', (data) => {
+        const room = activeRooms[data.room];
+        if (room && socket.username?.toLowerCase() === room.hostName?.toLowerCase()) {
+            console.log(`Host ${socket.username} is kicking user ${data.userId} from room ${data.room}`);
+            io.to(data.userId).emit('kicked');
+        } else {
+            console.log(`Unauthorized kick attempt by ${socket.username} or room not found`);
         }
     });
 
     socket.on('start_video', (data) => {
         const room = activeRooms[data.room];
-        if (room && socket.username === room.hostName) {
+        if (room && socket.username?.toLowerCase() === room.hostName?.toLowerCase()) {
             console.log(`Host starting video ${data.type} ${data.id} in room ${data.room}`);
             room.playing = { type: data.type, id: data.id };
             room.currentTime = 0;

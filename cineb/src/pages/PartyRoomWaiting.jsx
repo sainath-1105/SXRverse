@@ -15,6 +15,8 @@ export default function PartyRoomWaiting() {
     const [currentMsg, setCurrentMsg] = useState("");
     const [viewers, setViewers] = useState([]);
     const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'info'
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const lastVideoRef = useRef(null); // format: "type-id"
 
     const isHost = sessionStorage.getItem('wp_isHost') === 'true';
     const username = sessionStorage.getItem('wp_username') || "Guest";
@@ -29,11 +31,16 @@ export default function PartyRoomWaiting() {
 
         socket.on('video_sync', (data) => {
             if (data.type && data.id) {
-                setPlayingVideo({
-                    type: data.type,
-                    id: data.id,
-                    currentTime: data.currentTime || 0
-                });
+                const videoKey = `${data.type}-${data.id}`;
+                // Only auto-sync if it's a new video or if it's the first sync
+                if (lastVideoRef.current !== videoKey) {
+                    lastVideoRef.current = videoKey;
+                    setPlayingVideo({
+                        type: data.type,
+                        id: data.id,
+                        currentTime: data.currentTime || 0
+                    });
+                }
             }
         });
 
@@ -83,13 +90,17 @@ export default function PartyRoomWaiting() {
         alert("Session frequency copied to clipboard! Share it with your squad.");
     };
 
+    const forceSync = () => {
+        // Clear lastVideoRef so the next video_sync event (coming every 10s) will trigger a reload
+        lastVideoRef.current = null;
+        alert("Syncing playback with host...");
+    };
+
     const handleBack = () => {
         sessionStorage.removeItem('wp_room');
         sessionStorage.removeItem('wp_isHost');
         navigate('/party');
     };
-
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
         <div className="flex flex-col h-screen bg-background text-white overflow-hidden">
@@ -112,6 +123,14 @@ export default function PartyRoomWaiting() {
                 </div>
 
                 <div className="flex items-center gap-2">
+                    {!isHost && playingVideo && (
+                        <button
+                            onClick={forceSync}
+                            className="flex items-center gap-2 px-3 py-2 bg-accent/10 hover:bg-accent/20 rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition border border-accent/20 text-accent"
+                        >
+                            <Check size={12} /> Sync
+                        </button>
+                    )}
                     <button
                         onClick={handleInvite}
                         className="flex items-center gap-2 px-3 py-2 bg-white/5 hover:bg-white/10 rounded-xl text-[8px] md:text-[10px] font-black uppercase tracking-widest transition border border-white/5 text-textMuted hover:text-white"
@@ -125,7 +144,7 @@ export default function PartyRoomWaiting() {
                     )}
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        className={`md:hidden p-2 rounded-xl transition ${isSidebarOpen ? 'bg-primary text-background' : 'bg-white/5 text-textMuted'}`}
+                        className={`p-2 rounded-xl transition ${isSidebarOpen ? 'bg-primary text-background' : 'bg-white/5 text-textMuted'}`}
                     >
                         <MessageCircle size={18} />
                     </button>
@@ -136,8 +155,19 @@ export default function PartyRoomWaiting() {
                 {/* Main Content Area: Player or Waiting */}
                 <div className="flex-1 flex flex-col min-w-0 bg-background relative">
                     {playingVideo ? (
-                        <div className="flex-1 bg-black flex flex-col overflow-hidden">
+                        <div className="flex-1 bg-black flex flex-col overflow-hidden relative">
                             <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} />
+
+                            {/* Floating Overlay Toggle when Sidebar is closed */}
+                            {!isSidebarOpen && (
+                                <button
+                                    onClick={() => setIsSidebarOpen(true)}
+                                    className="absolute bottom-6 right-6 z-30 w-12 h-12 bg-primary text-background rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all cursor-pointer"
+                                    title="Open Chat"
+                                >
+                                    <MessageCircle size={20} />
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-background overflow-y-auto">
@@ -170,9 +200,10 @@ export default function PartyRoomWaiting() {
 
                 {/* Sidebar: Chat & Participants */}
                 <div className={`
-                    absolute inset-y-0 right-0 z-20 w-[85vw] max-w-[320px] md:w-80 border-l border-white/10 bg-card/95 backdrop-blur-2xl flex flex-col shrink-0
-                    transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 shadow-[-20px_0_40px_rgba(0,0,0,0.8)] md:shadow-none
-                    ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
+                    absolute inset-y-0 right-0 z-40 w-[85vw] max-w-[320px] md:w-80 border-l border-white/10 bg-card/95 backdrop-blur-3xl flex flex-col shrink-0
+                    transform transition-all duration-300 ease-in-out shadow-[-20px_0_40px_rgba(0,0,0,0.8)]
+                    ${isSidebarOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none md:w-0 md:opacity-0 md:border-none md:translate-x-0'}
+                    md:relative
                 `}>
                     <div className="p-4 flex gap-2 border-b border-white/5">
                         <button
