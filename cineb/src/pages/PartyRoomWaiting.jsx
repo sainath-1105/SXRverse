@@ -170,8 +170,8 @@ export default function PartyRoomWaiting() {
 
                 {/* Sidebar: Chat & Participants */}
                 <div className={`
-                    absolute inset-y-0 right-0 z-10 w-full sm:w-80 border-l border-white/5 bg-background flex flex-col shrink-0
-                    transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0
+                    absolute inset-y-0 right-0 z-20 w-[85vw] max-w-[320px] md:w-80 border-l border-white/10 bg-card/95 backdrop-blur-2xl flex flex-col shrink-0
+                    transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 shadow-[-20px_0_40px_rgba(0,0,0,0.8)] md:shadow-none
                     ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'}
                 `}>
                     <div className="p-4 flex gap-2 border-b border-white/5">

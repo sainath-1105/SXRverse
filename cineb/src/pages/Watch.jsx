@@ -184,17 +184,19 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
         <div className="w-full h-full min-h-screen bg-background relative flex flex-col items-center">
             {explicitType ? (
                 // --- Watch Party Quick Render (Bypasses detailed UI) ---
-                <div className="w-full h-full absolute inset-0 flex items-center justify-center">
-                    <div className="absolute inset-0 flex items-center justify-center bg-background">
-                        <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                <div className="w-full h-full flex flex-col items-center justify-center p-4 md:p-8 flex-1">
+                    <div className="w-full max-w-5xl aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl border border-white/10 relative">
+                        <div className="absolute inset-0 flex items-center justify-center bg-background pointer-events-none">
+                            <div className="w-12 h-12 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+                        </div>
+                        <iframe
+                            src={partyFinalUrl}
+                            className="w-full h-full border-none relative z-10"
+                            allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
+                            allowFullScreen
+                            title="Video Player"
+                        ></iframe>
                     </div>
-                    <iframe
-                        src={partyFinalUrl}
-                        className="w-full h-full border-none relative z-10"
-                        allow="autoplay; fullscreen; encrypted-media; picture-in-picture"
-                        allowFullScreen
-                        title="Video Player"
-                    ></iframe>
                 </div>
             ) : !detail ? (
                 // --- Standard Mode: Loading State ---
