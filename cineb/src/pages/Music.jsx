@@ -23,6 +23,9 @@ export default function Music() {
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState('');
+  const [addSongTarget, setAddSongTarget] = useState(null);
 
   const BROWSE_CATEGORIES = [
     { name: "Pop", gradient: "from-violet-600 to-indigo-800" },
@@ -46,32 +49,12 @@ export default function Music() {
   // Reusable Add-to-Playlist Menu
   const AddMenu = ({ song, dark }) => (
     <div className={`absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-all duration-200 drop-shadow-lg`} onClick={e => e.stopPropagation()}>
-      <div className="relative cursor-pointer">
-        <div className={`w-7 h-7 ${dark ? 'bg-black/70' : 'bg-[#1db954]'} rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform pointer-events-none shadow-lg`}>
-          <Plus size={14} strokeWidth={3} />
-        </div>
-        <select
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          value=""
-          onChange={(e) => {
-            e.stopPropagation();
-            if (e.target.value) {
-              if (e.target.value === 'like') toggleLike(song);
-              else toggleSongInPlaylist(e.target.value, song);
-              e.target.value = '';
-            }
-          }}
-        >
-          <option value="" disabled>Add to...</option>
-          <option value="like">{isLiked(song.id) ? '♥ Remove from Liked' : '♥ Add to Liked'}</option>
-          {playlists.length > 0 && <optgroup label="My Playlists">
-            {playlists.map(p => {
-              const hasSong = p.songs.some(s => s.id === song.id);
-              return <option key={p.id} value={p.id}>{hasSong ? '✗ Remove from' : '+ Add to'} {p.name}</option>;
-            })}
-          </optgroup>}
-        </select>
-      </div>
+      <button 
+        onClick={(e) => { e.stopPropagation(); setAddSongTarget(song); }}
+        className={`w-7 h-7 ${dark ? 'bg-black/70' : 'bg-[#1db954]'} rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform shadow-lg`}
+      >
+        <Plus size={14} strokeWidth={3} />
+      </button>
     </div>
   );
 
@@ -347,10 +330,7 @@ export default function Music() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl md:text-2xl font-bold text-white">Your Playlists</h2>
                 <button 
-                  onClick={() => {
-                    const name = prompt("Enter a name for your new playlist:");
-                    if (name) createPlaylist(name);
-                  }}
+                  onClick={() => setShowCreateModal(true)}
                   className="flex items-center gap-2 text-[#1db954] hover:text-white text-sm font-bold transition-colors"
                 >
                   <Plus size={16} /> Create
@@ -446,6 +426,104 @@ export default function Music() {
           </>
         )}
       </div>
+
+      {/* Add to Playlist Modal */}
+      {addSongTarget && (
+        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setAddSongTarget(null)}>
+          <div className="bg-[#121212] border border-white/10 p-5 md:p-6 rounded-2xl w-full max-w-sm shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col max-h-[80vh] animate-entrance" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center gap-3 mb-5 border-b border-white/5 pb-4">
+              <img src={getBestImage(addSongTarget.image)} className="w-12 h-12 rounded object-cover" alt="" />
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-white truncate">Add to Playlist</h3>
+                <p className="text-xs text-white/40 truncate">{addSongTarget.name}</p>
+              </div>
+            </div>
+            
+            <div className="overflow-y-auto custom-scrollbar space-y-2 mb-4">
+              <button 
+                onClick={() => { toggleLike(addSongTarget); setAddSongTarget(null); }}
+                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-left group"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#450af5] to-[#e8115b] flex items-center justify-center shrink-0">
+                  <Heart size={18} fill="white" className="text-white" />
+                </div>
+                <span className="font-bold text-sm text-white">Liked Songs</span>
+                {isLiked(addSongTarget.id) && <span className="ml-auto text-xs text-[#1db954] font-bold">Added</span>}
+              </button>
+              
+              {playlists.map(p => {
+                const hasSong = p.songs.some(s => s.id === addSongTarget.id);
+                return (
+                  <button 
+                    key={p.id}
+                    onClick={() => { toggleSongInPlaylist(p.id, addSongTarget); setAddSongTarget(null); }}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-colors text-left group"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0">
+                      <ListMusic size={18} className="text-white/40" />
+                    </div>
+                    <span className="font-bold text-sm text-white truncate">{p.name}</span>
+                    {hasSong && <span className="ml-auto text-xs text-[#1db954] font-bold">Added</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button 
+              onClick={() => { setAddSongTarget(null); setShowCreateModal(true); }}
+              className="w-full py-3.5 rounded-xl border border-white/10 text-white font-bold text-sm hover:bg-white/5 transition-colors flex items-center justify-center gap-2"
+            >
+              <Plus size={16} /> New Playlist
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Create Playlist Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setShowCreateModal(false)}>
+          <div className="bg-[#121212] border border-white/10 p-6 rounded-2xl w-full max-w-sm shadow-[0_0_50px_rgba(0,0,0,0.5)] animate-entrance" onClick={e => e.stopPropagation()}>
+            <h3 className="text-xl font-bold text-white mb-4">Create Playlist</h3>
+            <input
+              type="text"
+              placeholder="Playlist name (e.g. My Favorites)"
+              value={newPlaylistName}
+              onChange={e => setNewPlaylistName(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white outline-none focus:border-[#1db954]/50 mb-5 font-medium placeholder:text-white/30 text-sm"
+              autoFocus
+              onKeyDown={e => {
+                if (e.key === 'Enter' && newPlaylistName.trim()) {
+                  createPlaylist(newPlaylistName.trim());
+                  setShowCreateModal(false);
+                  setNewPlaylistName('');
+                }
+              }}
+            />
+            <div className="flex gap-3 justify-end">
+              <button 
+                onClick={() => { setShowCreateModal(false); setNewPlaylistName(''); }}
+                className="px-4 py-2 text-sm font-bold text-white/50 hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => {
+                  if (newPlaylistName.trim()) {
+                    createPlaylist(newPlaylistName.trim());
+                    setShowCreateModal(false);
+                    setNewPlaylistName('');
+                  }
+                }}
+                className={`px-6 py-2 bg-[#1db954] text-black text-sm font-bold rounded-full transition-all ${newPlaylistName.trim() ? 'hover:scale-105 active:scale-95' : 'opacity-50 cursor-not-allowed'}`}
+                disabled={!newPlaylistName.trim()}
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
