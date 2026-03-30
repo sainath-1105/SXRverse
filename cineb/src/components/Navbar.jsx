@@ -104,12 +104,12 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                                     ref={mobileInputRef}
                                     type="text"
                                     placeholder="Search movies, shows, anime..."
-                                    className="flex-1 bg-white/10 border border-white/10 rounded-lg text-sm px-4 py-2.5 outline-none focus:border-[#ffcc00]/50 text-white placeholder-white/30"
+                                    className="flex-1 bg-white/10 border border-white/10 rounded-lg text-sm px-4 py-2.5 outline-none focus:border-[#1db954]/50 text-white placeholder-white/30"
                                     value={query}
                                     onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
                                     autoFocus
                                 />
-                                <button type="submit" className="shrink-0 px-4 py-2 bg-[#ffcc00] text-black rounded-lg text-xs font-black uppercase">Go</button>
+                                <button type="submit" className="shrink-0 px-4 py-2 bg-[#1db954] text-black rounded-lg text-xs font-black uppercase">Go</button>
                             </form>
                         </div>
 
@@ -173,8 +173,8 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                         {/* Desktop: Logo (only when sidebar is hidden) */}
                         {isSidebarHidden && (
                             <Link to="/" className="group hidden xl:flex flex-col items-start shrink-0">
-                                <h1 className="text-xl font-black italic tracking-tighter text-white uppercase leading-none group-hover:text-[#ffcc00] transition-colors">SXR VERSE</h1>
-                                <span className="text-[6px] font-black tracking-[0.4em] text-[#ffcc00] uppercase mt-0.5 opacity-60">Version 4.2</span>
+                                <h1 className="text-xl font-black italic tracking-tighter text-white uppercase leading-none group-hover:text-[#1db954] transition-colors">SXR VERSE</h1>
+                                <span className="text-[6px] font-black tracking-[0.4em] text-[#1db954] uppercase mt-0.5 opacity-60">Version 4.2</span>
                             </Link>
                         )}
 
@@ -186,9 +186,9 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                                     to={link.path}
                                     className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 ${
                                         isActive(link.path)
-                                            ? 'text-black bg-[#ffcc00]'
+                                            ? 'text-black bg-[#1db954]'
                                             : link.highlight
-                                            ? 'text-[#ffcc00] hover:bg-[#ffcc00]/10'
+                                            ? 'text-[#1db954] hover:bg-[#1db954]/10'
                                             : 'text-white/40 hover:text-white hover:bg-white/5'
                                     }`}
                                 >
@@ -214,11 +214,11 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                                 <input
                                     type="text"
                                     placeholder="SEARCH..."
-                                    className="bg-white/[0.06] border border-white/[0.08] rounded-xl text-[9px] font-black uppercase tracking-[0.2em] pl-9 pr-4 py-2.5 w-40 lg:w-56 xl:w-64 focus:w-72 transition-all duration-500 outline-none focus:border-[#ffcc00]/50 focus:bg-white/[0.08] text-white placeholder-white/20"
+                                    className="bg-white/[0.06] border border-white/[0.08] rounded-xl text-[9px] font-black uppercase tracking-[0.2em] pl-9 pr-4 py-2.5 w-40 lg:w-56 xl:w-64 focus:w-72 transition-all duration-500 outline-none focus:border-[#1db954]/50 focus:bg-white/[0.08] text-white placeholder-white/20"
                                     value={query}
                                     onChange={(e) => { setQuery(e.target.value); setShowSuggestions(true); }}
                                 />
-                                <Search size={12} className="absolute left-3 text-white/20 group-focus-within:text-[#ffcc00] transition-colors" />
+                                <Search size={12} className="absolute left-3 text-white/20 group-focus-within:text-[#1db954] transition-colors" />
                             </form>
 
                             {showSuggestions && query.length > 2 && (suggestions.length > 0 || loading) && (
@@ -237,8 +237,8 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                                                          <img src={getImageUrl(item.poster_path, 'w92')} alt="" className="w-full h-full object-cover" />
                                                     </div>
                                                     <div className="flex-1 min-w-0">
-                                                        <h4 className="text-white text-[11px] font-black uppercase tracking-tight truncate mb-0.5 group-hover:text-[#ffcc00] transition-colors">{item.title || item.name}</h4>
-                                                        <span className="text-[8px] font-black text-[#ffcc00] uppercase tracking-widest">{item.media_type} • {(item.release_date || item.first_air_date || '').slice(0, 4)}</span>
+                                                        <h4 className="text-white text-[11px] font-black uppercase tracking-tight truncate mb-0.5 group-hover:text-[#1db954] transition-colors">{item.title || item.name}</h4>
+                                                        <span className="text-[8px] font-black text-[#1db954] uppercase tracking-widest">{item.media_type} • {(item.release_date || item.first_air_date || '').slice(0, 4)}</span>
                                                     </div>
                                                 </button>
                                             ))}
@@ -249,7 +249,7 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                         </div>
 
                         {/* Bell - desktop only */}
-                        <button className="hidden lg:flex relative p-2.5 text-white/25 hover:text-[#ffcc00] transition-all bg-white/[0.04] rounded-xl hover:bg-[#ffcc00]/10 border border-white/[0.04]">
+                        <button className="hidden lg:flex relative p-2.5 text-white/25 hover:text-[#1db954] transition-all bg-white/[0.04] rounded-xl hover:bg-[#1db954]/10 border border-white/[0.04]">
                             <Bell size={17} />
                             <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#ff4d4d] rounded-full animate-pulse" />
                         </button>
@@ -260,7 +260,7 @@ export default function Navbar({ onMenuClick, isSidebarHidden }) {
                                 <ProfileAvatar user={user} size="sm" />
                             </Link>
                         ) : (
-                            <Link to="/auth" className="hidden md:flex items-center gap-2 bg-[#ffcc00] text-black px-4 py-2 rounded-lg font-black uppercase tracking-widest text-[9px] hover:bg-white transition-all">
+                            <Link to="/auth" className="hidden md:flex items-center gap-2 bg-[#1db954] text-black px-4 py-2 rounded-lg font-black uppercase tracking-widest text-[9px] hover:bg-white transition-all">
                                  <Sparkles size={12} /> Sign In
                             </Link>
                         )}

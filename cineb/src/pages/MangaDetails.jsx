@@ -103,7 +103,7 @@ export default function MangaDetails() {
                                  <div className="h-4 w-[1px] bg-white/10"></div>
                                  <span>Ranked #{detail?.rank || '---'}</span>
                                  <div className="h-4 w-[1px] bg-white/10"></div>
-                                 <span className="text-[#ffcc00]">{detail?.type || 'Node'} archive</span>
+                                 <span className="text-[#1db954]">{detail?.type || 'Node'} archive</span>
                             </div>
 
                         {/* Image 2 Tab Layout */}
@@ -198,7 +198,7 @@ export default function MangaDetails() {
                            <div className="w-1.5 h-6 bg-[#ff4d4d] mb-10"></div>
                            <h3 className="text-[11px] font-black uppercase tracking-[0.5em] text-white/30 mb-12">Manga Information</h3>
                            <div className="space-y-10">
-                                <StatNode label="Consensus Rating" value={`${detail.score} / 10`} icon={<Star size={14} className="text-[#ffcc00]" />} />
+                                <StatNode label="Consensus Rating" value={`${detail.score} / 10`} icon={<Star size={14} className="text-[#1db954]" />} />
                                 <StatNode label="Transmission Status" value={detail.status} icon={<Zap size={14} className="text-[#ff4d4d]" />} />
                                 <StatNode label="Network Popularity" value={`Ranked #${detail.popularity}`} icon={<TrendingNode size={14} />} />
                                 <StatNode label="Publication Node" value={detail.type} icon={<Globe size={14} />} />

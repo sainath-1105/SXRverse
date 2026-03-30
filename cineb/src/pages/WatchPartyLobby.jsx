@@ -18,6 +18,7 @@ export default function WatchPartyLobby() {
     const [username, setUsername] = useState('');
     const [error, setError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [connectionError, setConnectionError] = useState(false);
 
     const [activeRooms, setActiveRooms] = useState([]);
     const [promptRoom, setPromptRoom] = useState(null);
@@ -37,18 +38,28 @@ export default function WatchPartyLobby() {
     const { user } = useAuth();
 
     useEffect(() => {
-        socket = io(import.meta.env.VITE_API_URL);
+        try {
+            socket = io(import.meta.env.VITE_API_URL, {
+                timeout: 5000,
+                reconnectionAttempts: 3,
+            });
 
-        socket.on('rooms_updated', (rooms) => {
-            setActiveRooms(rooms);
-        });
+            socket.on('connect', () => setConnectionError(false));
+            socket.on('connect_error', () => setConnectionError(true));
+
+            socket.on('rooms_updated', (rooms) => {
+                setActiveRooms(rooms);
+            });
+        } catch (err) {
+            setConnectionError(true);
+        }
 
         fetch(`${import.meta.env.VITE_API_URL}/api/rooms`)
             .then(res => res.json())
             .then(data => setActiveRooms(data))
-            .catch(console.error);
+            .catch(() => setConnectionError(true));
 
-        return () => socket.disconnect();
+        return () => { if (socket) socket.disconnect(); };
     }, []);
 
     const getFinalUsername = () => {
@@ -196,7 +207,7 @@ export default function WatchPartyLobby() {
                                     placeholder="Password"
                                     value={joinPassword}
                                     onChange={e => setJoinPassword(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-4 outline-none focus:border-[#ffcc00]/40 text-sm text-white text-center"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-4 outline-none focus:border-[#1db954]/40 text-sm text-white text-center"
                                     autoFocus
                                 />
                                 {passwordError && <p className="text-red-400 text-xs text-center">{passwordError}</p>}
@@ -211,7 +222,7 @@ export default function WatchPartyLobby() {
 
                 {/* Header */}
                 <header className="py-6 md:py-10 mb-6 md:mb-10">
-                    <p className="text-[10px] font-bold text-[#ffcc00] uppercase tracking-widest mb-2">SXR Party Hub</p>
+                    <p className="text-[10px] font-bold text-[#1db954] uppercase tracking-widest mb-2">SXR Party Hub</p>
                     <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-2">
                         Watch Together
                     </h1>
@@ -221,6 +232,7 @@ export default function WatchPartyLobby() {
                     </div>
                     
                     {error && <p className="mt-4 text-red-400 text-sm bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-lg">{error}</p>}
+                    {connectionError && <p className="mt-4 text-amber-400 text-sm bg-amber-500/10 border border-amber-500/20 px-4 py-2 rounded-lg">⚠️ Server is offline. Watch Party requires the backend server at {import.meta.env.VITE_API_URL || 'localhost:3001'}. Rooms will not load.</p>}
                 </header>
 
                 {/* Actions */}
@@ -231,14 +243,14 @@ export default function WatchPartyLobby() {
                             placeholder="Enter room code..." 
                             value={roomCode}
                             onChange={e => setRoomCode(e.target.value)}
-                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none focus:border-[#ffcc00]/40" 
+                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none focus:border-[#1db954]/40" 
                         />
                         <button type="submit" className="shrink-0 px-6 py-3 bg-white/10 border border-white/10 rounded-lg text-sm font-bold text-white hover:bg-white/20 transition active:scale-95">
                             Join
                         </button>
                     </form>
                     <div className="flex gap-2">
-                        <button onClick={handleRefresh} className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-[#ffcc00] transition active:scale-95">
+                        <button onClick={handleRefresh} className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-[#1db954] transition active:scale-95">
                             <RefreshCw size={18} />
                         </button>
                         <button onClick={() => setShowCreateModal(true)} className="flex-1 sm:flex-none flex items-center gap-2 px-6 py-3 bg-[#ff4d4d] rounded-lg text-sm font-bold text-white active:scale-95 transition">
@@ -252,7 +264,7 @@ export default function WatchPartyLobby() {
                     <div className="py-20 flex flex-col items-center justify-center border border-white/5 rounded-2xl bg-white/[0.02]">
                         <Users size={48} className="text-white/10 mb-4" />
                         <p className="text-sm text-white/20 mb-4">No active parties found</p>
-                        <button onClick={() => setShowCreateModal(true)} className="text-xs font-bold text-[#ffcc00] underline underline-offset-4">Create one</button>
+                        <button onClick={() => setShowCreateModal(true)} className="text-xs font-bold text-[#1db954] underline underline-offset-4">Create one</button>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
@@ -281,7 +293,7 @@ export default function WatchPartyLobby() {
                                 {/* Room info */}
                                 <div className="p-3 flex items-center justify-between">
                                     <div className="flex items-center gap-2 min-w-0">
-                                        <div className="w-7 h-7 rounded-full bg-[#ffcc00]/20 flex items-center justify-center text-xs font-bold text-[#ffcc00]">
+                                        <div className="w-7 h-7 rounded-full bg-[#1db954]/20 flex items-center justify-center text-xs font-bold text-[#1db954]">
                                             {room.host.charAt(0).toUpperCase()}
                                         </div>
                                         <div className="min-w-0">
@@ -322,7 +334,7 @@ export default function WatchPartyLobby() {
                                     placeholder="Search movie or show..."
                                     value={searchQuery}
                                     onChange={(e) => handleSearch(e.target.value)}
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-[#1db954]/40"
                                 />
                             </div>
 
@@ -330,7 +342,7 @@ export default function WatchPartyLobby() {
                                 <div className="grid grid-cols-3 gap-3 min-h-[200px]">
                                     {searchResults.map(item => (
                                         <button key={item.id} onClick={() => handleSelectMedia(item)} className="text-left group">
-                                            <div className="aspect-[2/3] rounded-lg overflow-hidden border border-white/5 group-hover:border-[#ffcc00]/40 transition bg-white/5">
+                                            <div className="aspect-[2/3] rounded-lg overflow-hidden border border-white/5 group-hover:border-[#1db954]/40 transition bg-white/5">
                                                 {item.poster_path && <img src={getImageUrl(item.poster_path, 'w185')} alt="" className="w-full h-full object-cover" />}
                                             </div>
                                             <p className="mt-2 text-[10px] font-bold truncate text-white/60 group-hover:text-white">{item.title || item.name}</p>
@@ -345,7 +357,7 @@ export default function WatchPartyLobby() {
                                         {selectedMedia.poster_path && <img src={getImageUrl(selectedMedia.poster_path, 'w92')} className="w-14 rounded" alt="" />}
                                         <div className="flex-1 min-w-0">
                                             <h3 className="text-sm font-bold text-white truncate">{selectedMedia.title || selectedMedia.name}</h3>
-                                            <span className="text-[10px] text-[#ffcc00] uppercase">{selectedMedia.media_type}</span>
+                                            <span className="text-[10px] text-[#1db954] uppercase">{selectedMedia.media_type}</span>
                                             <button onClick={() => setSelectedMedia(null)} className="block text-[10px] text-white/30 mt-1 hover:text-white">Change</button>
                                         </div>
                                     </div>
@@ -357,7 +369,7 @@ export default function WatchPartyLobby() {
                                             type="text" 
                                             value={customRoomName}
                                             onChange={e => setCustomRoomName(e.target.value)}
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#1db954]/40"
                                         />
                                     </div>
 
@@ -379,7 +391,7 @@ export default function WatchPartyLobby() {
                                             placeholder="Set password..."
                                             value={createPassword}
                                             onChange={e => setCreatePassword(e.target.value)}
-                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#1db954]/40"
                                         />
                                     )}
 

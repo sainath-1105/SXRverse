@@ -26,7 +26,7 @@ export default function Sidebar({ isOpen, className }) {
         {
             title: 'Features',
             items: [
-                { name: 'SXR Feed', icon: <MonitorPlay size={20} />, path: '/feed', color: 'text-[#ffcc00]' },
+                { name: 'SXR Feed', icon: <MonitorPlay size={20} />, path: '/feed', color: 'text-[#1db954]' },
                 { name: 'Channels', icon: <Radio size={20} />, path: '/channels' },
                 { name: 'Watch Party', icon: <Users size={20} />, path: '/party' },
                 { name: 'Upgrade Premium', icon: <Zap size={20} />, path: '/4k', color: 'text-accent' },
@@ -48,7 +48,7 @@ export default function Sidebar({ isOpen, className }) {
             <div className="h-14 md:h-20 flex items-center px-6 md:px-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent shrink-0">
                 <Link to="/" className="group flex items-center gap-3">
                     <img src="/sxr-logo.png" alt="SXR" className="h-8 md:h-10 w-auto object-contain group-hover:brightness-125 transition-all" />
-                    <h1 className="text-lg md:text-xl font-black italic tracking-tighter text-white uppercase leading-none group-hover:text-[#ffcc00] transition-colors">SXR VERSE</h1>
+                    <h1 className="text-lg md:text-xl font-black italic tracking-tighter text-white uppercase leading-none group-hover:text-[#1db954] transition-colors">SXR VERSE</h1>
                 </Link>
             </div>
 

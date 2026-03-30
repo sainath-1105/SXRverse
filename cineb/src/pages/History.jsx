@@ -42,7 +42,7 @@ export default function History() {
                             {/* Info + Delete */}
                             <div className="mt-2 flex items-center justify-between px-1">
                                 <div className="flex items-center gap-1.5 text-[8px] md:text-[9px] font-black text-white/30 uppercase tracking-widest">
-                                    <Clock size={10} className="text-[#ffcc00]" />
+                                    <Clock size={10} className="text-[#1db954]" />
                                     {item.media_type === 'tv' ? `S${item.season} E${item.episode}` : 'Watched'}
                                 </div>
                                 <button

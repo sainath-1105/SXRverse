@@ -54,7 +54,7 @@ export default function Channels() {
                         onClick={() => setSelectedChannel(ch)}
                         className={`whitespace-nowrap px-4 py-2.5 rounded-lg text-xs font-bold transition-all shrink-0 ${
                             selectedChannel?.id === ch.id
-                                ? 'bg-[#ffcc00] text-black'
+                                ? 'bg-[#1db954] text-black'
                                 : 'bg-white/5 text-white/50 active:bg-white/10'
                         }`}
                     >
@@ -78,11 +78,11 @@ export default function Channels() {
                                 onClick={() => setSelectedChannel(ch)}
                                 className={`w-full p-4 rounded-xl transition-all flex items-center gap-3 ${
                                     selectedChannel?.id === ch.id
-                                        ? 'bg-[#ffcc00] text-black'
+                                        ? 'bg-[#1db954] text-black'
                                         : 'text-white/50 hover:bg-white/5 hover:text-white'
                                 }`}
                             >
-                                <Radio size={14} className={selectedChannel?.id === ch.id ? 'text-black' : 'text-[#ffcc00]'} />
+                                <Radio size={14} className={selectedChannel?.id === ch.id ? 'text-black' : 'text-[#1db954]'} />
                                 <div className="text-left">
                                     <p className="text-sm font-black uppercase tracking-tight">{ch.name}</p>
                                     <p className="text-[9px] opacity-60">{ch.description}</p>
@@ -116,7 +116,7 @@ export default function Channels() {
                             </div>
 
                             <div className="absolute bottom-6 left-4 right-4 md:bottom-10 md:left-10 md:right-10 z-20">
-                                <p className="text-[10px] font-bold text-[#ffcc00] uppercase tracking-widest mb-2">{selectedChannel.name}</p>
+                                <p className="text-[10px] font-bold text-[#1db954] uppercase tracking-widest mb-2">{selectedChannel.name}</p>
                                 <h1 className="text-2xl md:text-5xl font-black uppercase tracking-tighter text-white mb-3 leading-tight">
                                     {activeHero.name || activeHero.title}
                                 </h1>

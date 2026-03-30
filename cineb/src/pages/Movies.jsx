@@ -138,7 +138,7 @@ export default function Movies() {
                             {loading ? 'Sourcing Data...' : 'Load More Results'}
                             <ArrowLeft size={14} className="rotate-[-90deg] group-hover:translate-x-2 transition-transform" />
                         </div>
-                        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#ffcc00] group-hover:w-full transition-all duration-700"></div>
+                        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#1db954] group-hover:w-full transition-all duration-700"></div>
                     </button>
                 </div>
             </div>

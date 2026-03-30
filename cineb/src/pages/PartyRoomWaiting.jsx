@@ -16,6 +16,7 @@ export default function PartyRoomWaiting() {
     const [viewers, setViewers] = useState([]);
     const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'info'
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [connectionError, setConnectionError] = useState(false);
     const lastVideoRef = useRef(null); // format: "type-id"
 
     const isHost = sessionStorage.getItem('wp_isHost') === 'true';
@@ -23,41 +24,52 @@ export default function PartyRoomWaiting() {
     const messagesEndRef = useRef(null);
 
     useEffect(() => {
-        socket = io(import.meta.env.VITE_API_URL);
+        try {
+            socket = io(import.meta.env.VITE_API_URL, {
+                timeout: 5000,
+                reconnectionAttempts: 3,
+            });
 
-        socket.on('connect', () => {
-            socket.emit('join_room', { room: roomCode, username });
-        });
+            socket.on('connect', () => {
+                setConnectionError(false);
+                socket.emit('join_room', { room: roomCode, username });
+            });
 
-        socket.on('video_sync', (data) => {
-            if (data.type && data.id) {
-                const videoKey = `${data.type}-${data.id}`;
-                // Only auto-sync if it's a new video or if it's the first sync
-                if (lastVideoRef.current !== videoKey) {
-                    lastVideoRef.current = videoKey;
-                    setPlayingVideo({
-                        type: data.type,
-                        id: data.id,
-                        currentTime: data.currentTime || 0
-                    });
+            socket.on('connect_error', () => {
+                setConnectionError(true);
+            });
+
+            socket.on('video_sync', (data) => {
+                if (data.type && data.id) {
+                    const videoKey = `${data.type}-${data.id}`;
+                    if (lastVideoRef.current !== videoKey) {
+                        lastVideoRef.current = videoKey;
+                        setPlayingVideo({
+                            type: data.type,
+                            id: data.id,
+                            currentTime: data.currentTime || 0
+                        });
+                    }
                 }
-            }
-        });
+            });
 
-        socket.on('receive_message', (msg) => {
-            setMessages(prev => [...prev, msg]);
-        });
+            socket.on('receive_message', (msg) => {
+                setMessages(prev => [...prev, msg]);
+            });
 
-        socket.on('room_users', (users) => {
-            setViewers(users);
-        });
+            socket.on('room_users', (users) => {
+                setViewers(users);
+            });
 
-        socket.on('kicked', () => {
-            alert("You have been removed from the session by the host.");
-            navigate('/party');
-        });
+            socket.on('kicked', () => {
+                alert("You have been removed from the session by the host.");
+                navigate('/party');
+            });
+        } catch (err) {
+            setConnectionError(true);
+        }
 
-        return () => socket.disconnect();
+        return () => { if (socket) socket.disconnect(); };
     }, [roomCode, username]);
 
     useEffect(() => {
@@ -104,6 +116,13 @@ export default function PartyRoomWaiting() {
 
     return (
         <div className="flex flex-col h-screen bg-background text-white overflow-y-auto custom-scrollbar">
+            {/* Connection Error */}
+            {connectionError && (
+                <div className="bg-red-500/10 border-b border-red-500/20 px-4 py-3 flex items-center justify-between shrink-0">
+                    <p className="text-sm text-red-400 font-medium">Unable to connect to server. Watch Party features require the backend server to be running.</p>
+                    <button onClick={() => navigate('/party')} className="shrink-0 px-4 py-1.5 bg-white/10 rounded-lg text-xs font-bold text-white hover:bg-white/20 transition">Go Back</button>
+                </div>
+            )}
             {/* Top Bar */}
             <div className="h-16 px-4 md:px-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-card/50 backdrop-blur-xl z-20">
                 <div className="flex items-center gap-2 md:gap-4 overflow-hidden">

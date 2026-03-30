@@ -39,7 +39,7 @@ export default function Auth() {
     return (
         <div className="min-h-screen bg-[#080808] flex items-center justify-center px-4 py-10">
             {/* Background glow */}
-            <div className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-[#ffcc00]/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
+            <div className="fixed top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[400px] bg-[#1db954]/[0.03] blur-[100px] rounded-full pointer-events-none"></div>
 
             <div className="w-full max-w-md">
                 {/* Back button */}
@@ -55,8 +55,8 @@ export default function Auth() {
                 <div className="bg-[#111] border border-white/[0.06] rounded-2xl p-6 md:p-10 shadow-2xl">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <div className="w-14 h-14 rounded-xl bg-[#ffcc00]/10 border border-[#ffcc00]/20 flex items-center justify-center mx-auto mb-5">
-                            {isLogin ? <LogIn size={24} className="text-[#ffcc00]" /> : <UserPlus size={24} className="text-[#ffcc00]" />}
+                        <div className="w-14 h-14 rounded-xl bg-[#1db954]/10 border border-[#1db954]/20 flex items-center justify-center mx-auto mb-5">
+                            {isLogin ? <LogIn size={24} className="text-[#1db954]" /> : <UserPlus size={24} className="text-[#1db954]" />}
                         </div>
                         <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-1">
                             {isLogin ? 'Welcome Back' : 'Create Account'}
@@ -83,7 +83,7 @@ export default function Auth() {
                                     placeholder="Your name"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
-                                    className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 outline-none focus:border-[#ffcc00]/50 text-sm transition-colors placeholder-white/20"
+                                    className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 outline-none focus:border-[#1db954]/50 text-sm transition-colors placeholder-white/20"
                                 />
                             </div>
                         )}
@@ -96,7 +96,7 @@ export default function Auth() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 outline-none focus:border-[#ffcc00]/50 text-sm transition-colors placeholder-white/20"
+                                className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 outline-none focus:border-[#1db954]/50 text-sm transition-colors placeholder-white/20"
                             />
                         </div>
 
@@ -109,7 +109,7 @@ export default function Auth() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 pr-12 outline-none focus:border-[#ffcc00]/50 text-sm transition-colors placeholder-white/20"
+                                    className="w-full bg-white/[0.04] border border-white/[0.08] text-white rounded-lg px-4 py-3.5 pr-12 outline-none focus:border-[#1db954]/50 text-sm transition-colors placeholder-white/20"
                                 />
                                 <button
                                     type="button"
@@ -127,7 +127,7 @@ export default function Auth() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-4 bg-[#ffcc00] text-black rounded-lg font-black uppercase tracking-wider text-sm hover:bg-[#ffd633] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="w-full py-4 bg-[#1db954] text-black rounded-lg font-black uppercase tracking-wider text-sm hover:bg-[#ffd633] active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                             {loading ? (
                                 <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin"></div>
@@ -146,7 +146,7 @@ export default function Auth() {
                             {isLogin ? "Don't have an account?" : 'Already have an account?'}
                             <button
                                 onClick={() => { setIsLogin(!isLogin); setError(''); }}
-                                className="ml-1.5 text-[#ffcc00] font-bold hover:text-[#ffd633] transition-colors"
+                                className="ml-1.5 text-[#1db954] font-bold hover:text-[#ffd633] transition-colors"
                             >
                                 {isLogin ? 'Sign Up' : 'Sign In'}
                             </button>

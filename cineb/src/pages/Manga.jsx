@@ -141,7 +141,7 @@ export default function Manga() {
                                  <div className="flex-1 min-w-0">
                                       <h4 className="text-[12px] font-black uppercase tracking-tight truncate group-hover:text-[#ff4d4d] transition-colors">{item.title}</h4>
                                       <div className="flex items-center gap-2 mt-1">
-                                           <Star size={10} className="text-[#ffcc00] fill-[#ffcc00]" />
+                                           <Star size={10} className="text-[#1db954] fill-[#1db954]" />
                                            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{item.score}</span>
                                       </div>
                                  </div>

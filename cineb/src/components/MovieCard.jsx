@@ -11,7 +11,7 @@ export default function MovieCard({ item, type }) {
     return (
         <Link 
             to={`/watch/${t}/${item.id}`} 
-            className="group block relative w-full aspect-[2/3] rounded-xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-700 hover:scale-[1.03] hover:border-[#ffcc00]/40 bg-zinc-900"
+            className="group block relative w-full aspect-[2/3] rounded-xl md:rounded-3xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-700 hover:scale-[1.03] hover:border-[#1db954]/40 bg-zinc-900"
         >
             <img
                 src={poster}
@@ -23,7 +23,7 @@ export default function MovieCard({ item, type }) {
             {/* Year Badge */}
             {date && (
                 <div className="absolute top-2 right-2 md:top-4 md:right-4 z-20">
-                    <div className="bg-[#ffcc00] text-black px-2 py-1 md:px-3 md:py-1.5 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
+                    <div className="bg-[#1db954] text-black px-2 py-1 md:px-3 md:py-1.5 rounded-lg md:rounded-xl text-[8px] md:text-[10px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
                         {date}
                     </div>
                 </div>
@@ -33,7 +33,7 @@ export default function MovieCard({ item, type }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute bottom-3 left-3 right-3 md:bottom-6 md:left-6 md:right-6">
                     <div className="flex items-center gap-2 mb-1 md:mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-[#ffcc00] rounded-full"></div>
+                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-[#1db954] rounded-full"></div>
                          <span className="text-[7px] md:text-[9px] font-black text-white/60 uppercase tracking-widest">{t}</span>
                     </div>
                     <h3 className="text-[11px] md:text-base font-black text-white uppercase tracking-tight leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75 line-clamp-2">

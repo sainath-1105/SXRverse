@@ -138,7 +138,7 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-12 text-[11px] font-bold uppercase tracking-[0.3em] text-white/40 mb-10">
                              <div className="flex items-center gap-6">
                                   <div className="flex items-center gap-3">
-                                       <Star size={40} className="text-[#ffcc00] fill-[#ffcc00] animate-pulse" />
+                                       <Star size={40} className="text-[#1db954] fill-[#1db954] animate-pulse" />
                                        <div className="flex flex-col">
                                             <span className="text-white/20 text-[8px] font-black tracking-widest">IMDB Rating</span>
                                             <span className="text-2xl font-black tracking-tight text-white">{detail.vote_average?.toFixed(1)} <span className="opacity-20 text-sm">/ 10</span></span>
@@ -176,7 +176,7 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
                                             className={`relative px-3 md:px-6 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-wider transition-all duration-500 overflow-hidden whitespace-nowrap ${selectedAudio === track.label ? 'text-white' : 'text-white/30 hover:text-white/60'}`}
                                         >
                                             {selectedAudio === track.label && (
-                                                <div className="absolute inset-0 bg-gradient-to-br from-[#ff4d4d] to-[#ffcc00] opacity-100 animate-pulse"></div>
+                                                <div className="absolute inset-0 bg-gradient-to-br from-[#ff4d4d] to-[#1db954] opacity-100 animate-pulse"></div>
                                             )}
                                             <span className="relative z-10 flex items-center gap-1.5">
                                                 {track.label}
@@ -316,7 +316,7 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
                                        <button 
                                           key={i + 1}
                                           onClick={() => { setSeason(i + 1); setEpisode(1); }}
-                                          className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${season === i + 1 ? 'bg-[#ffcc00] text-black shadow-lg shadow-[#ffcc00]/20' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}
+                                          className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${season === i + 1 ? 'bg-[#1db954] text-black shadow-lg shadow-[#1db954]/20' : 'bg-white/5 text-white/40 hover:bg-white/10'}`}
                                        >
                                            S{i + 1}
                                        </button>
@@ -360,7 +360,7 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
                                  <Link key={item.id} to={`/watch/${mediaType}/${item.id}`} className="w-56 shrink-0 group transition-all duration-500 hover:scale-[1.03]">
                                      <div className="relative aspect-[2/3] rounded-3xl overflow-hidden border border-white/5 group-hover:border-[#ff4d4d]/40 transition-all">
                                           <img src={getImageUrl(item.poster_path, 'w500')} alt="" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                                          <div className="absolute top-4 right-4 bg-[#ffcc00] text-black px-2 py-1 rounded text-[9px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
+                                          <div className="absolute top-4 right-4 bg-[#1db954] text-black px-2 py-1 rounded text-[9px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
                                               {(item.release_date || item.first_air_date || '').slice(0, 4)}
                                           </div>
                                           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">

@@ -36,7 +36,7 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#0b0b0b] text-white selection:bg-[#ffcc00] selection:text-black pb-20">
+        <div className="min-h-screen bg-[#0b0b0b] text-white selection:bg-[#1db954] selection:text-black pb-20">
             {/* Immersive Hero (Image 4 Naruto/Stranger Things style) */}
             {featured && (
                 <section className="relative h-[70vh] md:h-[85vh] w-full flex items-end overflow-hidden group -mt-14 md:-mt-20">
@@ -53,12 +53,12 @@ export default function Home() {
                     <div className="relative z-10 w-full max-w-[1920px] mx-auto px-4 md:px-16 pb-10 md:pb-20 animate-entrance">
                         <div className="flex flex-col gap-6 max-w-4xl">
                             <div className="flex items-center gap-3">
-                                <span className="bg-[#ffcc00] text-black px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest shadow-lg">
+                                <span className="bg-[#1db954] text-black px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest shadow-lg">
                                     {featured.media_type === 'movie' ? 'FILM' : 'SERIAL'}
                                 </span>
                                 <div className="h-[1px] w-12 bg-white/20"></div>
                                 <div className="flex items-center gap-1.5 text-[10px] font-bold text-white/60 tracking-widest uppercase">
-                                     <Star size={10} className="text-[#ffcc00] fill-[#ffcc00]" />
+                                     <Star size={10} className="text-[#1db954] fill-[#1db954]" />
                                      {featured.vote_average?.toFixed(1)} Rating
                                 </div>
                             </div>
@@ -72,7 +72,7 @@ export default function Home() {
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-6">
-                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-[#ffcc00] text-black px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-500 hover:bg-white hover:scale-105 shadow-2xl flex items-center justify-center gap-3 active:scale-95">
+                                <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-[#1db954] text-black px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-500 hover:bg-white hover:scale-105 shadow-2xl flex items-center justify-center gap-3 active:scale-95">
                                     <Play size={18} fill="currentColor" /> Watch Now
                                 </Link>
                                 <Link to={`/watch/${featured.media_type}/${featured.id}`} className="bg-white/5 backdrop-blur-3xl border border-white/10 text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-500 hover:bg-white/10 hover:scale-105 flex items-center justify-center gap-3">
@@ -89,7 +89,7 @@ export default function Home() {
                 <section>
                     <div className="flex items-center justify-between mb-12">
                         <div className="flex items-center gap-4">
-                             <div className="w-1.5 h-8 bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.4)]"></div>
+                             <div className="w-1.5 h-8 bg-[#1db954] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.4)]"></div>
                              <h2 className="text-3xl font-black uppercase tracking-tighter text-white">Movies of the Day</h2>
                         </div>
                     </div>
@@ -157,17 +157,17 @@ export default function Home() {
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-2">
-                                             <span className="text-[9px] font-black text-[#ffcc00] uppercase tracking-widest">New Arrival</span>
+                                             <span className="text-[9px] font-black text-[#1db954] uppercase tracking-widest">New Arrival</span>
                                              <div className="w-1 h-1 bg-white/20 rounded-full"></div>
                                              <span className="text-[9px] font-bold text-white/40 uppercase tracking-widest">{item.release_date?.slice(0, 4)}</span>
                                         </div>
-                                        <h3 className="text-[15px] font-black text-white uppercase tracking-tight truncate mb-2 group-hover:text-[#ffcc00] transition-colors">{item.title}</h3>
+                                        <h3 className="text-[15px] font-black text-white uppercase tracking-tight truncate mb-2 group-hover:text-[#1db954] transition-colors">{item.title}</h3>
                                         <p className="text-[11px] text-white/40 line-clamp-2 leading-relaxed h-[34px] group-hover:text-white/60 transition-colors">
                                             {item.overview}
                                         </p>
                                         <div className="flex items-center gap-2 mt-4 opacity-0 group-hover:opacity-100 transform translate-x--4 group-hover:translate-x-0 transition-all duration-500">
-                                             <span className="text-[10px] font-black uppercase text-[#ffcc00] tracking-widest">Watch Now</span>
-                                             <ArrowRight size={12} className="text-[#ffcc00]" />
+                                             <span className="text-[10px] font-black uppercase text-[#1db954] tracking-widest">Watch Now</span>
+                                             <ArrowRight size={12} className="text-[#1db954]" />
                                         </div>
                                     </div>
                                 </Link>
@@ -190,7 +190,7 @@ export default function Home() {
                      </div>
                      <div className="flex flex-col items-center md:items-end gap-4">
                          <div className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20">DESIGNED BY SAINATH</div>
-                         <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black text-[#ffcc00] shadow-inner">
+                         <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black text-[#1db954] shadow-inner">
                              @sainath
                          </div>
                      </div>
@@ -202,7 +202,7 @@ export default function Home() {
 
 function PosterNode({ item, type }) {
     return (
-        <Link to={`/watch/${type}/${item.id}`} className="group block relative w-full aspect-[2/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-700 hover:scale-[1.03] hover:border-[#ffcc00]/40">
+        <Link to={`/watch/${type}/${item.id}`} className="group block relative w-full aspect-[2/3] rounded-3xl overflow-hidden shadow-2xl border border-white/5 transition-all duration-700 hover:scale-[1.03] hover:border-[#1db954]/40">
             <img
                 src={getImageUrl(item.poster_path, 'w500')}
                 className="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 ease-out"
@@ -213,7 +213,7 @@ function PosterNode({ item, type }) {
             
             {/* Year Badge (Image 4 Style) */}
             <div className="absolute top-4 right-4 z-20">
-                <div className="bg-[#ffcc00] text-black px-3 py-1.5 rounded-xl text-[10px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
+                <div className="bg-[#1db954] text-black px-3 py-1.5 rounded-xl text-[10px] font-black shadow-2xl transform transition-transform group-hover:scale-110">
                     {(item.release_date || item.first_air_date || '').slice(0, 4)}
                 </div>
             </div>
@@ -222,7 +222,7 @@ function PosterNode({ item, type }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute bottom-6 left-6 right-6">
                     <div className="flex items-center gap-2 mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                         <div className="w-1.5 h-1.5 bg-[#ffcc00] rounded-full"></div>
+                         <div className="w-1.5 h-1.5 bg-[#1db954] rounded-full"></div>
                          <span className="text-[9px] font-black text-white/60 uppercase tracking-widest">{item.media_type || type}</span>
                     </div>
                     <h3 className="text-base font-black text-white uppercase tracking-tight leading-tight translate-y-4 group-hover:translate-y-0 transition-transform duration-500 delay-75">

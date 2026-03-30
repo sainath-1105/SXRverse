@@ -141,8 +141,8 @@ export default function Profile() {
                     </button>
                     <div className="flex-1 text-center md:text-left">
                          <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
-                              <div className="h-[1px] w-12 bg-[#ffcc00] opacity-40"></div>
-                              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ffcc00]">User Profile</span>
+                              <div className="h-[1px] w-12 bg-[#1db954] opacity-40"></div>
+                              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[#1db954]">User Profile</span>
                          </div>
                          <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">Profile Center</h1>
                     </div>
@@ -152,7 +152,7 @@ export default function Profile() {
                 <div className="bg-[#121212] border border-white/5 rounded-[4rem] p-12 md:p-16 mb-12 shadow-2xl relative overflow-hidden group">
                      {/* Dynamic HUD Lines */}
                      <div className="absolute top-0 right-0 w-32 h-[1px] bg-[#ff4d4d] opacity-40"></div>
-                     <div className="absolute top-0 right-0 w-[1px] h-32 bg-[#ffcc00] opacity-10"></div>
+                     <div className="absolute top-0 right-0 w-[1px] h-32 bg-[#1db954] opacity-10"></div>
 
                      <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
                           <div className="relative group/avatar">
@@ -161,8 +161,8 @@ export default function Profile() {
                                    <Camera size={32} className="text-white" />
                                </div>
                                {currentAvatarData && (
-                                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-black border border-[#ffcc00] px-6 py-2 rounded-full shadow-2xl">
-                                       <span className="text-[10px] font-black text-[#ffcc00] uppercase tracking-widest">{currentAvatarData.name}</span>
+                                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-black border border-[#1db954] px-6 py-2 rounded-full shadow-2xl">
+                                       <span className="text-[10px] font-black text-[#1db954] uppercase tracking-widest">{currentAvatarData.name}</span>
                                    </div>
                                )}
                           </div>
@@ -176,7 +176,7 @@ export default function Profile() {
                                    </p>
                                )}
                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-4">
-                                    <div className="px-5 py-2 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Level_Alpha_Member</div>
+                                    <div className="px-5 py-2 bg-[#1db954] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Level_Alpha_Member</div>
                                     <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">{user.email}</span>
                                </div>
                           </div>
@@ -207,7 +207,7 @@ export default function Profile() {
                                         value={editName}
                                         onChange={e => setEditName(e.target.value)}
                                         maxLength={30}
-                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#ffcc00]/40 text-sm font-bold tracking-tight transition-all"
+                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#1db954]/40 text-sm font-bold tracking-tight transition-all"
                                     />
                                     <div className="flex justify-between items-center px-2">
                                          <span className="text-[8px] font-black text-white/10 uppercase tracking-widest">Display Name</span>
@@ -222,7 +222,7 @@ export default function Profile() {
                                         onChange={e => setEditSlogan(e.target.value)}
                                         maxLength={100}
                                         rows={3}
-                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#ffcc00]/40 text-sm font-bold tracking-tight transition-all resize-none"
+                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#1db954]/40 text-sm font-bold tracking-tight transition-all resize-none"
                                     />
                                      <div className="flex justify-between items-center px-2">
                                          <span className="text-[8px] font-black text-white/10 uppercase tracking-widest">About You</span>
@@ -236,7 +236,7 @@ export default function Profile() {
                                     className={`w-full py-8 rounded-[2.5rem] font-black uppercase tracking-[0.6em] text-[12px] transition-all flex items-center justify-center gap-4 ${saved
                                         ? 'bg-[#00ff88] text-black shadow-[0_20px_50px_rgba(0,255,136,0.3)]'
                                         : hasChanges
-                                            ? 'bg-[#ffcc00] text-black hover:scale-[1.02] shadow-[0_20px_50px_rgba(255,204,0,0.2)]'
+                                            ? 'bg-[#1db954] text-black hover:scale-[1.02] shadow-[0_20px_50px_rgba(255,204,0,0.2)]'
                                             : 'bg-white/5 text-white/20 cursor-not-allowed opacity-50'
                                         }`}
                                 >
@@ -248,7 +248,7 @@ export default function Profile() {
                      {/* Avatar Matrix */}
                      <div className="bg-[#121212] border border-white/5 rounded-[4rem] p-12 shadow-2xl">
                           <div className="flex items-center gap-4 mb-12">
-                               <Sparkles size={24} className="text-[#ffcc00]" />
+                               <Sparkles size={24} className="text-[#1db954]" />
                                <h3 className="text-2xl font-black italic uppercase tracking-tighter">Avatar_Database</h3>
                           </div>
 
@@ -257,7 +257,7 @@ export default function Profile() {
                                    <button
                                        key={cat.name}
                                        onClick={() => setActiveTab(cat.name)}
-                                       className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === cat.name ? 'bg-[#ffcc00] text-black shadow-lg shadow-[#ffcc00]/20' : 'bg-white/5 text-white/20 hover:bg-white/10'}`}
+                                       className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === cat.name ? 'bg-[#1db954] text-black shadow-lg shadow-[#1db954]/20' : 'bg-white/5 text-white/20 hover:bg-white/10'}`}
                                    >
                                        {cat.name}
                                    </button>
@@ -269,11 +269,11 @@ export default function Profile() {
                                    <button
                                        key={avatar.id}
                                        onClick={() => setSelectedAvatar(avatar.id)}
-                                       className={`aspect-square rounded-[1.5rem] relative group transition-all duration-500 border-2 overflow-hidden ${selectedAvatar === avatar.id ? 'border-[#ffcc00] scale-110 shadow-2xl ring-4 ring-[#ffcc00]/20' : 'border-transparent opacity-40 hover:opacity-100'}`}
+                                       className={`aspect-square rounded-[1.5rem] relative group transition-all duration-500 border-2 overflow-hidden ${selectedAvatar === avatar.id ? 'border-[#1db954] scale-110 shadow-2xl ring-4 ring-[#1db954]/20' : 'border-transparent opacity-40 hover:opacity-100'}`}
                                    >
                                        <img src={avatar.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                        {selectedAvatar === avatar.id && (
-                                           <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#ffcc00] flex items-center justify-center shadow-2xl ring-2 ring-black">
+                                           <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#1db954] flex items-center justify-center shadow-2xl ring-2 ring-black">
                                                <Check size={12} className="text-black" />
                                            </div>
                                        )}

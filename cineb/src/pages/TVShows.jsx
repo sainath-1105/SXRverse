@@ -133,7 +133,7 @@ export default function TVShows() {
                         <span className="relative z-10 text-[11px] font-black uppercase tracking-[0.3em]">
                             {loading ? 'Decrypting Files...' : 'Load More Series'}
                         </span>
-                        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#ffcc00] group-hover:w-full transition-all duration-700"></div>
+                        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#1db954] group-hover:w-full transition-all duration-700"></div>
                     </button>
                 </div>
             </div>

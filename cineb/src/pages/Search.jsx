@@ -54,7 +54,7 @@ export default function Search() {
                             <div className="flex items-center gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-white/40">
                                  <span className="flex items-center gap-2"><Zap size={14} className="text-[#ff4d4d]" /> Archive Query Active</span>
                                  <span>Found: {items.length} Nodes</span>
-                                 <span className="px-3 py-1 border border-white/5 rounded-md text-[#ffcc00]">GLOBAL_SYNC</span>
+                                 <span className="px-3 py-1 border border-white/5 rounded-md text-[#1db954]">GLOBAL_SYNC</span>
                             </div>
                         </div>
                     </header>
@@ -100,7 +100,7 @@ export default function Search() {
                                  <div className="flex-1 min-w-0">
                                       <h4 className="text-[12px] font-black uppercase tracking-tight truncate group-hover:text-[#ff4d4d] transition-colors">{item.title || item.name}</h4>
                                       <div className="flex items-center gap-2 mt-1">
-                                           <Star size={10} className="text-[#ffcc00] fill-[#ffcc00]" />
+                                           <Star size={10} className="text-[#1db954] fill-[#1db954]" />
                                            <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">{item.vote_average?.toFixed(1)}</span>
                                       </div>
                                  </div>
