@@ -166,3 +166,79 @@
   75% { transform: rotate(-8deg); }
 }
 .group:hover .group-hover\:animate-wiggle { animation: wiggle 0.5s ease; }
+
+/* ─── Mobile Performance Optimizations ─── */
+
+/* Reduce backdrop-blur on mobile (biggest lag source) */
+@media (max-width: 768px) {
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg,
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl,
+  [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: blur(8px) !important;
+    backdrop-filter: blur(8px) !important;
+  }
+
+  /* Simplify heavy transitions on mobile */
+  .poster-card,
+  .poster-card:hover {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  /* Disable hover scale effects on touch */
+  .group:hover img {
+    transform: none !important;
+  }
+
+  /* Reduce animation durations */
+  .animate-entrance {
+    animation-duration: 0.3s !important;
+  }
+
+  /* Don't animate floats on mobile */
+  .animate-float {
+    animation: none !important;
+  }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* GPU acceleration hints for key elements */
+.animate-entrance,
+.poster-card {
+  will-change: transform, opacity;
+}
+
+/* Optimize image rendering */
+img {
+  content-visibility: auto;
+}
+
+/* Spin-slow for music disc */
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* Pulse-slow for now playing art */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.92; }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}

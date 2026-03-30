@@ -46,7 +46,7 @@ export default function Manga() {
                              Discover the Best <br /> <span className="text-[#ff4d4d]">Manga</span>
                          </h1>
                          <p className="text-white/40 text-[10px] md:text-sm max-w-2xl mx-auto mb-10 font-black uppercase tracking-[0.4em]">
-                             Premium Manga Collection V4.2
+                             Premium Manga Collection
                          </p>
                          <div className="flex items-center justify-center gap-6">
                               <Link to={`/manga/read/${hero.mal_id}`} className="bg-[#ff4d4d] text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-[11px] shadow-2xl hover:scale-105 transition-all">Read Now</Link>

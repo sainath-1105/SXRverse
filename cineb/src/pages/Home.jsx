@@ -151,6 +151,8 @@ export default function Home() {
                                             src={getImageUrl(item.poster_path, 'w185')}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                             alt=""
+                                            loading="lazy"
+                                            decoding="async"
                                         />
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -179,7 +181,7 @@ export default function Home() {
             <footer className="px-4 md:px-16 py-8 md:py-12 border-t border-white/5 bg-[#080808]">
                  <div className="max-w-[1920px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
                      <div className="flex flex-col items-center md:items-start gap-4">
-                         <div className="text-xl font-black uppercase tracking-tighter text-white">SXR VERSE</div>
+                         <img src="/sxr-logo.png" alt="SXR Verse" className="h-8 w-auto object-contain" />
                          <div className="flex gap-10 text-[9px] font-bold text-white/30 uppercase tracking-[0.3em]">
                              <span>Terms of Use</span>
                              <span>Privacy Statement</span>
@@ -187,9 +189,9 @@ export default function Home() {
                          </div>
                      </div>
                      <div className="flex flex-col items-center md:items-end gap-4">
-                         <div className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20">EDBAR AKSARA'S CREATIVE</div>
+                         <div className="text-[10px] font-black uppercase tracking-[0.5em] text-white/20">DESIGNED BY SAINATH</div>
                          <div className="px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black text-[#ffcc00] shadow-inner">
-                             @nndyyx_
+                             @sainath
                          </div>
                      </div>
                  </div>
@@ -205,6 +207,8 @@ function PosterNode({ item, type }) {
                 src={getImageUrl(item.poster_path, 'w500')}
                 className="w-full h-full object-cover transition-transform duration-[1500ms] group-hover:scale-110 ease-out"
                 alt=""
+                loading="lazy"
+                decoding="async"
             />
             
             {/* Year Badge (Image 4 Style) */}
