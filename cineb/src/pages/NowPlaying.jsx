@@ -88,7 +88,7 @@ export default function NowPlaying() {
           <div className="relative">
             <button
               onClick={() => setShowSleepMenu(s => !s)}
-              className={`p-2 rounded-lg transition-all ${sleepTimer ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+              className={`p-2 rounded-lg transition-all ${sleepTimer ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
             >
               <Timer size={18} />
             </button>
@@ -107,7 +107,7 @@ export default function NowPlaying() {
                   <button
                     key={m}
                     onClick={() => { startSleepTimer(m); setShowSleepMenu(false); }}
-                    className={`w-full text-left px-3 py-2 text-[11px] font-bold rounded-lg transition-colors ${sleepTimer === m ? 'text-[#ffcc00] bg-[#ffcc00]/10' : 'text-white/70 hover:bg-white/5'}`}
+                    className={`w-full text-left px-3 py-2 text-[11px] font-bold rounded-lg transition-colors ${sleepTimer === m ? 'text-[#1db954] bg-[#1db954]/10' : 'text-white/70 hover:bg-white/5'}`}
                   >
                     {m} Minutes
                   </button>
@@ -118,7 +118,7 @@ export default function NowPlaying() {
           {/* Lyrics Toggle */}
           <button
             onClick={() => setShowLyrics(l => !l)}
-            className={`p-2 rounded-lg transition-all ${showLyrics ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+            className={`p-2 rounded-lg transition-all ${showLyrics ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
           >
             <Mic2 size={18} />
           </button>
@@ -129,7 +129,7 @@ export default function NowPlaying() {
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 md:px-6 py-4 min-h-0">
         {/* Album Art */}
         <div className={`shrink-0 transition-all duration-500 ${showLyrics ? 'w-40 h-40 md:w-56 md:h-56 lg:w-72 lg:h-72' : 'w-56 h-56 md:w-72 md:h-72 lg:w-96 lg:h-96'}`}>
-          <div className={`w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/10 ${isPlaying ? 'ring-2 md:ring-4 ring-[#ffcc00]/20' : ''} transition-all duration-500`}>
+          <div className={`w-full h-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/10 ${isPlaying ? 'ring-2 md:ring-4 ring-[#1db954]/20' : ''} transition-all duration-500`}>
             {art
               ? <img src={art} alt="" className="w-full h-full object-cover" />
               : <div className="w-full h-full bg-white/5 flex items-center justify-center"><Mic2 size={48} className="text-white/10" /></div>
@@ -149,8 +149,8 @@ export default function NowPlaying() {
           >
             <Heart
               size={22}
-              fill={isLiked(currentSong.id) ? '#ffcc00' : 'none'}
-              className={`transition-all duration-300 ${isLiked(currentSong.id) ? 'text-[#ffcc00] scale-110' : 'text-white/30 group-hover:text-white'}`}
+              fill={isLiked(currentSong.id) ? '#1db954' : 'none'}
+              className={`transition-all duration-300 ${isLiked(currentSong.id) ? 'text-[#1db954] scale-110' : 'text-white/30 group-hover:text-white'}`}
             />
           </button>
         </div>
@@ -163,7 +163,7 @@ export default function NowPlaying() {
             className="w-full h-1.5 bg-white/10 rounded-full cursor-pointer group"
           >
             <div
-              className="h-full bg-[#ffcc00] rounded-full relative transition-all"
+              className="h-full bg-[#1db954] rounded-full relative transition-all"
               style={{ width: `${pct}%` }}
             >
               <div className="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -179,7 +179,7 @@ export default function NowPlaying() {
         <div className="flex items-center justify-center gap-5 md:gap-6 mt-4">
           <button
             onClick={() => setIsShuffled(s => !s)}
-            className={`p-2 rounded-lg transition-all ${isShuffled ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+            className={`p-2 rounded-lg transition-all ${isShuffled ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
           >
             <Shuffle size={18} />
           </button>
@@ -190,7 +190,7 @@ export default function NowPlaying() {
 
           <button
             onClick={togglePlay}
-            className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#ffcc00] text-black flex items-center justify-center hover:bg-white transition-all active:scale-90 shadow-xl shadow-[#ffcc00]/20"
+            className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#1db954] text-black flex items-center justify-center hover:bg-white transition-all active:scale-90 shadow-xl shadow-[#1db954]/20"
           >
             {isLoading
               ? <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -204,7 +204,7 @@ export default function NowPlaying() {
 
           <button
             onClick={cyclRepeat}
-            className={`p-2 rounded-lg transition-all ${repeatMode !== 'none' ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+            className={`p-2 rounded-lg transition-all ${repeatMode !== 'none' ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
           >
             <RepeatIcon size={18} />
           </button>
@@ -220,7 +220,7 @@ export default function NowPlaying() {
             min={0} max={1} step={0.01}
             value={isMuted ? 0 : volume}
             onChange={e => { setVolume(+e.target.value); if (isMuted) setIsMuted(false); }}
-            className="w-32 accent-[#ffcc00] cursor-pointer"
+            className="w-32 accent-[#1db954] cursor-pointer"
           />
         </div>
       </div>
@@ -229,12 +229,12 @@ export default function NowPlaying() {
       {showLyrics && (
         <div className="relative z-10 px-4 md:px-6 pb-6 shrink-0">
           <div className="max-w-md mx-auto bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 md:p-6 max-h-48 md:max-h-64 overflow-y-auto custom-scrollbar">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ffcc00] mb-3 flex items-center gap-2 sticky top-0 bg-inherit pb-2">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#1db954] mb-3 flex items-center gap-2 sticky top-0 bg-inherit pb-2">
               <Mic2 size={12} /> Lyrics
             </h3>
             {loadingLyrics ? (
               <div className="flex items-center justify-center py-8">
-                <div className="w-6 h-6 border-2 border-white/20 border-t-[#ffcc00] rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-white/20 border-t-[#1db954] rounded-full animate-spin" />
               </div>
             ) : lyrics ? (
               <p className="text-sm text-white/60 leading-relaxed whitespace-pre-line">

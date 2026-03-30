@@ -61,16 +61,16 @@ export default function MusicPlayer() {
               return (
                 <div
                   key={`${song.id}-${idx}`}
-                  className={`flex items-center gap-3 px-4 py-2.5 transition-all ${active ? 'bg-[#ffcc00]/10' : 'hover:bg-white/5'}`}
+                  className={`flex items-center gap-3 px-4 py-2.5 transition-all ${active ? 'bg-[#1db954]/10' : 'hover:bg-white/5'}`}
                 >
                   <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 bg-white/5">
                     {img && <img src={img} alt="" className="w-full h-full object-cover" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`text-[11px] font-bold truncate ${active ? 'text-[#ffcc00]' : 'text-white'}`}>{song.name}</p>
+                    <p className={`text-[11px] font-bold truncate ${active ? 'text-[#1db954]' : 'text-white'}`}>{song.name}</p>
                     <p className="text-[10px] text-white/30 truncate">{song.primaryArtists}</p>
                   </div>
-                  {active && <div className="w-1.5 h-1.5 rounded-full bg-[#ffcc00] animate-pulse shrink-0" />}
+                  {active && <div className="w-1.5 h-1.5 rounded-full bg-[#1db954] animate-pulse shrink-0" />}
                 </div>
               );
             })}
@@ -87,7 +87,7 @@ export default function MusicPlayer() {
           className="w-full h-1 bg-white/10 cursor-pointer group"
         >
           <div
-            className="h-full bg-[#ffcc00] relative transition-all"
+            className="h-full bg-[#1db954] relative transition-all"
             style={{ width: `${pct}%` }}
           >
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -101,14 +101,14 @@ export default function MusicPlayer() {
             onClick={() => navigate('/music')}
           >
             <div className="relative shrink-0">
-              <div className={`w-10 h-10 rounded-xl overflow-hidden border border-white/10 ${isPlaying ? 'ring-2 ring-[#ffcc00]/40' : ''}`}>
+              <div className={`w-10 h-10 rounded-xl overflow-hidden border border-white/10 ${isPlaying ? 'ring-2 ring-[#1db954]/40' : ''}`}>
                 {art
                   ? <img src={art} alt="" className="w-full h-full object-cover" />
-                  : <div className="w-full h-full bg-[#ffcc00]/10 flex items-center justify-center"><Music2 size={16} className="text-[#ffcc00]" /></div>
+                  : <div className="w-full h-full bg-[#1db954]/10 flex items-center justify-center"><Music2 size={16} className="text-[#1db954]" /></div>
                 }
               </div>
               {isPlaying && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#ffcc00] rounded-full flex items-center justify-center">
+                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[#1db954] rounded-full flex items-center justify-center">
                   <div className="w-1 h-1 bg-black rounded-full" />
                 </div>
               )}
@@ -124,7 +124,7 @@ export default function MusicPlayer() {
             onClick={(e) => { e.stopPropagation(); toggleLike(currentSong); }} 
             className="shrink-0 group hidden md:block mr-1 lg:mr-2"
           >
-            <Heart size={16} fill={isLiked(currentSong.id) ? '#ffcc00' : 'none'} className={`transition-all ${isLiked(currentSong.id) ? 'text-[#ffcc00] scale-110' : 'text-white/30 group-hover:text-white'}`} />
+            <Heart size={16} fill={isLiked(currentSong.id) ? '#1db954' : 'none'} className={`transition-all ${isLiked(currentSong.id) ? 'text-[#1db954] scale-110' : 'text-white/30 group-hover:text-white'}`} />
           </button>
 
           {/* Add to Playlist Native Select Trick */}
@@ -161,7 +161,7 @@ export default function MusicPlayer() {
             {/* Shuffle — desktop only */}
             <button
               onClick={() => setIsShuffled(s => !s)}
-              className={`hidden md:flex p-2 rounded-lg transition-all ${isShuffled ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+              className={`hidden md:flex p-2 rounded-lg transition-all ${isShuffled ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
             >
               <Shuffle size={15} />
             </button>
@@ -172,7 +172,7 @@ export default function MusicPlayer() {
 
             <button
               onClick={togglePlay}
-              className="w-10 h-10 rounded-full bg-[#ffcc00] text-black flex items-center justify-center hover:bg-white transition-all active:scale-90 shadow-lg shadow-[#ffcc00]/20"
+              className="w-10 h-10 rounded-full bg-[#1db954] text-black flex items-center justify-center hover:bg-white transition-all active:scale-90 shadow-lg shadow-[#1db954]/20"
             >
               {isLoading
                 ? <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -187,7 +187,7 @@ export default function MusicPlayer() {
             {/* Repeat — desktop only */}
             <button
               onClick={cyclRepeat}
-              className={`hidden md:flex p-2 rounded-lg transition-all ${repeatMode !== 'none' ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+              className={`hidden md:flex p-2 rounded-lg transition-all ${repeatMode !== 'none' ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
             >
               <RepeatIcon size={15} />
             </button>
@@ -210,14 +210,14 @@ export default function MusicPlayer() {
                 min={0} max={1} step={0.01}
                 value={isMuted ? 0 : volume}
                 onChange={e => { setVolume(+e.target.value); if (isMuted) setIsMuted(false); }}
-                className="w-20 accent-[#ffcc00] cursor-pointer"
+                className="w-20 accent-[#1db954] cursor-pointer"
               />
             </div>
 
             {/* Queue toggle */}
             <button
               onClick={() => setShowQueue(q => !q)}
-              className={`p-2 rounded-lg transition-all ${showQueue ? 'text-[#ffcc00]' : 'text-white/30 hover:text-white'}`}
+              className={`p-2 rounded-lg transition-all ${showQueue ? 'text-[#1db954]' : 'text-white/30 hover:text-white'}`}
             >
               <ListMusic size={16} />
             </button>

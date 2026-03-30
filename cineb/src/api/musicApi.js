@@ -35,7 +35,7 @@ export function getBestAudio(downloadUrls) {
 }
 
 // Search songs
-export async function searchSongs(query, page = 1, limit = 20) {
+export async function searchSongs(query, page = 1, limit = 40) {
   const data = await saavnFetch('/search/songs', { query, page, limit });
   return data?.data || null;
 }
@@ -105,6 +105,8 @@ export const FEATURED_PLAYLISTS = [
   { id: '902306817', name: 'Viral Nation', emoji: '📈' },
   { id: '845149969', name: 'Romantic Top 40', emoji: '❤️' },
   { id: '1208889749', name: 'Bollywood Love Songs', emoji: '🎬' },
+  { id: '303128179', name: 'Best Of Pop', emoji: '🎵' },
+  { id: '87510850', name: 'Love Songs English', emoji: '💕' },
 ];
 
 // New releases search queries
