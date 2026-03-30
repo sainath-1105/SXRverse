@@ -131,208 +131,158 @@ export default function Profile() {
     const currentAvatarData = selectedAvatar ? getAvatarById(selectedAvatar) : null;
 
     return (
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-12">
-            {/* Back Button */}
-            <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-textMuted hover:text-white transition-colors mb-8 group">
-                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                <span className="text-[11px] font-bold uppercase tracking-wider">Back</span>
-            </button>
-
-            {/* Profile Header Card */}
-            <div className="bg-card border border-white/5 rounded-[32px] p-6 sm:p-10 mb-8 relative overflow-hidden">
-                {/* Decorative Background */}
-                <div className="absolute inset-0 opacity-[0.02]">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full blur-[120px]"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent rounded-full blur-[100px]"></div>
-                </div>
-
-                <div className="relative flex flex-col sm:flex-row items-center gap-6 sm:gap-8">
-                    {/* Avatar Preview */}
-                    <div className="relative group">
-                        <ProfileAvatar user={{ ...user, avatar: selectedAvatar }} size="2xl" />
-                        <div className="absolute inset-0 bg-background/40 rounded-[32px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            <Camera size={28} className="text-white" />
-                        </div>
-                        {currentAvatarData && (
-                            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-card border border-white/10 px-3 py-1 rounded-full shadow-lg">
-                                <span className="text-[9px] font-bold text-primary uppercase tracking-wider">{currentAvatarData.name}</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* User Info */}
-                    <div className="text-center sm:text-left flex-1">
-                        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">{user.name}</h1>
-                        {user.slogan && (
-                            <p className="text-textMuted text-sm mt-1.5 flex items-center gap-2 justify-center sm:justify-start">
-                                <Quote size={12} className="text-primary opacity-50" />
-                                {user.slogan}
-                            </p>
-                        )}
-                        <p className="text-textMuted/50 text-xs mt-3">{user.email}</p>
-                        <div className="flex items-center gap-2 mt-3 justify-center sm:justify-start">
-                            <div className="bg-primary/10 text-primary border border-primary/20 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5">
-                                <Sparkles size={10} /> Member
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Edit Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                {/* Left: Name & Slogan */}
-                <div className="bg-card border border-white/5 rounded-[28px] p-6 sm:p-8">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center">
-                            <Edit3 size={16} className="text-primary" />
-                        </div>
-                        Edit Profile
-                    </h2>
-
-                    <div className="space-y-5">
-                        <div>
-                            <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-2 ml-1">Display Name</label>
-                            <input
-                                type="text"
-                                value={editName}
-                                onChange={e => setEditName(e.target.value)}
-                                maxLength={30}
-                                className="w-full bg-background border border-white/5 text-white rounded-2xl py-3.5 px-4 outline-none focus:border-primary/50 transition text-sm"
-                                placeholder="Your name"
-                            />
-                            <p className="text-[10px] text-textMuted/40 mt-1.5 ml-1">{editName.length}/30 characters</p>
-                        </div>
-
-                        <div>
-                            <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-2 ml-1">Slogan / Bio</label>
-                            <textarea
-                                value={editSlogan}
-                                onChange={e => setEditSlogan(e.target.value)}
-                                maxLength={100}
-                                rows={3}
-                                className="w-full bg-background border border-white/5 text-white rounded-2xl py-3.5 px-4 outline-none focus:border-primary/50 transition text-sm resize-none"
-                                placeholder='e.g. "Believe it!" or "Plus Ultra!"'
-                            />
-                            <p className="text-[10px] text-textMuted/40 mt-1.5 ml-1">{editSlogan.length}/100 characters</p>
-                        </div>
-                    </div>
-
-                    {error && <p className="text-red-500 text-xs mt-4 font-medium">{error}</p>}
-
-                    {/* Save Button */}
-                    <button
-                        onClick={handleSave}
-                        disabled={!hasChanges || saving}
-                        className={`w-full mt-6 py-4 rounded-2xl font-bold text-sm uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${saved
-                            ? 'bg-green-500 text-white shadow-lg shadow-green-500/20'
-                            : hasChanges
-                                ? 'bg-primary text-background hover:bg-primaryDark shadow-lg shadow-primary/20 active:scale-[0.98]'
-                                : 'bg-white/5 text-textMuted/40 cursor-not-allowed'
-                            }`}
-                    >
-                        {saved ? (
-                            <><Check size={18} /> Saved!</>
-                        ) : saving ? (
-                            'Saving...'
-                        ) : (
-                            'Save Changes'
-                        )}
+        <div className="min-h-screen bg-[#080808] pt-32 pb-40 px-8 md:px-16 overflow-hidden selection:bg-[#ff4d4d]">
+            <div className="max-w-[1400px] mx-auto relative z-10">
+                
+                {/* Tactical Header */}
+                <header className="flex flex-col md:flex-row items-center gap-12 mb-20 animate-entrance">
+                    <button onClick={() => navigate(-1)} className="p-5 bg-white/5 border border-white/10 rounded-full hover:bg-[#ff4d4d] hover:text-white transition-all group">
+                        <ArrowLeft size={24} className="group-hover:-translate-x-1 transition-transform" />
                     </button>
+                    <div className="flex-1 text-center md:text-left">
+                         <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
+                              <div className="h-[1px] w-12 bg-[#ffcc00] opacity-40"></div>
+                              <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[#ffcc00]">User Profile</span>
+                         </div>
+                         <h1 className="text-5xl md:text-7xl font-black italic uppercase tracking-tighter text-white leading-none">Profile Center</h1>
+                    </div>
+                </header>
+
+                {/* Profile Diagnostic Node */}
+                <div className="bg-[#121212] border border-white/5 rounded-[4rem] p-12 md:p-16 mb-12 shadow-2xl relative overflow-hidden group">
+                     {/* Dynamic HUD Lines */}
+                     <div className="absolute top-0 right-0 w-32 h-[1px] bg-[#ff4d4d] opacity-40"></div>
+                     <div className="absolute top-0 right-0 w-[1px] h-32 bg-[#ffcc00] opacity-10"></div>
+
+                     <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                          <div className="relative group/avatar">
+                               <ProfileAvatar user={{ ...user, avatar: selectedAvatar }} size="2xl" className="ring-8 ring-white/5" />
+                               <div className="absolute inset-0 bg-[#ff4d4d]/20 rounded-[32px] flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
+                                   <Camera size={32} className="text-white" />
+                               </div>
+                               {currentAvatarData && (
+                                   <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-black border border-[#ffcc00] px-6 py-2 rounded-full shadow-2xl">
+                                       <span className="text-[10px] font-black text-[#ffcc00] uppercase tracking-widest">{currentAvatarData.name}</span>
+                                   </div>
+                               )}
+                          </div>
+
+                          <div className="flex-1 text-center md:text-left space-y-4">
+                               <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-white">{user.name}</h2>
+                               {user.slogan && (
+                                   <p className="text-lg font-medium text-white/40 italic flex items-center justify-center md:justify-start gap-3">
+                                       <Quote size={16} className="text-[#ff4d4d]" />
+                                       {user.slogan}
+                                   </p>
+                               )}
+                               <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-4">
+                                    <div className="px-5 py-2 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">Level_Alpha_Member</div>
+                                    <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.4em]">{user.email}</span>
+                               </div>
+                          </div>
+
+                          <button 
+                            onClick={() => { logout(); navigate('/'); }}
+                            className="px-10 py-5 border border-[#ff4d4d]/20 text-[#ff4d4d] hover:bg-[#ff4d4d] hover:text-white rounded-[2rem] text-[11px] font-black uppercase tracking-widest transition-all shadow-xl shadow-[#ff4d4d]/10"
+                          >
+                              Discontinue_Session
+                          </button>
+                     </div>
                 </div>
 
-                {/* Right: Avatar Selection */}
-                <div className="bg-card border border-white/5 rounded-[28px] p-6 sm:p-8">
-                    <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-xl bg-accent/10 flex items-center justify-center">
-                            <User size={16} className="text-accent" />
-                        </div>
-                        Choose Avatar
-                    </h2>
+                {/* Settings Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                     {/* Data Integrity Form */}
+                     <div className="bg-[#121212] border border-white/5 rounded-[4rem] p-12 shadow-2xl">
+                          <div className="flex items-center gap-4 mb-12">
+                               <Edit3 size={24} className="text-[#ff4d4d]" />
+                               <h3 className="text-2xl font-black italic uppercase tracking-tighter">Modify_Identity</h3>
+                          </div>
 
-                    {/* Category Tabs */}
-                    <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-                        {AVATAR_CATEGORIES.map(cat => (
-                            <button
-                                key={cat.name}
-                                onClick={() => setActiveTab(cat.name)}
-                                className={`whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${activeTab === cat.name
-                                    ? 'bg-primary text-background'
-                                    : 'bg-white/5 text-textMuted hover:bg-white/10'
-                                    }`}
-                            >
-                                {cat.name}
-                            </button>
-                        ))}
-                        <button
-                            onClick={() => {
-                                setSelectedAvatar('');
-                                setActiveTab('');
-                            }}
-                            className={`whitespace-nowrap px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all ${selectedAvatar === '' && activeTab === ''
-                                ? 'bg-primary text-background'
-                                : 'bg-white/5 text-textMuted hover:bg-white/10'
-                                }`}
-                        >
-                            Default
-                        </button>
-                    </div>
+                          <div className="space-y-10">
+                               <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-2">Display_Alias</label>
+                                    <input
+                                        type="text"
+                                        value={editName}
+                                        onChange={e => setEditName(e.target.value)}
+                                        maxLength={30}
+                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#ffcc00]/40 text-sm font-bold tracking-tight transition-all"
+                                    />
+                                    <div className="flex justify-between items-center px-2">
+                                         <span className="text-[8px] font-black text-white/10 uppercase tracking-widest">Display Name</span>
+                                         <span className="text-[9px] font-black text-white/20">{editName.length}/30</span>
+                                    </div>
+                               </div>
 
-                    {/* Avatar Grid */}
-                    <div className="grid grid-cols-4 gap-3">
-                        {activeTab === '' ? (
-                            <button
-                                onClick={() => setSelectedAvatar('')}
-                                className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all border-2 ${selectedAvatar === ''
-                                    ? 'border-primary bg-primary/10 scale-105 shadow-lg shadow-primary/20'
-                                    : 'border-transparent bg-white/5 hover:bg-white/10'
-                                    }`}
-                            >
-                                <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center text-background font-black text-lg">
-                                    {user.name.charAt(0).toUpperCase()}
-                                </div>
-                                <span className="text-[9px] font-bold text-textMuted">Default</span>
-                            </button>
-                        ) : (
-                            AVATAR_CATEGORIES.find(c => c.name === activeTab)?.avatars.map(avatar => (
-                                <button
-                                    key={avatar.id}
-                                    onClick={() => setSelectedAvatar(avatar.id)}
-                                    className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all border-2 ${selectedAvatar === avatar.id
-                                        ? 'border-primary bg-primary/10 scale-105 shadow-lg shadow-primary/20'
-                                        : 'border-transparent bg-white/5 hover:bg-white/10 hover:scale-[1.02]'
+                               <div className="space-y-4">
+                                    <label className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 ml-2">Motto_Buffer</label>
+                                    <textarea
+                                        value={editSlogan}
+                                        onChange={e => setEditSlogan(e.target.value)}
+                                        maxLength={100}
+                                        rows={3}
+                                        className="w-full bg-black/40 border border-white/5 text-white rounded-2xl p-6 outline-none focus:border-[#ffcc00]/40 text-sm font-bold tracking-tight transition-all resize-none"
+                                    />
+                                     <div className="flex justify-between items-center px-2">
+                                         <span className="text-[8px] font-black text-white/10 uppercase tracking-widest">About You</span>
+                                         <span className="text-[9px] font-black text-white/20">{editSlogan.length}/100</span>
+                                    </div>
+                               </div>
+
+                               <button
+                                    onClick={handleSave}
+                                    disabled={!hasChanges || saving}
+                                    className={`w-full py-8 rounded-[2.5rem] font-black uppercase tracking-[0.6em] text-[12px] transition-all flex items-center justify-center gap-4 ${saved
+                                        ? 'bg-[#00ff88] text-black shadow-[0_20px_50px_rgba(0,255,136,0.3)]'
+                                        : hasChanges
+                                            ? 'bg-[#ffcc00] text-black hover:scale-[1.02] shadow-[0_20px_50px_rgba(255,204,0,0.2)]'
+                                            : 'bg-white/5 text-white/20 cursor-not-allowed opacity-50'
                                         }`}
                                 >
-                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${avatar.gradient} flex items-center justify-center text-white font-black text-sm sm:text-base shadow-md`}>
-                                        {avatar.initials}
-                                    </div>
-                                    <span className="text-[8px] sm:text-[9px] font-bold text-textMuted truncate w-full text-center px-1">{avatar.name}</span>
-                                    {selectedAvatar === avatar.id && (
-                                        <div className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full bg-primary flex items-center justify-center">
-                                            <Check size={10} className="text-background" />
-                                        </div>
-                                    )}
+                                    {saved ? <><Check size={18} /> SYNC_COMPLETE</> : saving ? 'UPLOADING...' : 'COMMIT_CHANGES'}
                                 </button>
-                            ))
-                        )}
-                    </div>
-                </div>
-            </div>
+                          </div>
+                     </div>
 
-            {/* Danger Zone */}
-            <div className="mt-8 bg-card border border-white/5 rounded-[28px] p-6 sm:p-8">
-                <h3 className="text-sm font-bold text-textMuted uppercase tracking-wider mb-4">Account</h3>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <p className="text-white text-sm font-medium">Sign Out</p>
-                        <p className="text-textMuted text-xs mt-0.5">Sign out of your account on this device</p>
-                    </div>
-                    <button
-                        onClick={() => { logout(); navigate('/'); }}
-                        className="px-6 py-3 rounded-2xl border border-red-500/20 text-red-500 hover:bg-red-500/10 text-xs font-bold uppercase tracking-wider transition-all"
-                    >
-                        Sign Out
-                    </button>
+                     {/* Avatar Matrix */}
+                     <div className="bg-[#121212] border border-white/5 rounded-[4rem] p-12 shadow-2xl">
+                          <div className="flex items-center gap-4 mb-12">
+                               <Sparkles size={24} className="text-[#ffcc00]" />
+                               <h3 className="text-2xl font-black italic uppercase tracking-tighter">Avatar_Database</h3>
+                          </div>
+
+                          <div className="flex gap-4 mb-10 overflow-x-auto pb-4 scrollbar-hide">
+                               {AVATAR_CATEGORIES.map(cat => (
+                                   <button
+                                       key={cat.name}
+                                       onClick={() => setActiveTab(cat.name)}
+                                       className={`px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === cat.name ? 'bg-[#ffcc00] text-black shadow-lg shadow-[#ffcc00]/20' : 'bg-white/5 text-white/20 hover:bg-white/10'}`}
+                                   >
+                                       {cat.name}
+                                   </button>
+                               ))}
+                          </div>
+
+                          <div className="grid grid-cols-4 gap-6">
+                               {(activeTab === '' ? [] : AVATAR_CATEGORIES.find(c => c.name === activeTab)?.avatars || []).map(avatar => (
+                                   <button
+                                       key={avatar.id}
+                                       onClick={() => setSelectedAvatar(avatar.id)}
+                                       className={`aspect-square rounded-[1.5rem] relative group transition-all duration-500 border-2 overflow-hidden ${selectedAvatar === avatar.id ? 'border-[#ffcc00] scale-110 shadow-2xl ring-4 ring-[#ffcc00]/20' : 'border-transparent opacity-40 hover:opacity-100'}`}
+                                   >
+                                       <img src={avatar.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                       {selectedAvatar === avatar.id && (
+                                           <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-[#ffcc00] flex items-center justify-center shadow-2xl ring-2 ring-black">
+                                               <Check size={12} className="text-black" />
+                                           </div>
+                                       )}
+                                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60"></div>
+                                       <span className="absolute bottom-2 left-0 right-0 text-center text-[7px] font-black text-white uppercase tracking-tighter">{avatar.name}</span>
+                                   </button>
+                               ))}
+                          </div>
+                     </div>
                 </div>
             </div>
         </div>

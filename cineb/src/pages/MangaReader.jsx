@@ -30,20 +30,27 @@ export default function MangaReader() {
                 if (metaRes && metaRes.data) {
                     setDetail(metaRes.data);
                     const title = metaRes.data.title;
+                    const altTitles = metaRes.data.titles?.map(t => t.title) || [];
 
-                    // 2. Search MangaDex for the UUID and Chapter Feed
-                    const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=1`);
-                    const searchData = await searchRes.json();
+                    // 2. Search MangaDex - Try multiple title variants
+                    let mdId = null;
+                    for (let t of [title, ...altTitles].slice(0, 3)) {
+                        const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica`);
+                        const searchData = await searchRes.json();
+                        if (searchData.data && searchData.data.length > 0) {
+                            mdId = searchData.data[0].id;
+                            break;
+                        }
+                    }
 
-                    if (searchData.data && searchData.data.length > 0) {
-                        const mdId = searchData.data[0].id;
+                    if (mdId) {
                         setMangaDexId(mdId);
 
-                        // Recursive fetch to get ALL chapters (MangaDex limits to 500 per request)
+                        // Recursive fetch for chapters
                         const fetchAllChapters = async (offset = 0, accrued = []) => {
-                            const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica`);
+                            const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&includeExternalVol=0`);
                             const feedData = await feedRes.json();
-
+                            if (!feedData.data) return accrued;
                             const newAccrued = [...accrued, ...feedData.data];
                             if (feedData.total > offset + 500) {
                                 return fetchAllChapters(offset + 500, newAccrued);
@@ -52,16 +59,12 @@ export default function MangaReader() {
                         };
 
                         const allChapters = await fetchAllChapters();
-
                         if (allChapters.length > 0) {
-                            // Filter unique chapters by chapter number, prioritizing higher IDs or better quality if needed
-                            // Here we just keep the first one we find for each chapter number
                             const uniqueChapters = allChapters.filter((v, i, a) =>
                                 a.findIndex(t => t.attributes.chapter === v.attributes.chapter) === i
                             );
-
                             setChapters(uniqueChapters);
-                            setCurrentChapter(uniqueChapters[0]); // Default to first chapter
+                            setCurrentChapter(uniqueChapters[0]);
                         }
                     }
                 }
@@ -76,7 +79,10 @@ export default function MangaReader() {
     // Page Loader (Triggers when chapter changes)
     useEffect(() => {
         const loadPages = async () => {
-            if (!currentChapter) return;
+            if (!currentChapter) {
+                setLoading(false);
+                return;
+            }
             setLoading(true);
             try {
                 const chapterId = currentChapter.id;
@@ -86,8 +92,11 @@ export default function MangaReader() {
                 if (atHomeData.chapter) {
                     const host = atHomeData.baseUrl;
                     const hash = atHomeData.chapter.hash;
-                    const pageUrls = atHomeData.chapter.data.map(
-                        filename => `${host}/data/${hash}/${filename}`
+                    const filenames = atHomeData.chapter.data || atHomeData.chapter.dataSaver;
+                    const type = atHomeData.chapter.data ? 'data' : 'data-saver';
+
+                    const pageUrls = filenames.map(
+                        filename => `${host}/${type}/${hash}/${filename}`
                     );
                     setPages(pageUrls);
                     if (containerRef.current) containerRef.current.scrollTo(0, 0);
@@ -125,7 +134,7 @@ export default function MangaReader() {
         };
     }, [currentChapter]);
 
-    if (loading) return <div className="h-screen bg-background flex items-center justify-center text-primary font-black uppercase tracking-[0.5em] animate-pulse">Initializing Neural Link...</div>;
+    if (loading) return <div className="h-screen bg-background flex items-center justify-center text-primary font-black uppercase tracking-[0.5em] animate-pulse">Loading Reader...</div>;
 
     return (
         <div className="fixed inset-0 bg-background z-[100] flex flex-col overflow-hidden text-white font-sans">

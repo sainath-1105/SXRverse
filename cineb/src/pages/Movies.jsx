@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchApi } from '../api';
+import { ArrowLeft } from 'lucide-react';
 import MovieCard from '../components/MovieCard';
 import MovieSkeleton from '../components/MovieSkeleton';
 
@@ -59,55 +60,56 @@ export default function Movies() {
     }, [page]);
 
     return (
-        <div className="px-8 max-w-[1600px] mx-auto py-10 flex flex-col md:flex-row gap-12">
-            {/* Sidebar Filters */}
-            <div className="w-full md:w-72 flex-shrink-0">
-                <div className="bg-card border border-white/5 rounded-[32px] p-8 sticky top-28 shadow-2xl overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-full h-[2px] bg-primary transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div>
-                    <h2 className="text-xl font-bold text-white mb-8 tracking-tight uppercase">Filters</h2>
+        <div className="min-h-screen bg-[#080808] pt-8 pb-40 px-6 md:px-12 lg:px-20 overflow-hidden">
+            <div className="max-w-[1920px] mx-auto relative z-10 space-y-16">
 
-                    <div className="mb-10">
-                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Sort By</label>
-                        <select
-                            className="w-full bg-background border border-white/5 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl focus:ring-0 focus:border-primary/50 block p-4 outline-none cursor-pointer hover:bg-white/5 transition-all"
-                            value={sort}
-                            onChange={(e) => setSort(e.target.value)}
-                        >
-                            <option value="popularity.desc">Most Popular</option>
-                            <option value="vote_average.desc">Top Rated</option>
-                            <option value="primary_release_date.desc">New Releases</option>
-                            <option value="revenue.desc">Highest Revenue</option>
-                        </select>
-                    </div>
-
-                    <div className="mb-10">
-                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Language</label>
-                        <select
-                            className="w-full bg-background border border-white/5 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl focus:ring-0 focus:border-primary/50 block p-4 outline-none cursor-pointer hover:bg-white/5 transition-all"
-                            value={language}
-                            onChange={(e) => setLanguage(e.target.value)}
-                        >
-                            <option value="">All Languages</option>
-                            {POPULAR_LANGUAGES.map(lang => (
-                                <option key={lang.code} value={lang.code}>{lang.name}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-[11px] font-bold text-textMuted uppercase tracking-wider mb-3 ml-1">Genres</label>
-                        <div className="flex flex-col gap-2 max-h-[500px] overflow-y-auto pr-3 custom-scrollbar">
-                            <button
-                                onClick={() => setSelectedGenre('')}
-                                className={`text-left px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${!selectedGenre ? 'bg-primary text-background shadow-lg shadow-primary/20 scale-[1.02]' : 'text-textMuted hover:text-white hover:bg-white/5'}`}
+                {/* Horizontal Top Filters */}
+                <div className="bg-[#121212]/80 backdrop-blur-3xl border border-white/5 rounded-xl md:rounded-[2.5rem] p-4 md:p-8 shadow-2xl flex flex-col lg:flex-row items-stretch lg:items-center gap-6 md:gap-12 animate-entrance" style={{ animationDelay: '100ms' }}>
+                    <div className="flex flex-col md:flex-row items-center gap-8 w-full lg:w-auto">
+                        <div className="w-full md:w-64">
+                            <label className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 ml-1 mb-2 block">Sort By</label>
+                            <select 
+                                className="w-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white rounded-2xl p-4 outline-none focus:border-[#ff4d4d]/40 transition-all cursor-pointer"
+                                value={sort}
+                                onChange={(e) => setSort(e.target.value)}
                             >
-                                All Genres
+                                <option value="popularity.desc">Most Popular</option>
+                                <option value="vote_average.desc">Top Rated</option>
+                                <option value="primary_release_date.desc">New Releases</option>
+                            </select>
+                        </div>
+
+                        <div className="w-full md:w-64">
+                            <label className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 ml-1 mb-2 block">Language</label>
+                            <select 
+                                className="w-full bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white rounded-2xl p-4 outline-none focus:border-[#ff4d4d]/40 transition-all cursor-pointer"
+                                value={language}
+                                onChange={(e) => setLanguage(e.target.value)}
+                            >
+                                <option value="">All Regions</option>
+                                {POPULAR_LANGUAGES.map(lang => (
+                                    <option key={lang.code} value={lang.code}>{lang.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="h-[1px] lg:h-12 w-full lg:w-[1px] bg-white/10"></div>
+
+                    <div className="flex-1 w-full overflow-hidden">
+                        <label className="text-[9px] font-black uppercase tracking-[0.4em] text-white/20 ml-1 mb-2 block">Filter by Genre</label>
+                        <div className="flex gap-3 overflow-x-auto pb-4 custom-scrollbar snap-x">
+                            <button 
+                                onClick={() => setSelectedGenre('')}
+                                className={`whitespace-nowrap px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 snap-start ${!selectedGenre ? 'bg-[#ff4d4d] text-white shadow-[0_10px_20px_rgba(255,77,77,0.2)]' : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'}`}
+                            >
+                                All Movies
                             </button>
                             {genres.map(g => (
-                                <button
+                                <button 
                                     key={g.id}
                                     onClick={() => setSelectedGenre(g.id)}
-                                    className={`text-left px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${selectedGenre == g.id ? 'bg-primary text-background shadow-lg shadow-primary/20 scale-[1.02]' : 'text-textMuted hover:text-white hover:bg-white/5'}`}
+                                    className={`whitespace-nowrap px-6 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 snap-start ${selectedGenre == g.id ? 'bg-[#ff4d4d] text-white shadow-[0_10px_20px_rgba(255,77,77,0.2)]' : 'bg-white/5 text-white/40 hover:bg-white/10 hover:text-white'}`}
                                 >
                                     {g.name}
                                 </button>
@@ -115,37 +117,31 @@ export default function Movies() {
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Grid */}
-            <div className="flex-1">
-                <div className="flex items-center gap-4 mb-14">
-                    <div className="w-1.5 h-10 bg-primary rounded-full shadow-[0_0_20px_rgba(251,191,36,0.25)]"></div>
-                    <h1 className="text-4xl font-bold text-white tracking-tighter uppercase whitespace-nowrap">
-                        Movies
-                    </h1>
-                </div>
-
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 gap-y-12">
+                {/* Results Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 gap-y-16 animate-entrance" style={{ animationDelay: '200ms' }}>
                     {items.map((item, idx) => (
-                        <MovieCard key={`${item.id}-${idx}`} item={item} type="movie" />
+                        <div key={`${item.id}-${idx}`}>
+                            <MovieCard item={item} type="movie" />
+                        </div>
                     ))}
-
-                    {loading && Array.from({ length: 12 }).map((_, i) => (
-                        <MovieSkeleton key={`sk-${i}`} />
-                    ))}
+                    {loading && Array.from({ length: 15 }).map((_, i) => <MovieSkeleton key={i} />)}
                 </div>
 
-                <div className="mt-20 mb-10 flex justify-center">
-                    <button
+                <div className="flex justify-center pt-20">
+                    <button 
                         onClick={() => setPage(p => p + 1)}
                         disabled={loading}
-                        className="bg-white/5 border border-white/10 px-14 py-5 rounded-[24px] text-white font-black uppercase tracking-[0.2em] text-[10px] hover:bg-primary hover:text-background hover:border-primary hover:shadow-[0_20px_40px_rgba(251,191,36,0.2)] transition-all duration-500 disabled:opacity-20"
+                        className="group relative px-16 py-6 bg-white/5 border border-white/10 rounded-[2.5rem] overflow-hidden transition-all hover:bg-white/10 active:scale-95 disabled:opacity-20 shadow-2xl"
                     >
-                        {loading ? 'Loading...' : 'Load More'}
+                        <div className="relative z-10 flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.3em]">
+                            {loading ? 'Sourcing Data...' : 'Load More Results'}
+                            <ArrowLeft size={14} className="rotate-[-90deg] group-hover:translate-x-2 transition-transform" />
+                        </div>
+                        <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#ffcc00] group-hover:w-full transition-all duration-700"></div>
                     </button>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

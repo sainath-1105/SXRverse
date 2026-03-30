@@ -15,7 +15,7 @@ export default function PartyRoomWaiting() {
     const [currentMsg, setCurrentMsg] = useState("");
     const [viewers, setViewers] = useState([]);
     const [activeTab, setActiveTab] = useState('chat'); // 'chat' or 'info'
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const lastVideoRef = useRef(null); // format: "type-id"
 
     const isHost = sessionStorage.getItem('wp_isHost') === 'true';
@@ -87,7 +87,7 @@ export default function PartyRoomWaiting() {
     const handleInvite = () => {
         const url = window.location.href;
         navigator.clipboard.writeText(url);
-        alert("Session frequency copied to clipboard! Share it with your squad.");
+        alert("Room link copied to clipboard! Share it with your friends.");
     };
 
     const forceSync = () => {
@@ -103,7 +103,7 @@ export default function PartyRoomWaiting() {
     };
 
     return (
-        <div className="flex flex-col h-screen bg-background text-white overflow-hidden">
+        <div className="flex flex-col h-screen bg-background text-white overflow-y-auto custom-scrollbar">
             {/* Top Bar */}
             <div className="h-16 px-4 md:px-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-card/50 backdrop-blur-xl z-20">
                 <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
@@ -117,7 +117,7 @@ export default function PartyRoomWaiting() {
                         </h1>
                         <div className="flex items-center gap-1.5 text-[7px] md:text-[9px] text-textMuted font-black uppercase tracking-widest whitespace-nowrap">
                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
-                            {viewers.length} Viewers
+                            {viewers.length} Online
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@ export default function PartyRoomWaiting() {
                 {/* Main Content Area: Player or Waiting */}
                 <div className="flex-1 flex flex-col min-w-0 bg-background relative">
                     {playingVideo ? (
-                        <div className="flex-1 bg-black flex flex-col overflow-hidden relative">
+                        <div className="flex-1 bg-black flex flex-col overflow-y-auto relative custom-scrollbar">
                             <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} />
 
                             {/* Floating Overlay Toggle when Sidebar is closed */}

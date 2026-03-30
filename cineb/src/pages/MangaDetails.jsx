@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { fetchManga } from '../api';
-import { BookOpen, Star, Clock, List, ArrowLeft, Share2, Heart } from 'lucide-react';
+import { BookOpen, Star, List, ArrowLeft, Heart, Share2, Zap, History, Globe, Hexagon, Triangle, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
 
 export default function MangaDetails() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(true);
-
     const [chapters, setChapters] = useState([]);
     const [fetchingChapters, setFetchingChapters] = useState(false);
+    const [activeTab, setActiveTab] = useState('Ringkasan');
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -17,24 +18,42 @@ export default function MangaDetails() {
         fetchManga(`/manga/${id}/full`).then(async (data) => {
             if (data && data.data) {
                 setDetail(data.data);
-
-                // Fetch Chapters from MangaDex
                 setFetchingChapters(true);
                 try {
-                    const title = data.data.title;
-                    const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=1`);
-                    const searchData = await searchRes.json();
-                    if (searchData.data?.length > 0) {
-                        const mdId = searchData.data[0].id;
-                        const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica`);
+                    // Clean title for better search (removing common MAL suffixes)
+                    const cleanTitle = (str) => str.replace(/\((Manga|TV|Light Novel|Movie|Manhwa|Manhua)\)/gi, '').trim();
+                    
+                    const mainTitle = cleanTitle(data.data.title_english || data.data.title);
+                    const japTitle = cleanTitle(data.data.title_japanese || data.data.title);
+                    const altTitles = data.data.titles?.map(t => cleanTitle(t.title)) || [];
+                    
+                    let mdId = null;
+                    const searchQueries = [...new Set([mainTitle, japTitle, ...altTitles])].slice(0, 5);
+
+                    for (let t of searchQueries) {
+                        try {
+                            const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`);
+                            const searchData = await searchRes.json();
+                            if (searchData.data?.length > 0) {
+                                mdId = searchData.data[0].id;
+                                break;
+                            }
+                        } catch (err) { continue; }
+                    }
+
+                    if (mdId) {
+                        const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`);
                         const feedData = await feedRes.json();
                         if (feedData.data) {
-                            const unique = feedData.data.filter((v, i, a) => a.findIndex(t => t.attributes.chapter === v.attributes.chapter) === i);
+                            // Filter out duplicates and invalid chapter numbers
+                            const unique = feedData.data
+                                .filter(ch => ch.attributes && ch.attributes.chapter)
+                                .filter((v, i, a) => a.findIndex(t => t.attributes.chapter === v.attributes.chapter) === i);
                             setChapters(unique);
                         }
                     }
                 } catch (e) {
-                    console.error("Dex Chapter Fetch Error:", e);
+                    console.error("Dex Hub Error:", e);
                 }
                 setFetchingChapters(false);
             }
@@ -42,138 +61,195 @@ export default function MangaDetails() {
         });
     }, [id]);
 
-    if (loading) return <div className="p-10 text-center animate-pulse text-primary font-bold uppercase tracking-wider text-xs">Loading...</div>;
-    if (!detail) return <div className="p-10 text-center text-red-500 font-bold uppercase tracking-wider text-xs">Not Found</div>;
+    if (loading) return <div className="h-screen bg-[#080808] flex items-center justify-center animate-pulse text-white font-black uppercase tracking-widest text-xs">Loading Details...</div>;
 
     return (
-        <div className="max-w-[1600px] mx-auto px-4 md:px-8 py-6 md:py-10">
-            <button onClick={() => window.history.back()} className="flex items-center gap-2 text-textMuted hover:text-white transition-colors mb-6 md:mb-10 group">
-                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
-                <span className="text-[10px] font-bold uppercase tracking-wider leading-none">Back to Manga</span>
-            </button>
-
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
-                {/* Visual Section */}
-                <div className="w-full lg:w-[450px] shrink-0">
-                    <div className="rounded-[40px] overflow-hidden border border-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.6)] relative group aspect-[2/3] w-full max-w-[450px] mx-auto">
-                        <img
-                            src={detail.images?.jpg?.large_image_url}
-                            alt={detail.title}
-                            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+        <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden relative selection:bg-[#ff4d4d] selection:text-white pb-40">
+            {/* Image 2 Inspired Immersive Banner */}
+            <section className="relative h-[85vh] w-full flex items-end">
+                <div className="absolute inset-0 z-0">
+                        <img 
+                            src={detail?.images?.jpg?.large_image_url || ''} 
+                            className="w-full h-full object-cover opacity-30 blur-2xl scale-110" 
+                            alt="" 
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80"></div>
-                        <div className="absolute inset-x-0 bottom-0 p-8 flex items-center gap-3">
-                            <Link
-                                to={`/manga/read/${id}`}
-                                className="flex-1 bg-primary text-background font-black py-4.5 rounded-2xl flex items-center justify-center gap-3 shadow-2xl hover:bg-primaryDark transition-all text-xs uppercase tracking-widest active:scale-95"
-                            >
-                                <BookOpen size={18} /> START READING
-                            </Link>
-                            <button className="w-14 h-14 bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-95">
-                                <Heart size={20} />
-                            </button>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-[#080808]/80"></div>
+                    </div>
+
+                    {/* Floating Character/Metadata Labels (Image 2 Style) */}
+                    <div className="absolute top-[30%] left-[10%] px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-3xl animate-bounce-slow">
+                         <span className="text-[10px] font-black uppercase tracking-widest text-[#ff4d4d]">Status: {detail?.status || 'Active'}</span>
+                    </div>
+                    <div className="absolute top-[45%] right-[15%] px-4 py-2 border border-white/20 rounded-full bg-white/5 backdrop-blur-3xl animate-pulse">
+                         <span className="text-[10px] font-black uppercase tracking-widest text-white/40">MASTER_TYPE: {detail?.type || 'Archive'}</span>
+                    </div>
+
+                    <div className="relative z-10 max-w-[1920px] mx-auto px-8 md:px-16 pb-20 w-full animate-entrance">
+                        <div className="flex flex-col gap-6 max-w-4xl">
+                            <div className="flex items-center gap-4 mb-4">
+                                 <div className="w-1.5 h-6 bg-[#ff4d4d] rounded-full"></div>
+                                 <h2 className="text-xl font-black uppercase tracking-tighter text-[#ff4d4d]">Broadcast Overview</h2>
+                            </div>
+                            <h1 className="text-5xl md:text-9xl font-black uppercase tracking-tighter leading-[0.85] italic mb-8">
+                                {detail?.title || 'Unknown Archive'}
+                            </h1>
+
+                            <div className="flex flex-wrap items-center gap-10 text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-12">
+                                 <div className="flex items-center gap-4">
+                                     <ThumbsUp size={16} className="text-[#ff4d4d]" />
+                                     <ThumbsDown size={14} className="opacity-20" />
+                                     <span className="text-white">96% Global Link</span>
+                                 </div>
+                                 <div className="h-4 w-[1px] bg-white/10"></div>
+                                 <span>Ranked #{detail?.rank || '---'}</span>
+                                 <div className="h-4 w-[1px] bg-white/10"></div>
+                                 <span className="text-[#ffcc00]">{detail?.type || 'Node'} archive</span>
+                            </div>
+
+                        {/* Image 2 Tab Layout */}
+                        <div className="flex flex-wrap gap-4 mb-16">
+                            {['Summary', 'Reviews', 'Extras'].map(t => (
+                                <button key={t} onClick={() => setActiveTab(t)} className={`px-10 py-5 rounded-full font-black uppercase tracking-widest text-[11px] transition-all duration-300 border ${activeTab === t ? 'bg-white text-black border-white' : 'bg-white/5 border-white/10 text-white hover:bg-white/10'}`}>
+                                    {t}
+                                </button>
+                            ))}
                         </div>
                     </div>
                 </div>
+            </section>
 
-                {/* Content Section */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-6 flex-wrap">
-                        <span className="bg-primary/10 text-primary border border-primary/20 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ">
-                            {detail.type}
-                        </span>
-                        <div className="h-[1px] w-8 bg-white/10 hidden sm:block"></div>
-                        <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em]">Ranked #{detail.rank}</span>
-                    </div>
+            {/* Main Content Node Matrix */}
+            <div className="relative z-10 max-w-[1920px] mx-auto px-8 md:px-16 grid grid-cols-1 xl:grid-cols-12 gap-24">
+                <div className="xl:col-span-8 flex flex-col gap-24">
+                     {/* Image 2 Synopsis Section */}
+                     <section className="bg-white/3 backdrop-blur-3xl border border-white/10 rounded-[3.5rem] p-12 relative overflow-hidden group">
+                           <div className="absolute top-0 right-0 w-80 h-80 bg-[#ff4d4d]/5 blur-[120px] rounded-full"></div>
+                           <p className="text-lg md:text-2xl font-medium leading-[1.8] text-white/60 italic tracking-tight">
+                                {detail.synopsis}
+                           </p>
+                     </section>
 
-                    <h1 className="text-4xl sm:text-6xl lg:text-8xl font-black text-white mb-8 tracking-tighter leading-none uppercase break-words">
-                        {detail.title}
-                    </h1>
+                     {/* Content Hub Matrix (Chapters) */}
+                     <section>
+                          <div className="flex items-center justify-between mb-12 border-b border-white/10 pb-8">
+                              <h2 className="text-3xl font-black uppercase tracking-tighter italic">Chapter Selection</h2>
+                              <span className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">TOTAL: {chapters.length}</span>
+                          </div>
 
-                    <div className="flex flex-wrap gap-6 text-[10px] font-black uppercase tracking-widest mb-12">
-                        <div className="flex items-center gap-2 bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-xl shadow-inner">
-                            <Star size={12} className="fill-current" />
-                            <span>{detail.score} Rating</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/5 text-white/60 border border-white/10 px-4 py-2 rounded-xl">
-                            <Clock size={12} />
-                            <span>{detail.status}</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-accent/10 text-accent border border-accent/20 px-4 py-2 rounded-xl ">
-                            <List size={12} />
-                            <span>{chapters.length || detail.chapters || '??'} Chapters</span>
-                        </div>
-                    </div>
+                          {fetchingChapters ? (
+                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                                 {Array.from({ length: 12 }).map((_, i) => (
+                                     <div key={i} className="h-20 bg-white/5 rounded-3xl animate-pulse border border-white/5"></div>
+                                 ))}
+                             </div>
+                          ) : chapters.length > 0 ? (
+                             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 max-h-[600px] overflow-y-auto pr-6 custom-scrollbar">
+                                 {chapters.map(ch => (
+                                     <Link
+                                         key={ch.id}
+                                         to={`/manga/read/${id}`}
+                                         className="group relative p-6 bg-white/5 border border-white/5 rounded-[2.5rem] hover:border-[#ff4d4d]/40 transition-all duration-500 overflow-hidden text-center"
+                                     >
+                                         <div className="absolute inset-x-0 bottom-0 h-1 bg-[#ff4d4d] scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+                                         <span className="text-[8px] font-black text-white/20 uppercase tracking-widest block mb-1">Node Index</span>
+                                         <p className="text-[14px] font-black text-white uppercase tracking-tight group-hover:text-[#ff4d4d] transition-colors">CH. {ch.attributes.chapter}</p>
+                                     </Link>
+                                 ))}
+                             </div>
+                          ) : (
+                             <div className="p-20 text-center bg-white/5 rounded-[2.5rem] border border-white/5 italic">
+                                  <p className="text-white/20 text-[11px] font-black uppercase tracking-[0.5em]">No Chapters Available</p>
+                             </div>
+                          )}
+                     </section>
 
-                    <div className="mb-14">
-                        <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-6 flex items-center gap-3">
-                            <div className="w-2 h-4 bg-primary rounded-full shadow-[0_0_10px_rgba(251,191,36,0.3)]"></div> Synopsis
-                        </h3>
-                        <p className="text-textMuted leading-relaxed text-sm md:text-xl max-w-4xl opacity-80 tracking-tight">
-                            {detail.synopsis}
-                        </p>
-                    </div>
-
-                    {/* Chapter Feed Section (MangaFire Style) */}
-                    <div className="mb-14">
-                        <div className="flex items-center justify-between mb-8">
-                            <h3 className="text-[11px] font-bold text-white uppercase tracking-wider flex items-center gap-3">
-                                <div className="w-2 h-4 bg-accent rounded-full shadow-[0_0_10px_rgba(252,165,165,0.3)]"></div> Chapters
-                            </h3>
-                            <span className="text-[9px] font-medium text-white/20 uppercase tracking-wider">{chapters.length} Available</span>
-                        </div>
-
-                        {fetchingChapters ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                                {Array.from({ length: 12 }).map((_, i) => (
-                                    <div key={i} className="h-14 bg-white/5 rounded-2xl animate-pulse border border-white/5"></div>
-                                ))}
-                            </div>
-                        ) : chapters.length > 0 ? (
-                            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 max-h-[500px] overflow-y-auto pr-4 custom-scrollbar">
-                                {chapters.map(ch => (
-                                    <Link
-                                        key={ch.id}
-                                        to={`/manga/read/${id}`}
-                                        className="group p-4 bg-white/5 border border-white/10 rounded-2xl hover:border-primary hover:bg-primary/20 transition-all text-center relative overflow-hidden"
-                                    >
-                                        <div className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-5 transition-opacity"></div>
-                                        <span className="relative z-10 text-[11px] font-black text-textMuted group-hover:text-primary transition-colors uppercase tracking-widest">CH. {ch.attributes.chapter}</span>
-                                    </Link>
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="p-12 text-center bg-white/5 rounded-3xl border border-white/10">
-                                <p className="text-textMuted text-[11px] font-medium uppercase tracking-wider leading-relaxed">No chapters available for this title.</p>
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
-                        <div>
-                            <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-6">Authors</h3>
-                            <div className="space-y-4">
-                                {detail.authors?.map(author => (
-                                    <div key={author.mal_id} className="flex flex-col group cursor-default">
-                                        <span className="text-white font-black uppercase tracking-tighter text-base group-hover:text-primary transition-colors">{author.name}</span>
-                                        <span className="text-[9px] text-textMuted uppercase tracking-wider font-bold opacity-50">Author</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div>
-                            <h3 className="text-[11px] font-bold text-white uppercase tracking-wider mb-6">Genres</h3>
-                            <div className="flex flex-wrap gap-2">
-                                {detail.genres?.map(genre => (
-                                    <span key={genre.mal_id} className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest text-textMuted hover:text-primary hover:border-primary/30 transition-all cursor-default">
-                                        {genre.name}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                     {/* Image 2 Moral Story / Deep Archive Section */}
+                     <section className="mt-20 border-t border-white/5 pt-24 pb-20">
+                           <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter italic mb-10 leading-none">Manga <br /> Details</h2>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+                                <div>
+                                     <p className="text-white/40 text-lg md:text-xl leading-relaxed max-w-xl italic">
+                                          "Every archive contains a soul. In this transmission, the data reflects the enduring spirit of the creator's vision across the neural net."
+                                     </p>
+                                </div>
+                                <div className="space-y-12">
+                                     <div>
+                                          <span className="text-[10px] font-black uppercase text-[#ff4d4d] tracking-[0.5em] block mb-4">Original Architects</span>
+                                          {detail.authors?.map(author => (
+                                              <p key={author.mal_id} className="text-3xl font-black uppercase tracking-tight italic mb-2">{author.name}</p>
+                                          ))}
+                                     </div>
+                                     <div>
+                                          <span className="text-[10px] font-black uppercase text-[#ff4d4d] tracking-[0.5em] block mb-4">Neural Classification</span>
+                                          <div className="flex flex-wrap gap-4">
+                                              {detail.genres?.map(genre => (
+                                                  <span key={genre.mal_id} className="px-6 py-2 bg-white/5 border border-white/10 rounded-xl text-[9px] font-black uppercase tracking-[0.3em]">{genre.name}</span>
+                                              ))}
+                                          </div>
+                                     </div>
+                                </div>
+                           </div>
+                     </section>
                 </div>
+
+                {/* Right Rail: Tactical Stats (Image 1/4 Style) */}
+                <aside className="xl:col-span-4 sticky top-40 space-y-10">
+                      <div className="bg-[#121212] border border-white/10 rounded-[3rem] p-10 shadow-2xl">
+                           <div className="w-1.5 h-6 bg-[#ff4d4d] mb-10"></div>
+                           <h3 className="text-[11px] font-black uppercase tracking-[0.5em] text-white/30 mb-12">Manga Information</h3>
+                           <div className="space-y-10">
+                                <StatNode label="Consensus Rating" value={`${detail.score} / 10`} icon={<Star size={14} className="text-[#ffcc00]" />} />
+                                <StatNode label="Transmission Status" value={detail.status} icon={<Zap size={14} className="text-[#ff4d4d]" />} />
+                                <StatNode label="Network Popularity" value={`Ranked #${detail.popularity}`} icon={<TrendingNode size={14} />} />
+                                <StatNode label="Publication Node" value={detail.type} icon={<Globe size={14} />} />
+                           </div>
+                           
+                           <div className="mt-16 flex flex-col gap-4">
+                                <Link to={`/manga/read/${id}`} className="w-full py-6 bg-[#ff4d4d] text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-2xl text-center hover:scale-[1.02] transition-transform active:scale-95">
+                                    Start Transcription
+                                </Link>
+                                <button className="w-full py-6 bg-white/5 border border-white/10 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] hover:bg-white/10 transition-colors">
+                                    Add to Archive Hub
+                                </button>
+                           </div>
+                      </div>
+
+                      {/* Tactical label overlay */}
+                      <div className="h-60 border border-white/5 rounded-[40px] flex items-center justify-center bg-black/40 relative overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-br from-[#ff4d4d]/10 to-transparent"></div>
+                          <span className="vertical-label opacity-30 text-[#ff4d4d] tracking-[1.2rem]">{detail.title}</span>
+                      </div>
+                </aside>
             </div>
+            
+            {/* Japan Archive Sidebar ID */}
+            <div className="fixed left-6 top-1/2 -translate-y-1/2 hidden 2xl:flex flex-col items-center gap-10 opacity-20 group hover:opacity-100 transition-opacity">
+                 <div className="w-[1px] h-32 bg-white/40"></div>
+                 <div className="vertical-label group-hover:text-[#ff4d4d] transition-colors tracking-[1em]">MANGA_{detail.mal_id}</div>
+                 <div className="w-[1px] h-32 bg-white/40"></div>
+            </div>
+        </div>
+    );
+}
+
+function StatNode({ label, value, icon }) {
+    return (
+        <div className="flex items-center gap-6 group">
+             <div className="p-4 bg-white/5 border border-white/10 rounded-2xl group-hover:border-[#ff4d4d]/40 transition-all">
+                  {icon}
+             </div>
+             <div>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-white/20 block mb-1">{label}</span>
+                  <p className="text-lg font-black uppercase tracking-tight italic group-hover:text-white transition-colors">{value}</p>
+             </div>
+        </div>
+    );
+}
+
+function TrendingNode({ size }) {
+    return (
+        <div className="text-white/40 flex items-center justify-center">
+             <Star size={size} />
         </div>
     );
 }

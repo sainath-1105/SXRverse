@@ -3,141 +3,153 @@ import { Link } from 'react-router-dom';
 import { fetchApi, getImageUrl } from '../api';
 import MovieCard from '../components/MovieCard';
 import MovieSkeleton from '../components/MovieSkeleton';
-import { Radio, Tv, Play, Users, Volume2, Info } from 'lucide-react';
+import { Radio, Play, Users } from 'lucide-react';
+
+const CARTOON_CHANNELS = [
+    { id: 'hungama', name: 'Hungama TV', networkId: 1045, query: 'Doraemon', description: 'Home of Doraemon & Shin-chan' },
+    { id: 'cn', name: 'Cartoon Network', networkId: 56, query: 'Ben 10', description: 'Classic animation hub' },
+    { id: 'disney-xd', name: 'Disney XD', networkId: 44, query: 'Pokemon', description: 'Action & adventure' },
+    { id: 'disney-channel', name: 'Disney Channel', networkId: 54, query: 'Disney', description: 'Disney originals' },
+    { id: 'nick', name: 'Nickelodeon', networkId: 13, query: 'SpongeBob', description: 'SpongeBob & TMNT' },
+    { id: 'boomerang', name: 'Boomerang', networkId: 88, query: 'Tom and Jerry', description: 'Cartoon classics' },
+    { id: 'sonyyay', name: 'Sony YAY!', networkId: 1993, query: 'Oggy', description: 'Non-stop laughter' },
+    { id: 'animax', name: 'Animax', networkId: 204, query: 'Naruto', description: 'Anime network' },
+    { id: 'pogo', name: 'Pogo TV', networkId: 1046, query: 'Chhota Bheem', description: 'Indian kids channel' },
+    { id: 'toonami', name: 'Toonami', networkId: 878, query: 'Batman', description: 'Action animation' },
+    { id: 'teletoon', name: 'Teletoon', networkId: 145, query: 'Total Drama', description: 'Serious about cartoons' }
+];
 
 export default function Channels() {
-    const [genres, setGenres] = useState([]);
-    const [selectedChannel, setSelectedChannel] = useState(null);
+    const [selectedChannel, setSelectedChannel] = useState(CARTOON_CHANNELS[0]);
     const [items, setItems] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [activeHero, setActiveHero] = useState(null);
 
     useEffect(() => {
-        // Fetch TV genres as channels
-        fetchApi('/genre/tv/list').then(data => {
-            if (data && data.genres) {
-                setGenres(data.genres);
-                setSelectedChannel(data.genres[0]);
-            }
-        });
-    }, []);
-
-    useEffect(() => {
-        if (selectedChannel) {
+        const fetchChannelContent = async () => {
             setLoading(true);
-            fetchApi('/discover/tv', { with_genres: selectedChannel.id }).then(data => {
-                if (data && data.results) {
-                    setItems(data.results);
-                    setActiveHero(data.results[0]);
-                }
-                setLoading(false);
-            });
-        }
+            let data;
+            if (selectedChannel.networkId) {
+                data = await fetchApi('/discover/tv', { with_networks: selectedChannel.networkId, sort_by: 'popularity.desc' });
+            }
+            if (!data || !data.results || data.results.length === 0) {
+                data = await fetchApi('/search/tv', { query: selectedChannel.query });
+            }
+            if (data && data.results) {
+                setItems(data.results);
+                setActiveHero(data.results[0]);
+            }
+            setLoading(false);
+        };
+        fetchChannelContent();
     }, [selectedChannel]);
 
     return (
-        <div className="flex h-[calc(100vh-80px)] overflow-hidden bg-background">
-            {/* Channel Lineup Sidebar */}
-            <div className="w-80 border-r border-white/5 flex flex-col bg-card/10 backdrop-blur-sm">
-                <div className="p-8 border-b border-white/5">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
-                            <Radio size={20} className="animate-pulse" />
-                        </div>
-                        <div>
-                            <h2 className="text-sm font-bold text-white uppercase tracking-wider leading-none">Channels</h2>
-                            <p className="text-[10px] text-textMuted font-medium uppercase tracking-wider mt-1.5 opacity-60">Browse by Genre</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
-                    {genres.map((g, idx) => (
-                        <button
-                            key={g.id}
-                            onClick={() => setSelectedChannel(g)}
-                            className={`w-full flex items-center gap-4 p-4 rounded-[20px] transition-all duration-300 group ${selectedChannel?.id === g.id ? 'bg-primary text-background shadow-lg shadow-primary/20 scale-[1.02]' : 'text-textMuted hover:bg-white/5 hover:text-white'}`}
-                        >
-                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-black text-xs transition-all ${selectedChannel?.id === g.id ? 'bg-background/20' : 'bg-white/5 group-hover:bg-primary/20 group-hover:text-primary'}`}>
-                                0{idx + 1}
-                            </div>
-                            <div className="text-left">
-                                <p className="text-xs font-black uppercase tracking-widest">{g.name}</p>
-                                <p className={`text-[9px] font-bold uppercase tracking-wider mt-0.5 opacity-60 ${selectedChannel?.id === g.id ? 'text-background' : 'text-primary'}`}>Now Playing</p>
-                            </div>
-                            {selectedChannel?.id === g.id && (
-                                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-background animate-pulse shadow-[0_0_8px_white]"></div>
-                            )}
-                        </button>
-                    ))}
-                </div>
+        <div className="min-h-screen bg-[#080808]">
+            {/* Channel Selector - Horizontal scroll on mobile, sidebar on desktop */}
+            <div className="lg:hidden overflow-x-auto px-4 py-4 flex gap-2 scrollbar-hide border-b border-white/5">
+                {CARTOON_CHANNELS.map((ch) => (
+                    <button
+                        key={ch.id}
+                        onClick={() => setSelectedChannel(ch)}
+                        className={`whitespace-nowrap px-4 py-2.5 rounded-lg text-xs font-bold transition-all shrink-0 ${
+                            selectedChannel?.id === ch.id
+                                ? 'bg-[#ffcc00] text-black'
+                                : 'bg-white/5 text-white/50 active:bg-white/10'
+                        }`}
+                    >
+                        {ch.name}
+                    </button>
+                ))}
             </div>
 
-            {/* Main Content Feed */}
-            <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar bg-background/50">
-                {/* Channel Player Preview */}
-                {activeHero && (
-                    <div className="relative h-[60vh] shrink-0 overflow-hidden group">
-                        <img
-                            src={getImageUrl(activeHero.backdrop_path, 'w1280')}
-                            alt={activeHero.name}
-                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[5s] group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
-                        <div className="absolute inset-x-0 bottom-0 p-12 flex items-end justify-between gap-10">
-                            <div className="max-w-2xl">
-                                <div className="flex items-center gap-3 mb-6">
-                                    <div className="bg-primary px-3 py-1 rounded text-background text-[10px] font-black uppercase tracking-widest shadow-lg">LIVE</div>
-                                    <div className="bg-background/60 backdrop-blur-md px-3 py-1 rounded text-white text-[10px] font-black uppercase tracking-widest border border-white/10 flex items-center gap-2">
-                                        <Users size={12} className="text-primary" />
-                                        12.4K Watching
-                                    </div>
+            <div className="flex">
+                {/* Desktop Sidebar */}
+                <div className="hidden lg:flex w-80 shrink-0 flex-col border-r border-white/5 h-[calc(100vh-80px)] sticky top-20">
+                    <div className="p-6 border-b border-white/5">
+                        <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Channels</h2>
+                        <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mt-1">Live Networks</p>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+                        {CARTOON_CHANNELS.map((ch) => (
+                            <button
+                                key={ch.id}
+                                onClick={() => setSelectedChannel(ch)}
+                                className={`w-full p-4 rounded-xl transition-all flex items-center gap-3 ${
+                                    selectedChannel?.id === ch.id
+                                        ? 'bg-[#ffcc00] text-black'
+                                        : 'text-white/50 hover:bg-white/5 hover:text-white'
+                                }`}
+                            >
+                                <Radio size={14} className={selectedChannel?.id === ch.id ? 'text-black' : 'text-[#ffcc00]'} />
+                                <div className="text-left">
+                                    <p className="text-sm font-black uppercase tracking-tight">{ch.name}</p>
+                                    <p className="text-[9px] opacity-60">{ch.description}</p>
                                 </div>
-                                <h1 className="text-5xl font-black text-white mb-4 tracking-tighter uppercase drop-shadow-2xl">{activeHero.name}</h1>
-                                <p className="text-textMuted text-xs font-medium leading-relaxed line-clamp-2 max-w-xl tracking-wide opacity-80">{activeHero.overview}</p>
+                                {selectedChannel?.id === ch.id && (
+                                    <Play size={12} fill="currentColor" className="ml-auto" />
+                                )}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="flex-1 overflow-y-auto">
+                    {/* Hero */}
+                    {activeHero ? (
+                        <section className="relative h-[40vh] md:h-[55vh] overflow-hidden">
+                            <img
+                                src={activeHero.backdrop_path ? getImageUrl(activeHero.backdrop_path, 'original') : (activeHero.poster_path ? getImageUrl(activeHero.poster_path, 'w500') : '')}
+                                alt=""
+                                className="absolute inset-0 w-full h-full object-cover opacity-50"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/40 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#080808] via-transparent to-transparent"></div>
+                            
+                            <div className="absolute top-4 left-4 md:top-8 md:left-8 z-20">
+                                <div className="flex items-center gap-2 px-3 py-1.5 bg-black/60 backdrop-blur rounded-full border border-white/10">
+                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                    <span className="text-[9px] font-bold text-white/60 uppercase tracking-widest">LIVE</span>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-4">
-                                <Link to={`/watch/tv/${activeHero.id}`} className="w-16 h-16 rounded-full bg-primary text-background flex items-center justify-center shadow-2xl hover:bg-primaryDark transition-all hover:scale-110 transform active:scale-95 group">
-                                    <Play size={28} fill="currentColor" className="ml-1 transition-transform group-hover:rotate-12" />
+
+                            <div className="absolute bottom-6 left-4 right-4 md:bottom-10 md:left-10 md:right-10 z-20">
+                                <p className="text-[10px] font-bold text-[#ffcc00] uppercase tracking-widest mb-2">{selectedChannel.name}</p>
+                                <h1 className="text-2xl md:text-5xl font-black uppercase tracking-tighter text-white mb-3 leading-tight">
+                                    {activeHero.name || activeHero.title}
+                                </h1>
+                                <p className="text-white/40 text-xs md:text-sm max-w-lg line-clamp-2 mb-4">{activeHero.overview}</p>
+                                <Link to={`/watch/tv/${activeHero.id}`} className="inline-flex items-center gap-2 px-6 md:px-8 py-3 bg-[#ff4d4d] text-white rounded-lg font-bold uppercase tracking-widest text-[10px] active:scale-95 transition-transform">
+                                    <Play size={14} fill="white" /> Watch Now
                                 </Link>
-                                <div className="flex flex-col gap-2">
-                                    <button className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-                                        <Volume2 size={18} />
-                                    </button>
-                                    <button className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-all">
-                                        <Info size={18} />
-                                    </button>
-                                </div>
                             </div>
+                        </section>
+                    ) : (
+                        <div className="h-[40vh] md:h-[55vh] bg-white/[0.02] animate-pulse"></div>
+                    )}
+
+                    {/* Content Grid */}
+                    <section className="p-4 md:p-10">
+                        <div className="flex items-center gap-3 mb-6 md:mb-10">
+                            <div className="w-8 h-[2px] bg-[#ff4d4d]"></div>
+                            <h2 className="text-lg md:text-2xl font-black uppercase tracking-tighter text-white">Shows on {selectedChannel.name}</h2>
+                            <span className="text-[9px] font-bold text-white/20 uppercase tracking-widest ml-auto">{items.length} shows</span>
                         </div>
 
-                        {/* Scanline Effect Overlay */}
-                        <div className="absolute inset-0 pointer-events-none opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] z-10 bg-[length:100%_2px,3px_100%]"></div>
-                    </div>
-                )}
-
-                {/* Grid Content */}
-                <div className="p-12">
-                    <div className="flex items-center gap-4 mb-10">
-                        <div className="w-1.5 h-8 bg-primary rounded-full shadow-[0_0_15px_rgba(251,191,36,0.3)]"></div>
-                        <h3 className="text-2xl font-bold text-white tracking-tight uppercase">More in {selectedChannel?.name}</h3>
-                    </div>
-
-                    <div className="grid grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-8">
-                        {loading ? (
-                            Array.from({ length: 8 }).map((_, i) => <MovieSkeleton key={i} />)
-                        ) : (
-                            items.slice(1).map((item, idx) => (
-                                <div key={`${item.id}-${idx}`} className="relative group">
-                                    <MovieCard item={item} type="tv" />
-                                    <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none rounded-[24px]"></div>
-                                    <div className="absolute top-4 left-4 z-20 pointer-events-none transform -translate-x-10 group-hover:translate-x-0 transition-transform duration-300">
-                                        <div className="bg-primary text-background font-black text-[8px] px-2 py-0.5 rounded tracking-tighter shadow-xl">STREAMING</div>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 md:gap-8">
+                            {loading ? (
+                                Array.from({ length: 8 }).map((_, i) => <MovieSkeleton key={i} />)
+                            ) : (
+                                items.slice(1).map((item, idx) => (
+                                    <div key={`${item.id}-${idx}`} className="animate-entrance" style={{ animationDelay: `${idx * 30}ms` }}>
+                                        <MovieCard item={item} type="tv" />
                                     </div>
-                                </div>
-                            ))
-                        )}
-                    </div>
+                                ))
+                            )}
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>

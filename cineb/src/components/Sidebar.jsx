@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Home, Tv, Film, Users, LayoutGrid, Heart, History,
-    Settings, LogOut, Radio, MonitorPlay, Zap, BookOpen
+    Settings, LogOut, Radio, MonitorPlay, Zap, BookOpen, Music
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileAvatar } from '../pages/Profile';
@@ -20,14 +20,16 @@ export default function Sidebar({ isOpen, className }) {
                 { name: 'TV Shows', icon: <Tv size={20} />, path: '/tv' },
                 { name: 'Anime', icon: <MonitorPlay size={20} />, path: '/anime' },
                 { name: 'Manga', icon: <BookOpen size={20} />, path: '/manga' },
+                { name: 'Music', icon: <Music size={20} />, path: '/music' },
             ]
         },
         {
             title: 'Features',
             items: [
+                { name: 'SXR Feed', icon: <MonitorPlay size={20} />, path: '/feed', color: 'text-[#ffcc00]' },
                 { name: 'Channels', icon: <Radio size={20} />, path: '/channels' },
                 { name: 'Watch Party', icon: <Users size={20} />, path: '/party' },
-                { name: 'Premium 4K', icon: <Zap size={20} />, path: '/4k', color: 'text-accent' },
+                { name: 'Upgrade Premium', icon: <Zap size={20} />, path: '/4k', color: 'text-accent' },
             ]
         },
         {
@@ -43,15 +45,12 @@ export default function Sidebar({ isOpen, className }) {
 
     return (
         <div className={`${className} bg-background border-r border-white/5 flex flex-col transition-all duration-500 ease-out`}>
-            {/* Logo Section */}
-            <div className="h-20 md:h-24 flex items-center px-8 mb-4">
-                <Link to="/" className="flex items-center gap-4 group">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] md:rounded-[18px] bg-gradient-to-br from-primary to-accent flex items-center justify-center text-background font-black text-xl md:text-2xl shadow-[0_10px_25px_rgba(251,191,36,0.2)] transition-all group-hover:scale-110">
-                        ▶
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-xl md:text-2xl font-black text-white leading-none tracking-tighter uppercase whitespace-nowrap">SXRverse</span>
-                        <span className="text-[10px] font-bold text-primary tracking-wider leading-none mt-1.5 uppercase opacity-80">Premium</span>
+            <div className="h-14 md:h-20 flex items-center px-6 md:px-8 border-b border-white/5 bg-gradient-to-br from-white/5 to-transparent shrink-0">
+                <Link to="/" className="group flex flex-col items-start">
+                    <h1 className="text-lg md:text-xl font-black italic tracking-tighter text-white uppercase leading-none group-hover:text-[#ffcc00] transition-colors">SXR VERSE</h1>
+                    <div className="flex items-center gap-1.5 mt-0.5 opacity-60">
+                         <div className="w-1 h-1 bg-[#ffcc00] rounded-full animate-pulse"></div>
+                         <span className="text-[6px] font-black tracking-[0.3em] text-[#ffcc00] uppercase">V 4.2</span>
                     </div>
                 </Link>
             </div>

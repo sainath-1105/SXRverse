@@ -11,7 +11,6 @@ import Search from './pages/Search';
 import MyList from './pages/MyList';
 import WatchPartyLobby from './pages/WatchPartyLobby';
 import PartyRoomWaiting from './pages/PartyRoomWaiting';
-import Auth from './pages/Auth';
 import Premium4K from './pages/Premium4K';
 import Channels from './pages/Channels';
 import History from './pages/History';
@@ -19,7 +18,13 @@ import Manga from './pages/Manga';
 import MangaDetails from './pages/MangaDetails';
 import MangaReader from './pages/MangaReader';
 import Profile from './pages/Profile';
+import Auth from './pages/Auth';
+import Feed from './pages/Feed';
+import Music from './pages/Music';
+import NowPlaying from './pages/NowPlaying';
 import { AuthProvider } from './context/AuthContext';
+import { MusicProvider } from './context/MusicContext';
+import MusicPlayer from './components/MusicPlayer';
 import { useLocation } from 'react-router-dom';
 
 function AppContent() {
@@ -27,7 +32,9 @@ function AppContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isPartyRoom = location.pathname.startsWith('/party/room/');
   const isChannels = location.pathname === '/channels';
+  const isFeed = location.pathname === '/feed';
   const isMangaReader = location.pathname.startsWith('/manga/read/');
+  const isNowPlaying = location.pathname === '/now-playing';
 
   // Global effect to scroll to top on route change
   useEffect(() => {
@@ -37,7 +44,7 @@ function AppContent() {
 
   return (
     <div className="flex bg-background min-h-screen text-textMain relative overflow-x-hidden">
-      {!isPartyRoom && !isMangaReader && (
+      {!isPartyRoom && !isMangaReader && !isFeed && !isNowPlaying && (
         <Sidebar
           isOpen={sidebarOpen}
           className={`fixed inset-y-0 left-0 z-[50] w-72 md:w-64 transition-transform duration-300 ease-in-out md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -53,11 +60,14 @@ function AppContent() {
         />
       )}
 
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 min-w-0 ${!isPartyRoom && !isMangaReader ? 'md:pl-64' : ''}`}>
-        {!isPartyRoom && !isMangaReader && (
-          <Navbar onMenuClick={() => setSidebarOpen(true)} />
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-300 min-w-0 ${!isPartyRoom && !isMangaReader && !isFeed && !isNowPlaying ? 'md:pl-64' : ''}`}>
+        {!isPartyRoom && !isMangaReader && !isNowPlaying && (
+          <Navbar 
+            onMenuClick={() => setSidebarOpen(true)} 
+            isSidebarHidden={isPartyRoom || isMangaReader || isFeed || isNowPlaying}
+          />
         )}
-        <main className={`flex-1 ${!isPartyRoom && !isChannels && !isMangaReader ? 'pb-10' : ''}`}>
+        <main className={`flex-1 ${!isNowPlaying ? 'pt-14 md:pt-20' : ''} ${!isPartyRoom && !isChannels && !isMangaReader && !isFeed && !isNowPlaying ? 'pb-10' : ''}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/anime" element={<Anime />} />
@@ -65,7 +75,10 @@ function AppContent() {
             <Route path="/tv" element={<TVShows />} />
             <Route path="/4k" element={<Premium4K />} />
             <Route path="/channels" element={<Channels />} />
+            <Route path="/feed" element={<Feed />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/music" element={<Music />} />
+            <Route path="/now-playing" element={<NowPlaying />} />
             <Route path="/mylist" element={<MyList />} />
             <Route path="/history" element={<History />} />
             <Route path="/manga" element={<Manga />} />
@@ -78,6 +91,7 @@ function AppContent() {
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
+        {!isNowPlaying && <MusicPlayer />}
       </div>
     </div>
   );
@@ -86,9 +100,11 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppContent />
-      </BrowserRouter>
+      <MusicProvider>
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
+      </MusicProvider>
     </AuthProvider>
   );
 }

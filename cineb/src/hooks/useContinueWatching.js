@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 export function useContinueWatching() {
     const [history, setHistory] = useState([]);
@@ -10,7 +10,7 @@ export function useContinueWatching() {
         }
     }, []);
 
-    const addToHistory = (item, type, season = 1, episode = 1) => {
+    const addToHistory = useCallback((item, type, season = 1, episode = 1) => {
         if (!item || !item.id) return;
 
         setHistory((prev) => {
@@ -33,12 +33,25 @@ export function useContinueWatching() {
                 timestamp: new Date().getTime()
             });
 
-            if (list.length > 20) list = list.slice(0, 20); // Keep last 20
+            if (list.length > 20) list = list.slice(0, 20);
 
             localStorage.setItem('sxr_history', JSON.stringify(list));
             return list;
         });
-    };
+    }, []);
 
-    return { history, addToHistory };
+    const clearHistory = useCallback(() => {
+        localStorage.removeItem('sxr_history');
+        setHistory([]);
+    }, []);
+
+    const removeFromHistory = useCallback((id, type) => {
+        setHistory((prev) => {
+            const list = prev.filter(i => !(i.id === id && i.media_type === type));
+            localStorage.setItem('sxr_history', JSON.stringify(list));
+            return list;
+        });
+    }, []);
+
+    return { history, addToHistory, clearHistory, removeFromHistory };
 }

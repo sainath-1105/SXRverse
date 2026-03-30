@@ -43,7 +43,6 @@ export default function WatchPartyLobby() {
             setActiveRooms(rooms);
         });
 
-        // Initial fetch
         fetch(`${import.meta.env.VITE_API_URL}/api/rooms`)
             .then(res => res.json())
             .then(data => setActiveRooms(data))
@@ -65,10 +64,7 @@ export default function WatchPartyLobby() {
 
     const handleSearch = async (q) => {
         setSearchQuery(q);
-        if (q.length < 2) {
-            setSearchResults([]);
-            return;
-        }
+        if (q.length < 2) { setSearchResults([]); return; }
         setIsSearching(true);
         const data = await fetchApi('/search/multi', { query: q });
         setSearchResults(data?.results?.filter(r => r.media_type !== 'person') || []);
@@ -153,7 +149,7 @@ export default function WatchPartyLobby() {
                     setPasswordError('Incorrect password.');
                     setPromptRoom(code.toUpperCase());
                 } else if (res.status === 404) {
-                    setError('Room not found! Ensure it is active.');
+                    setError('Room not found!');
                 }
             }
         } catch (err) {
@@ -163,10 +159,7 @@ export default function WatchPartyLobby() {
 
     const handleJoinWithCode = (e) => {
         e.preventDefault();
-        if (!roomCode.trim()) {
-            setError('Please enter a room code to join.');
-            return;
-        }
+        if (!roomCode.trim()) { setError('Enter a room code.'); return; }
         attemptJoinRoom(roomCode);
     };
 
@@ -186,333 +179,220 @@ export default function WatchPartyLobby() {
     };
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="min-h-screen bg-[#080808] px-4 md:px-8 lg:px-16 pb-20">
+            <div className="max-w-[1400px] mx-auto">
+                
+                {/* Password Prompt Modal */}
+                {promptRoom && (
+                    <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-xl flex items-center justify-center p-4">
+                        <div className="bg-[#121212] border border-white/10 p-8 rounded-2xl max-w-sm w-full">
+                            <Lock size={32} className="text-[#ff4d4d] mx-auto mb-4" />
+                            <h3 className="text-xl font-black text-center mb-1 uppercase tracking-tight">Private Room</h3>
+                            <p className="text-white/30 text-center text-xs mb-6">Enter password to join</p>
 
-            {/* Password Prompt Modal */}
-            {promptRoom && (
-                <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md flex items-center justify-center p-4">
-                    <div className="bg-card border border-white/5 p-8 rounded-3xl max-w-sm w-full shadow-[0_40px_100px_rgba(0,0,0,0.6)]">
-                        <Lock size={40} className="text-primary mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-center mb-2 uppercase tracking-tighter">Private Party</h3>
-                        <p className="text-textMuted text-center text-[11px] mb-6 font-medium">This room is password protected</p>
+                            <form onSubmit={submitPasswordPrompt} className="space-y-4">
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    value={joinPassword}
+                                    onChange={e => setJoinPassword(e.target.value)}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-4 outline-none focus:border-[#ffcc00]/40 text-sm text-white text-center"
+                                    autoFocus
+                                />
+                                {passwordError && <p className="text-red-400 text-xs text-center">{passwordError}</p>}
+                                <div className="flex gap-3">
+                                    <button type="button" onClick={() => setPromptRoom(null)} className="flex-1 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition">Cancel</button>
+                                    <button type="submit" className="flex-1 py-3 rounded-lg bg-[#ff4d4d] text-white text-sm font-bold transition">Join</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
 
-                        {passwordError && <p className="text-primary text-[10px] font-black uppercase text-center mb-4 tracking-widest">{passwordError}</p>}
+                {/* Header */}
+                <header className="py-6 md:py-10 mb-6 md:mb-10">
+                    <p className="text-[10px] font-bold text-[#ffcc00] uppercase tracking-widest mb-2">SXR Party Hub</p>
+                    <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-2">
+                        Watch Together
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-white/40">
+                        <span className="flex items-center gap-1.5"><Users size={14} className="text-[#ff4d4d]" /> {activeRooms.length} rooms online</span>
+                        <span className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div> Secure Connection</span>
+                    </div>
+                    
+                    {error && <p className="mt-4 text-red-400 text-sm bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-lg">{error}</p>}
+                </header>
 
-                        <form onSubmit={submitPasswordPrompt}>
-                            <input
-                                type="password"
-                                placeholder="Enter Password"
-                                value={joinPassword}
-                                onChange={e => setJoinPassword(e.target.value)}
-                                className="w-full bg-background/50 border border-white/5 text-white rounded-2xl p-4 outline-none focus:border-primary/50 mb-6 text-center tracking-widest"
-                                autoFocus
-                            />
-                            <div className="flex gap-3">
-                                <button type="button" onClick={() => setPromptRoom(null)} className="flex-1 px-4 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-bold text-[11px] transition uppercase tracking-wider">Cancel</button>
-                                <button type="submit" className="flex-1 px-4 py-4 rounded-2xl bg-primary hover:bg-primaryDark text-background font-bold text-[11px] transition uppercase tracking-wider shadow-lg shadow-primary/20">Join Room</button>
-                            </div>
-                        </form>
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row gap-3 mb-8">
+                    <form onSubmit={handleJoinWithCode} className="flex-1 flex gap-2">
+                        <input 
+                            type="text" 
+                            placeholder="Enter room code..." 
+                            value={roomCode}
+                            onChange={e => setRoomCode(e.target.value)}
+                            className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white outline-none focus:border-[#ffcc00]/40" 
+                        />
+                        <button type="submit" className="shrink-0 px-6 py-3 bg-white/10 border border-white/10 rounded-lg text-sm font-bold text-white hover:bg-white/20 transition active:scale-95">
+                            Join
+                        </button>
+                    </form>
+                    <div className="flex gap-2">
+                        <button onClick={handleRefresh} className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-[#ffcc00] transition active:scale-95">
+                            <RefreshCw size={18} />
+                        </button>
+                        <button onClick={() => setShowCreateModal(true)} className="flex-1 sm:flex-none flex items-center gap-2 px-6 py-3 bg-[#ff4d4d] rounded-lg text-sm font-bold text-white active:scale-95 transition">
+                            <Plus size={16} /> Create Party
+                        </button>
                     </div>
                 </div>
-            )}
+
+                {/* Room List */}
+                {activeRooms.length === 0 ? (
+                    <div className="py-20 flex flex-col items-center justify-center border border-white/5 rounded-2xl bg-white/[0.02]">
+                        <Users size={48} className="text-white/10 mb-4" />
+                        <p className="text-sm text-white/20 mb-4">No active parties found</p>
+                        <button onClick={() => setShowCreateModal(true)} className="text-xs font-bold text-[#ffcc00] underline underline-offset-4">Create one</button>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                        {activeRooms.map((room, idx) => (
+                            <div key={room.id} className="bg-white/[0.03] border border-white/5 rounded-xl overflow-hidden hover:border-white/10 transition group">
+                                {/* Room poster */}
+                                <div className="relative aspect-video overflow-hidden">
+                                    <img 
+                                        src={room.media?.poster_path ? getImageUrl(room.media.poster_path, 'w500') : ''} 
+                                        alt="" 
+                                        className="w-full h-full object-cover opacity-30 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#080808] to-transparent"></div>
+                                    
+                                    <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 bg-black/60 rounded text-[8px] font-bold text-white/50 uppercase tracking-widest">
+                                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div> Live
+                                    </div>
+                                    {room.hasPassword && <Lock size={12} className="absolute top-3 right-3 text-[#ff4d4d]" />}
+
+                                    <div className="absolute bottom-3 left-3 right-3">
+                                        <h3 className="text-base font-bold text-white truncate">{room.roomName}</h3>
+                                        <p className="text-[10px] text-white/30 uppercase">{room.id}</p>
+                                    </div>
+                                </div>
+
+                                {/* Room info */}
+                                <div className="p-3 flex items-center justify-between">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="w-7 h-7 rounded-full bg-[#ffcc00]/20 flex items-center justify-center text-xs font-bold text-[#ffcc00]">
+                                            {room.host.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <span className="text-xs font-bold text-white truncate block">{room.host}</span>
+                                            <span className="text-[9px] text-white/20">{room.viewers} watching</span>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => handleJoinClickFromList(room)}
+                                        className="px-4 py-2 bg-[#ff4d4d] rounded-lg text-xs font-bold text-white active:scale-95 transition"
+                                    >
+                                        Join
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {/* Create Room Modal */}
             {showCreateModal && (
-                <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-                    <div className="bg-card border border-white/5 rounded-3xl w-full max-w-2xl relative shadow-2xl my-4 sm:my-8 max-h-[90vh] flex flex-col">
-                        <button onClick={() => setShowCreateModal(false)} className="absolute top-6 right-6 text-textMuted hover:text-white transition">
-                            <X size={24} />
-                        </button>
+                <div className="fixed inset-0 z-[200] bg-black/90 backdrop-blur-xl flex items-end sm:items-center justify-center">
+                    <div className="bg-[#121212] border border-white/10 rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
+                        <div className="flex items-center justify-between p-4 border-b border-white/5">
+                            <h2 className="text-lg font-black uppercase tracking-tight">Create Party</h2>
+                            <button onClick={() => setShowCreateModal(false)} className="p-2 bg-white/5 rounded-lg text-white/40 hover:text-white transition">
+                                <X size={18} />
+                            </button>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                            {/* Search */}
+                            <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-white/20" size={16} />
+                                <input 
+                                    type="text" 
+                                    placeholder="Search movie or show..."
+                                    value={searchQuery}
+                                    onChange={(e) => handleSearch(e.target.value)}
+                                    className="w-full bg-white/5 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                />
+                            </div>
 
-                        <div className="p-4 sm:p-8 overflow-y-auto">
-                            <h2 className="text-2xl font-bold mb-1 uppercase tracking-tighter">Create Room</h2>
                             {!selectedMedia ? (
-                                <div className="mt-6">
-                                    <div className="relative group">
-                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-textMuted group-focus-within:text-primary transition" size={20} />
-                                        <input
-                                            type="text"
-                                            placeholder="Find a movie..."
-                                            value={searchQuery}
-                                            onChange={(e) => handleSearch(e.target.value)}
-                                            className="w-full bg-background/50 border border-white/5 text-white rounded-2xl py-4 pl-12 pr-4 outline-none focus:border-primary/50 transition shadow-inner"
-                                            autoFocus
-                                        />
-                                    </div>
-
-                                    <div className="mt-6 min-h-[300px] max-h-[450px] overflow-y-auto pr-2 custom-scrollbar">
-                                        {isSearching ? (
-                                            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                                                <Loader2 className="animate-spin mb-4" size={32} />
-                                                <p>Searching titles...</p>
+                                <div className="grid grid-cols-3 gap-3 min-h-[200px]">
+                                    {searchResults.map(item => (
+                                        <button key={item.id} onClick={() => handleSelectMedia(item)} className="text-left group">
+                                            <div className="aspect-[2/3] rounded-lg overflow-hidden border border-white/5 group-hover:border-[#ffcc00]/40 transition bg-white/5">
+                                                {item.poster_path && <img src={getImageUrl(item.poster_path, 'w185')} alt="" className="w-full h-full object-cover" />}
                                             </div>
-                                        ) : searchResults.length > 0 ? (
-                                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                                                {searchResults.map(item => (
-                                                    <button
-                                                        key={item.id}
-                                                        onClick={() => handleSelectMedia(item)}
-                                                        className="group flex flex-col items-start text-left"
-                                                    >
-                                                        <div className="aspect-[2/3] w-full bg-background rounded-xl overflow-hidden mb-2 border border-white/5 transition transform group-hover:scale-105 group-hover:border-primary">
-                                                            <img
-                                                                src={getImageUrl(item.poster_path, 'w185')}
-                                                                alt=""
-                                                                className="w-full h-full object-cover"
-                                                            />
-                                                        </div>
-                                                        <span className="text-xs font-bold text-white truncate w-full">{item.title || item.name}</span>
-                                                        <span className="text-[10px] text-gray-500 uppercase tracking-tighter">{item.media_type} • {(item.release_date || item.first_air_date || '').slice(0, 4)}</span>
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        ) : searchQuery ? (
-                                            <div className="flex flex-col items-center justify-center py-20 text-gray-500">
-                                                <Search size={48} className="mb-4 opacity-10" />
-                                                <p>Nothing found for "{searchQuery}"</p>
-                                            </div>
-                                        ) : (
-                                            <div className="flex flex-col items-center justify-center py-20 text-gray-500 text-center">
-                                                <div className="w-16 h-16 rounded-full bg-[#0a0a0a] flex items-center justify-center mb-4">
-                                                    <Search size={24} className="opacity-40" />
-                                                </div>
-                                                <p className="text-sm">Type in the search box to find something to watch</p>
-                                            </div>
-                                        )}
-                                    </div>
+                                            <p className="mt-2 text-[10px] font-bold truncate text-white/60 group-hover:text-white">{item.title || item.name}</p>
+                                        </button>
+                                    ))}
+                                    {isSearching && <div className="col-span-3 py-10 text-center text-xs text-white/20 animate-pulse">Searching...</div>}
                                 </div>
                             ) : (
-                                <div className="mt-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    {/* Selected Media Preview */}
-                                    <div className="bg-background p-4 rounded-3xl border border-white/5 flex flex-col sm:flex-row gap-4 sm:gap-6 relative">
-                                        <button onClick={() => setSelectedMedia(null)} className="absolute top-4 right-4 text-xs font-bold bg-white/5 hover:bg-white/10 p-2 rounded-full text-white transition text-textMuted hover:text-white">
-                                            <X size={14} />
-                                        </button>
-                                        <img
-                                            src={getImageUrl(selectedMedia.poster_path, 'w185')}
-                                            className="w-24 h-36 rounded-xl object-cover border border-white/10"
-                                            alt=""
-                                        />
-                                        <div className="flex-1 pt-2">
-                                            <h3 className="text-xl font-black text-white">{selectedMedia.title || selectedMedia.name}</h3>
-                                            <p className="text-sm text-gray-500 mb-4">{selectedMedia.media_type.toUpperCase()} • {(selectedMedia.release_date || selectedMedia.first_air_date || '').slice(0, 4)}</p>
-
-                                            {selectedMedia.media_type === 'tv' && (
-                                                <div className="flex flex-col gap-2">
-                                                    <select
-                                                        className="bg-background border border-white/10 text-xs rounded-lg p-2 outline-none text-white focus:border-primary/50"
-                                                        onChange={(e) => changeSeason(e.target.value)}
-                                                        value={selectedSeason}
-                                                    >
-                                                        {[...Array(selectedMedia.seasons?.length || 1)].map((_, i) => (
-                                                            <option key={i} value={i + 1}>Season {i + 1}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            )}
+                                <div className="space-y-4">
+                                    {/* Selected media */}
+                                    <div className="flex gap-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                                        {selectedMedia.poster_path && <img src={getImageUrl(selectedMedia.poster_path, 'w92')} className="w-14 rounded" alt="" />}
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-sm font-bold text-white truncate">{selectedMedia.title || selectedMedia.name}</h3>
+                                            <span className="text-[10px] text-[#ffcc00] uppercase">{selectedMedia.media_type}</span>
+                                            <button onClick={() => setSelectedMedia(null)} className="block text-[10px] text-white/30 mt-1 hover:text-white">Change</button>
                                         </div>
                                     </div>
 
-                                    {/* Episodes Grid if TV */}
-                                    {selectedMedia.media_type === 'tv' && episodesList.length > 0 && (
-                                        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
-                                            {episodesList.map(ep => (
-                                                <button
-                                                    key={ep.id}
-                                                    onClick={() => setSelectedEpisode(ep.episode_number)}
-                                                    className={`aspect-square rounded-xl flex items-center justify-center text-xs font-bold transition-all border ${selectedEpisode === ep.episode_number ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20' : 'bg-background border-white/5 text-textMuted hover:bg-white/5 hover:text-white'}`}
-                                                >
-                                                    E{ep.episode_number}
-                                                </button>
-                                            ))}
+                                    {/* Room name */}
+                                    <div>
+                                        <label className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-1 block">Room Name</label>
+                                        <input 
+                                            type="text" 
+                                            value={customRoomName}
+                                            onChange={e => setCustomRoomName(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                        />
+                                    </div>
+
+                                    {/* Private toggle */}
+                                    <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                                        <div>
+                                            <span className="text-xs font-bold text-white">Private Room</span>
+                                            <p className="text-[10px] text-white/30">Requires password</p>
                                         </div>
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" checked={isPrivate} onChange={e => setIsPrivate(e.target.checked)} className="sr-only peer" />
+                                            <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#ff4d4d]"></div>
+                                        </label>
+                                    </div>
+
+                                    {isPrivate && (
+                                        <input 
+                                            type="password"
+                                            placeholder="Set password..."
+                                            value={createPassword}
+                                            onChange={e => setCreatePassword(e.target.value)}
+                                            className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-sm text-white outline-none focus:border-[#ffcc00]/40"
+                                        />
                                     )}
 
-                                    {/* Room Config */}
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="text-[10px] font-black uppercase tracking-widest text-textMuted/40 ml-1">Room Name</label>
-                                            <input
-                                                type="text"
-                                                value={customRoomName}
-                                                onChange={(e) => setCustomRoomName(e.target.value)}
-                                                className="w-full bg-background border border-white/5 text-white rounded-2xl py-3 px-4 outline-none focus:border-primary/50 mt-1"
-                                            />
-                                        </div>
-
-                                        <div className="bg-background border border-white/5 rounded-2xl p-4 flex flex-col gap-4">
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex items-center gap-3">
-                                                    <div className={`p-2 rounded-lg ${isPrivate ? 'bg-accent/10 text-accent' : 'bg-white/5 text-textMuted/40'}`}>
-                                                        {isPrivate ? <Lock size={18} /> : <Unlock size={18} />}
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-sm font-bold text-white leading-tight">Make room private</p>
-                                                        <p className="text-[10px] text-textMuted/40 tracking-tight">Private rooms require a password to join</p>
-                                                    </div>
-                                                </div>
-                                                <label className="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" checked={isPrivate} onChange={e => setIsPrivate(e.target.checked)} className="sr-only peer" />
-                                                    <div className="w-11 h-6 bg-white/5 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                                </label>
-                                            </div>
-
-                                            {isPrivate && (
-                                                <div className="animate-in slide-in-from-top-2 duration-300 border-t border-gray-800/50 pt-4">
-                                                    <label className="text-[11px] font-bold uppercase tracking-wider text-primary ml-1">Room Password</label>
-                                                    <div className="relative mt-1">
-                                                        <input
-                                                            type={showCreatePassword ? "text" : "password"}
-                                                            value={createPassword}
-                                                            onChange={(e) => setCreatePassword(e.target.value)}
-                                                            className="w-full bg-background border border-white/5 text-white rounded-xl py-3 px-4 outline-none focus:border-primary/50 pr-10"
-                                                            placeholder="Set secret code"
-                                                        />
-                                                        <button
-                                                            onClick={() => setShowCreatePassword(!showCreatePassword)}
-                                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-textMuted hover:text-primary transition-colors"
-                                                        >
-                                                            {showCreatePassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                                                        </button>
-                                                    </div>
-                                                    <p className="text-[10px] text-gray-500 mt-2 px-1">Share this password with friends you want to invite</p>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <button
+                                    <button 
                                         onClick={handleCreateRoom}
-                                        className="w-full bg-primary hover:bg-primaryDark text-background py-4.5 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 transition active:scale-[0.98] mt-4 uppercase tracking-wider"
+                                        className="w-full py-4 bg-[#ff4d4d] text-white rounded-lg font-bold uppercase tracking-widest text-sm active:scale-95 transition"
                                     >
-                                        Create Party
+                                        Create Room
                                     </button>
                                 </div>
                             )}
                         </div>
                     </div>
-                </div>
-            )}
-
-            {/* Header / Nav */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 md:mb-12">
-                <div className="text-center md:text-left">
-                    <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tighter mb-2 uppercase">Watch Party</h1>
-                    <p className="text-textMuted text-[11px] md:text-sm font-medium uppercase tracking-wider opacity-60">Watch movies together in real-time</p>
-                </div>
-                <div className="flex items-center justify-center md:justify-end gap-3">
-                    <button
-                        onClick={handleRefresh}
-                        className="p-3 bg-white/5 border border-white/5 text-textMuted hover:text-white rounded-2xl transition hover:border-white/10"
-                        title="Refresh rooms"
-                    >
-                        <RefreshCw size={20} />
-                    </button>
-                    <button
-                        onClick={() => {
-                            setShowCreateModal(true);
-                            setSelectedMedia(null);
-                            setSearchQuery('');
-                        }}
-                        className="bg-primary hover:bg-primaryDark text-background px-8 py-3.5 rounded-2xl font-bold flex items-center gap-2 transition shadow-lg shadow-primary/20 uppercase tracking-wider text-[11px]"
-                    >
-                        <Plus size={20} /> Create Room
-                    </button>
-                </div>
-            </div>
-
-            {/* Room Filters */}
-            <div className="mb-10 flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-background font-bold text-[10px] uppercase tracking-wider transition">Active Parties</button>
-                <button className="whitespace-nowrap px-6 py-2 rounded-full bg-white/5 text-textMuted font-bold text-[10px] uppercase tracking-wider hover:bg-white/10 transition">Popular</button>
-            </div>
-
-            {/* Room Grid */}
-            {activeRooms.length === 0 ? (
-                <div className="bg-card/50 border border-white/5 rounded-[32px] md:rounded-[48px] p-10 md:p-24 flex flex-col items-center justify-center text-center shadow-inner mt-4 backdrop-blur-md">
-                    <div className="relative mb-8">
-                        <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full"></div>
-                        <div className="relative w-24 h-24 rounded-[32px] bg-background border border-white/10 flex items-center justify-center">
-                            <Users size={40} className="text-primary" />
-                        </div>
-                    </div>
-                    <h3 className="text-3xl font-bold text-white mb-3 tracking-tighter uppercase">No Active Rooms</h3>
-                    <p className="text-textMuted max-w-sm font-medium uppercase tracking-wider text-[11px] leading-relaxed">There are no parties active right now. Why not start your own?</p>
-
-                    <button
-                        onClick={() => {
-                            setShowCreateModal(true);
-                            setSelectedMedia(null);
-                            setSearchQuery('');
-                        }}
-                        className="mt-10 px-10 py-5 bg-primary text-background rounded-[24px] font-bold hover:scale-105 transition shadow-2xl shadow-primary/30 uppercase tracking-wider text-xs"
-                    >
-                        Create a Room
-                    </button>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {activeRooms.map(room => (
-                        <div key={room.id} className="group relative bg-card rounded-3xl overflow-hidden border border-white/5 transition-all hover:border-primary/50 hover:shadow-2xl hover:shadow-black/50">
-                            {/* Backdrop Image */}
-                            <div className="aspect-video w-full relative overflow-hidden">
-                                {room.media?.poster_path ? (
-                                    <div className="absolute inset-0">
-                                        <img
-                                            src={getImageUrl(room.media.poster_path, 'w500')}
-                                            alt=""
-                                            className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition duration-700 group-hover:scale-110"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"></div>
-                                    </div>
-                                ) : (
-                                    <div className="absolute inset-0 bg-gradient-to-br from-card to-background"></div>
-                                )}
-
-                                {/* Room Tags */}
-                                <div className="absolute top-4 left-4 flex gap-2">
-                                    {room.hasPassword && (
-                                        <div className="bg-background/60 backdrop-blur-md p-2 rounded-lg text-primary border border-primary/20 shadow-lg">
-                                            <Lock size={14} />
-                                        </div>
-                                    )}
-                                    <div className="bg-background/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-white border border-white/10 shadow-lg flex items-center gap-2">
-                                        <Users size={14} className="text-primary/70" />
-                                        <span className="text-xs font-bold">{room.viewers}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className="p-6 pt-0 relative mt-[-10px]">
-                                <h3 className="text-lg font-bold text-white leading-tight mb-1 truncate group-hover:text-primary transition uppercase tracking-tight">{room.roomName}</h3>
-                                {room.media ? (
-                                    <p className="text-[11px] font-bold text-textMuted mb-4 flex items-center gap-2 uppercase tracking-wide truncate">
-                                        <span className="w-1 h-3 bg-primary rounded-full"></span>
-                                        {room.media.title || room.media.name}
-                                    </p>
-                                ) : (
-                                    <p className="text-[11px] font-bold text-textMuted mb-4 uppercase tracking-wide">Selecting Movie...</p>
-                                )}
-
-                                <div className="flex items-center justify-between mt-auto">
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-6 h-6 rounded-full bg-background flex items-center justify-center text-[10px] font-bold border border-white/5 text-primary">
-                                            {room.host.charAt(0).toUpperCase()}
-                                        </div>
-                                        <span className="text-[10px] uppercase tracking-wider font-bold text-textMuted/60">Host: {room.host}</span>
-                                    </div>
-
-                                    <button
-                                        onClick={() => handleJoinClickFromList(room)}
-                                        className="bg-primary hover:bg-primaryDark text-background px-5 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition active:scale-95 shadow-lg shadow-primary/20 uppercase tracking-wider"
-                                    >
-                                        <LogIn size={14} /> Join
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
                 </div>
             )}
         </div>
