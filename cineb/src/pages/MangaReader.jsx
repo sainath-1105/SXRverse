@@ -96,23 +96,21 @@ export default function MangaReader() {
             setLoading(true);
             try {
                 const chapterId = currentChapter.id;
-                const atHomeRes = await fetch(`https://api.mangadex.org/at-home/server/${chapterId}`);
-                const atHomeData = await atHomeRes.json();
-
-                if (atHomeData.chapter) {
-                    const host = atHomeData.baseUrl;
-                    const hash = atHomeData.chapter.hash;
-                    const filenames = atHomeData.chapter.data || atHomeData.chapter.dataSaver;
-                    const type = atHomeData.chapter.data ? 'data' : 'data-saver';
-
-                    const pageUrls = filenames.map(
-                        filename => `${host}/${type}/${hash}/${filename}`
-                    );
-                    setPages(pageUrls);
+                const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                
+                const proxyRes = await fetch(`${backendUrl}/api/manga/pages?id=${chapterId}&provider=mangadex`);
+                if (!proxyRes.ok) throw new Error('Proxy failed');
+                
+                const proxyData = await proxyRes.json();
+                if (proxyData.pages && proxyData.pages.length > 0) {
+                    setPages(proxyData.pages);
                     if (containerRef.current) containerRef.current.scrollTo(0, 0);
+                } else {
+                     throw new Error('No pages found');
                 }
             } catch (err) {
-                console.error("Page Fetch Failed:", err);
+                console.error("Manga Loading Failed via Proxy. Fallback needed:", err);
+                setPages([]); // This triggers the fallback UI in the render block
             }
             setLoading(false);
         };

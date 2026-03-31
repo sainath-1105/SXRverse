@@ -348,6 +348,34 @@ app.get('/api/youtube', async (req, res) => {
     }
 });
 
+// ── Manga Engine Proxy ────────────────────────────────────────────────────────
+app.get('/api/manga/pages', async (req, res) => {
+    try {
+        const { id, provider = 'mangadex' } = req.query;
+        if (!id) return res.status(400).json({ error: 'Manga ID is required' });
+
+        if (provider === 'mangadex') {
+             const chapterRes = await fetch(`https://api.mangadex.org/at-home/server/${id}`);
+             const chapterData = await chapterRes.json();
+             if (!chapterData.chapter) throw new Error('Chapter not found on MangaDex');
+             
+             const host = chapterData.baseUrl;
+             const hash = chapterData.chapter.hash;
+             const filenames = chapterData.chapter.data || chapterData.chapter.dataSaver;
+             const type = chapterData.chapter.data ? 'data' : 'data-saver';
+
+             const pages = filenames.map(f => `${host}/${type}/${hash}/${f}`);
+             return res.json({ pages });
+        }
+        
+        // Additional provider logic could go here (Webtoons, etc.)
+        res.status(404).json({ error: 'Provider not supported via proxy yet' });
+    } catch (error) {
+        console.error('Manga Proxy Error:', error);
+        res.status(500).json({ error: 'Manga server encountered a neural error' });
+    }
+});
+
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
