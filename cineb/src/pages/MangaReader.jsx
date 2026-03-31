@@ -48,16 +48,20 @@ export default function MangaReader() {
 
                         // Recursive fetch for chapters
                         const fetchAllChapters = async (offset = 0, accrued = []) => {
-                            const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
+                            try {
+                                const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
 
-                            const feedRes = await fetch(url);
-                            const feedData = await feedRes.json();
-                            if (!feedData.data) return accrued;
-                            const newAccrued = [...accrued, ...feedData.data];
-                            if (feedData.total > offset + 500) {
-                                return fetchAllChapters(offset + 500, newAccrued);
+                                const feedRes = await fetch(url);
+                                const feedData = await feedRes.json();
+                                if (!feedData.data) return accrued;
+                                const newAccrued = [...accrued, ...feedData.data];
+                                if (feedData.total > offset + 500) {
+                                    return fetchAllChapters(offset + 500, newAccrued);
+                                }
+                                return newAccrued;
+                            } catch (e) {
+                                return accrued;
                             }
-                            return newAccrued;
                         };
 
                         const allChapters = await fetchAllChapters();
@@ -67,12 +71,16 @@ export default function MangaReader() {
                             );
                             setChapters(uniqueChapters);
                             setCurrentChapter(uniqueChapters[0]);
+                        } else {
+                            // Secondary provider attempt (Placeholder for more robust expansion)
+                            console.warn("MangaDex feed empty. Try fallback providers.");
                         }
                     }
                 }
             } catch (err) {
                 console.error("Manga Metadata Retrieval Failed:", err);
             }
+            setLoading(false);
         };
 
         loadMangaMetadata();
@@ -207,8 +215,36 @@ export default function MangaReader() {
                             </div>
                         ))
                     ) : (
-                        <div className="py-20 text-center w-full">
-                            <h3 className="text-xl font-bold text-white/40 uppercase tracking-widest ">Content Not Found</h3>
+                        <div className="py-20 text-center w-full px-8">
+                            <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-[0.3em]">Neural Link Failed</h3>
+                            <p className="text-white/40 text-xs mb-8 max-w-sm mx-auto uppercase font-bold tracking-widest leading-loose">MangaDex is currently offline or this title is unavailable. Try an external platform:</p>
+                            
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                                <a 
+                                    href={`https://mangafire.to/filter?keyword=${encodeURIComponent(detail?.title)}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="px-10 py-4 bg-[#ff4d4d] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+                                >
+                                    Try MangaFire
+                                </a>
+                                <a 
+                                    href={`https://www.webtoons.com/search?keyword=${encodeURIComponent(detail?.title)}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="px-10 py-4 bg-[#1db954] text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+                                >
+                                    Webtoons Hub
+                                </a>
+                                <a 
+                                    href={`https://mangareader.to/search?keyword=${encodeURIComponent(detail?.title)}`} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer" 
+                                    className="px-10 py-4 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white/10 transition-all"
+                                >
+                                    Station M-Reader
+                                </a>
+                            </div>
                         </div>
                     )}
 
