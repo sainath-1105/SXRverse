@@ -34,8 +34,10 @@ export default function MangaReader() {
 
                     // 2. Search MangaDex - Try multiple title variants
                     let mdId = null;
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                    
                     for (let t of [title, ...altTitles].slice(0, 3)) {
-                        const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica`);
+                        const searchRes = await fetch(`${backendUrl}/api/manga/search?title=${encodeURIComponent(t)}`);
                         const searchData = await searchRes.json();
                         if (searchData.data && searchData.data.length > 0) {
                             mdId = searchData.data[0].id;
@@ -49,9 +51,7 @@ export default function MangaReader() {
                         // Recursive fetch for chapters
                         const fetchAllChapters = async (offset = 0, accrued = []) => {
                             try {
-                                const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
-
-                                const feedRes = await fetch(url);
+                                const feedRes = await fetch(`${backendUrl}/api/manga/feed?id=${mdId}&offset=${offset}`);
                                 const feedData = await feedRes.json();
                                 if (!feedData.data) return accrued;
                                 const newAccrued = [...accrued, ...feedData.data];

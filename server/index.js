@@ -399,6 +399,36 @@ app.get('/api/manga/pages', async (req, res) => {
     }
 });
 
+app.get('/api/manga/search', async (req, res) => {
+    try {
+        const { title } = req.query;
+        if (!title) return res.status(400).json({ error: 'Title is required' });
+        
+        const url = `https://api.mangadex.org/manga?title=${encodeURIComponent(title)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includes[]=cover_art`;
+        const mdRes = await fetch(url);
+        const data = await mdRes.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Manga Search Proxy Error:', error);
+        res.status(500).json({ error: 'Failed to search MangaDex' });
+    }
+});
+
+app.get('/api/manga/feed', async (req, res) => {
+    try {
+        const { id, offset = 0 } = req.query;
+        if (!id) return res.status(400).json({ error: 'Manga ID is required' });
+        
+        const url = `https://api.mangadex.org/manga/${id}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
+        const mdRes = await fetch(url);
+        const data = await mdRes.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Manga Feed Proxy Error:', error);
+        res.status(500).json({ error: 'Failed to fetch manga feed' });
+    }
+});
+
 app.get('/api/manga/fallback', async (req, res) => {
     try {
         const { q } = req.query;
