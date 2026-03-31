@@ -57,7 +57,7 @@ export const fetchManga = async (path, params = {}, retryCount = 0) => {
 };
 
 export const fetchYouTube = async (query) => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
     try {
         const res = await fetch(`${backendUrl}/api/youtube?q=${encodeURIComponent(query)}`);
         if (!res.ok) throw new Error('Network response was not ok');
