@@ -95,7 +95,17 @@ export default function Manga() {
             <section className="max-w-[1920px] mx-auto px-4 md:px-12 lg:px-20 mb-20 relative z-20">
                 <div className="bg-[#121212] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl backdrop-blur-3xl">
                     <div className="flex flex-col gap-10">
-                        <div className="relative flex-1">
+                        <form 
+                            onSubmit={async (e) => {
+                                e.preventDefault();
+                                if (!searchQuery.trim()) return;
+                                setLoading(true);
+                                const res = await fetchManga(`/manga?q=${encodeURIComponent(searchQuery)}&limit=18&order_by=popularity&sort=desc`);
+                                setMangas(res?.data || []);
+                                setLoading(false);
+                            }}
+                            className="relative flex-1"
+                        >
                              <input 
                                  type="text" 
                                  placeholder="Search for manga, manhwa, authors..." 
@@ -104,8 +114,8 @@ export default function Manga() {
                                  onChange={(e) => setSearchQuery(e.target.value)}
                              />
                              <Search size={22} className="absolute left-7 top-1/2 -translate-y-1/2 text-white/10 group-focus-within:text-[#1db954] transition-colors" />
-                             <button className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#1db954] text-black px-10 py-3 rounded-xl font-black uppercase text-[11px] tracking-widest hover:scale-105 transition-all shadow-xl">Search</button>
-                        </div>
+                             <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#1db954] text-black px-10 py-3 rounded-xl font-black uppercase text-[11px] tracking-widest hover:scale-105 transition-all shadow-xl">Search</button>
+                        </form>
                         
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
                             {['Genre', 'Status', 'Type', 'Year', 'Rating', 'Update'].map(f => (
