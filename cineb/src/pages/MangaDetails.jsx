@@ -30,13 +30,13 @@ export default function MangaDetails() {
                     let mdId = null;
                     const searchQueries = [...new Set([mainTitle, japTitle, ...altTitles])].filter(t => t && t.length > 1).slice(0, 6);
 
+                    const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
                     for (let t of searchQueries) {
                         try {
-                            const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includes[]=cover_art`);
+                            const searchRes = await fetch(`${backendUrl}/api/manga/search?title=${encodeURIComponent(t)}`);
                             const searchData = await searchRes.json();
                             if (searchData.data?.length > 0) {
                                 mdId = searchData.data[0].id;
-                                // If the found title is a good enough match, break
                                 break;
                             }
                         } catch (err) { continue; }
@@ -44,10 +44,7 @@ export default function MangaDetails() {
 
                     if (mdId) {
                         const fetchAllChapters = async (offset = 0, accrued = []) => {
-                            // MangaDex feed URL with manual params to avoid encoding issues
-                            const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
-
-                            const feedRes = await fetch(url);
+                            const feedRes = await fetch(`${backendUrl}/api/manga/feed?id=${mdId}&offset=${offset}`);
                             const feedData = await feedRes.json();
                             if (!feedData.data) return accrued;
                             const newAccrued = [...accrued, ...feedData.data];
