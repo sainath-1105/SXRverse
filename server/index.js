@@ -352,7 +352,7 @@ app.get('/api/youtube', async (req, res) => {
 app.get('/api/manga/pages', async (req, res) => {
     try {
         const { id, provider = 'mangadex' } = req.query;
-        if (!id) return res.status(400).json({ error: 'Manga ID is required' });
+        if (!id) return res.status(400).json({ error: 'Manga ID/URL is required' });
 
         if (provider === 'mangadex') {
              const chapterRes = await fetch(`https://api.mangadex.org/at-home/server/${id}`);
@@ -368,11 +368,63 @@ app.get('/api/manga/pages', async (req, res) => {
              return res.json({ pages });
         }
         
-        // Additional provider logic could go here (Webtoons, etc.)
+        if (provider === 'fallback') {
+             // Scrape MangaKakalot chapter page
+             const chapterUrl = id.startsWith('http') ? id : `https://mangakakalot.com/chapter/${id}`;
+             const pageRes = await fetch(chapterUrl);
+             const html = await pageRes.text();
+             
+             const imgRegex = /<img src="(https?:\/\/[^"]+)"[^>]+class="img-loading"/g;
+             let match;
+             const pages = [];
+             while ((match = imgRegex.exec(html)) !== null) {
+                 pages.push(match[1]);
+             }
+             
+             if (pages.length === 0) {
+                 // Try alternative regex for different kakalot domains
+                 const altRegex = /<img src="(https?:\/\/[^"]+)"[^>]+title="[^"]+" alt="[^"]+"/g;
+                 while ((match = altRegex.exec(html)) !== null) {
+                     if (match[1].includes('chapter')) pages.push(match[1]);
+                 }
+             }
+
+             return res.json({ pages });
+        }
+
         res.status(404).json({ error: 'Provider not supported via proxy yet' });
     } catch (error) {
         console.error('Manga Proxy Error:', error);
         res.status(500).json({ error: 'Manga server encountered a neural error' });
+    }
+});
+
+app.get('/api/manga/fallback', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) return res.status(400).json({ error: 'Query is required' });
+        
+        const searchUrl = `https://mangakakalot.com/search/story/${q.replace(/\s+/g, '_')}`;
+        const searchRes = await fetch(searchUrl);
+        const html = await searchRes.text();
+        
+        // Scrape search results
+        const items = [];
+        const itemRegex = /<div class="story_item">[\s\S]*?<a href="([^"]+)" title="([^"]+)">[\s\S]*?<img src="([^"]+)"/g;
+        let match;
+        while ((match = itemRegex.exec(html)) !== null && items.length < 5) {
+            items.push({
+                url: match[1],
+                title: match[2],
+                image: match[3],
+                id: match[1].split('/').pop()
+            });
+        }
+        
+        res.json({ results: items });
+    } catch (error) {
+        console.error('Fallback Search Error:', error);
+        res.status(500).json({ error: 'Fallback engine offline' });
     }
 });
 

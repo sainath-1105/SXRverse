@@ -72,9 +72,57 @@ export default function MangaReader() {
                             setChapters(uniqueChapters);
                             setCurrentChapter(uniqueChapters[0]);
                         } else {
-                            // Secondary provider attempt (Placeholder for more robust expansion)
-                            console.warn("MangaDex feed empty. Try fallback providers.");
+                            // Secondary provider attempt (MangaKakalot Fallback)
+                            const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                            const fallbackRes = await fetch(`${backendUrl}/api/manga/fallback?q=${encodeURIComponent(title)}`);
+                            const fallbackData = await fallbackRes.json();
+                            
+                            if (fallbackData.results && fallbackData.results.length > 0) {
+                                // Scrape first match for chapters (simple approximation)
+                                const mangaUrl = fallbackData.results[0].url;
+                                const chapRes = await fetch(mangaUrl);
+                                const chapHtml = await chapRes.text();
+                                const chapRegex = /<a href="([^"]+)" title="([^"]+)">Chapter (\d+)<\/a>/g;
+                                let m;
+                                const fallbackChapters = [];
+                                while ((m = chapRegex.exec(chapHtml)) !== null) {
+                                    fallbackChapters.push({
+                                        id: m[1].split('/').pop(),
+                                        attributes: { chapter: m[3], title: m[2] },
+                                        provider: 'fallback'
+                                    });
+                                }
+                                if (fallbackChapters.length > 0) {
+                                    setChapters(fallbackChapters.reverse());
+                                    setCurrentChapter(fallbackChapters[fallbackChapters.length - 1]);
+                                }
+                            }
                         }
+                    } else {
+                         // mdId missing - try fallback directly
+                         const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
+                         const fallbackRes = await fetch(`${backendUrl}/api/manga/fallback?q=${encodeURIComponent(title)}`);
+                         const fallbackData = await fallbackRes.json();
+                         if (fallbackData.results && fallbackData.results.length > 0) {
+                             const mangaUrl = fallbackData.results[0].url;
+                             const chapRes = await fetch(mangaUrl);
+                             const chapHtml = await chapRes.text();
+                             const chapRegex = /<a href="([^"]+)" title="([^"]+)">Chapter (\d+)<\/a>/g;
+                             let m;
+                             const fallbackChapters = [];
+                             while ((m = chapRegex.exec(chapHtml)) !== null) {
+                                 fallbackChapters.push({
+                                     id: m[1].split('/').pop(),
+                                     attributes: { chapter: m[3], title: m[2] },
+                                     url: m[1],
+                                     provider: 'fallback'
+                                 });
+                             }
+                             if (fallbackChapters.length > 0) {
+                                 setChapters(fallbackChapters.reverse());
+                                 setCurrentChapter(fallbackChapters[fallbackChapters.length - 1]);
+                             }
+                         }
                     }
                 }
             } catch (err) {
@@ -96,9 +144,10 @@ export default function MangaReader() {
             setLoading(true);
             try {
                 const chapterId = currentChapter.id;
+                const provider = currentChapter.provider || 'mangadex';
                 const backendUrl = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_API_URL || 'http://localhost:3001';
                 
-                const proxyRes = await fetch(`${backendUrl}/api/manga/pages?id=${chapterId}&provider=mangadex`);
+                const proxyRes = await fetch(`${backendUrl}/api/manga/pages?id=${encodeURIComponent(currentChapter.url || chapterId)}&provider=${provider}`);
                 if (!proxyRes.ok) throw new Error('Proxy failed');
                 
                 const proxyData = await proxyRes.json();
