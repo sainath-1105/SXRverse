@@ -99,13 +99,11 @@ export default function PartyRoomWaiting() {
     const handleInvite = () => {
         const url = window.location.href;
         navigator.clipboard.writeText(url);
-        alert("Room link copied to clipboard! Share it with your friends.");
     };
 
     const forceSync = () => {
         // Clear lastVideoRef so the next video_sync event (coming every 10s) will trigger a reload
         lastVideoRef.current = null;
-        alert("Syncing playback with host...");
     };
 
     const handleBack = () => {
@@ -175,7 +173,7 @@ export default function PartyRoomWaiting() {
                 <div className="flex-1 flex flex-col min-w-0 bg-background relative">
                     {playingVideo ? (
                         <div className="flex-1 bg-black flex flex-col overflow-y-auto relative custom-scrollbar">
-                            <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} />
+                            <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} socket={socket} />
 
                             {/* Floating Overlay Toggle when Sidebar is closed */}
                             {!isSidebarOpen && (

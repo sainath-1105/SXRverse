@@ -13,11 +13,9 @@ const SERVERS = [
 ];
 
 
-import { io } from 'socket.io-client';
 
-let socket;
 
-export default function Watch({ explicitType, explicitId, startTime, partyRoom, isHost, username }) {
+export default function Watch({ explicitType, explicitId, startTime, partyRoom, isHost, username, socket }) {
     const params = useParams();
     const type = explicitType || params.type;
     const id = explicitId || params.id;
@@ -57,17 +55,14 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
         });
 
         // Socket logic for Watch Party
-        if (partyRoom) {
-            socket = io(import.meta.env.VITE_API_URL);
+        if (partyRoom && socket) {
             if (isHost) {
                 // Host notifies room that a video has started
                 socket.emit('start_video', { room: partyRoom, type, id, title: document.title });
             }
         }
-
-        return () => {
-            if (socket) socket.disconnect();
-        };
+        
+        return () => {};
     }, [id, type, partyRoom, isHost]);
 
     // Host periodic sync
