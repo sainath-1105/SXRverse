@@ -176,15 +176,13 @@ export default function PartyRoomWaiting() {
                             <Watch explicitType={playingVideo.type} explicitId={playingVideo.id} startTime={playingVideo.currentTime} partyRoom={roomCode} isHost={isHost} username={username} socket={socket} />
 
                             {/* Floating Overlay Toggle when Sidebar is closed */}
-                            {!isSidebarOpen && (
-                                <button
-                                    onClick={() => setIsSidebarOpen(true)}
-                                    className="absolute bottom-6 right-6 z-30 w-12 h-12 bg-primary text-background rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all cursor-pointer"
-                                    title="Open Chat"
-                                >
-                                    <MessageCircle size={20} />
-                                </button>
-                            )}
+                            <button
+                                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                                className={`absolute bottom-6 right-6 z-[60] w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-90 transition-all cursor-pointer ${isSidebarOpen ? 'bg-white text-black' : 'bg-primary text-background'}`}
+                                title="Open Chat"
+                            >
+                                {isSidebarOpen ? <X size={24} /> : <MessageCircle size={24} />}
+                            </button>
                         </div>
                     ) : (
                         <div className="flex-1 flex flex-col items-center justify-center p-6 md:p-12 text-center bg-background overflow-y-auto">
@@ -217,11 +215,17 @@ export default function PartyRoomWaiting() {
 
                 {/* Sidebar: Chat & Participants */}
                 <div className={`
-                    absolute inset-y-0 right-0 z-40 w-[85vw] max-w-[320px] md:w-80 border-l border-white/10 bg-card/95 backdrop-blur-3xl flex flex-col shrink-0
-                    transform transition-all duration-300 ease-in-out shadow-[-20px_0_40px_rgba(0,0,0,0.8)]
-                    ${isSidebarOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0 pointer-events-none md:w-0 md:opacity-0 md:border-none md:translate-x-0'}
-                    md:relative
+                    fixed md:relative inset-y-0 right-0 z-40 
+                    w-full md:w-80 border-l border-white/10 bg-card/95 backdrop-blur-3xl flex flex-col shrink-0
+                    transform transition-all duration-500 ease-in-out shadow-[-20px_0_40px_rgba(0,0,0,0.8)]
+                    ${isSidebarOpen 
+                        ? 'translate-y-0 md:translate-y-0 opacity-100' 
+                        : 'translate-y-full md:translate-x-full md:translate-y-0 opacity-0 pointer-events-none md:w-0 md:opacity-0 md:border-none'
+                    }
+                    h-[60vh] md:h-full top-auto bottom-0 md:top-0 md:bottom-auto
+                    rounded-t-[32px] md:rounded-none
                 `}>
+                    <div className="md:hidden w-12 h-1.5 bg-white/10 rounded-full mx-auto mt-4 mb-2 shrink-0" onClick={() => setIsSidebarOpen(false)}></div>
                     <div className="p-4 flex gap-2 border-b border-white/5">
                         <button
                             onClick={() => setActiveTab('chat')}
