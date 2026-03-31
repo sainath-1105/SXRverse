@@ -350,6 +350,6 @@ app.get('/api/youtube', async (req, res) => {
 
 // ── Start ─────────────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-    console.log(`SXRverse server running on port ${PORT}`);
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`SXRverse server running on port ${PORT} (exposed to network)`);
 });
