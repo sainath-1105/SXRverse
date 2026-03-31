@@ -39,7 +39,7 @@ export default function LiveEsports() {
                                 <iframe 
                                     src={`https://yewtu.be/embed/${activeVideo}?autoplay=1`} 
                                     className="absolute inset-0 w-full h-full"
-                                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
+                                    allow="autoplay; fullscreen; picture-in-picture" 
                                     allowFullScreen
                                 ></iframe>
                                 <div className="absolute top-4 right-4 z-30 flex items-center gap-3">

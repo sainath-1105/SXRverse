@@ -70,7 +70,7 @@ export default function Feed() {
                             <iframe 
                                 src={`https://www.youtube.com/embed/${video.trailerId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${video.trailerId}&modestbranding=1&rel=0&showinfo=0`}
                                 className="absolute inset-0 w-full h-full scale-[1.7] brightness-[0.4]"
-                                allow="autoplay; encrypted-media; fullscreen"
+                                allow="autoplay; fullscreen; picture-in-picture"
                                 title={video.title || video.name}
                             ></iframe>
                         )}
