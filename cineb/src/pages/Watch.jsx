@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { io } from 'socket.io-client';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { fetchApi, getImageUrl } from '../api';
 import { PlayCircle, ArrowLeft, Server, Star, List, Heart, SkipBack, SkipForward, Plus, Share2, Zap, Triangle, Hexagon, Play } from 'lucide-react';
@@ -55,15 +56,29 @@ export default function Watch({ explicitType, explicitId, startTime, partyRoom, 
         });
 
         // Socket logic for Watch Party
-        if (partyRoom && socket) {
-            if (isHost) {
-                // Host notifies room that a video has started
-                socket.emit('start_video', { room: partyRoom, type, id, title: document.title });
-            }
+        let tempSocket = socket;
+        const storedRoom = sessionStorage.getItem('wp_room');
+        const storedUser = sessionStorage.getItem('wp_username') || "Guest";
+        const storedIsHost = sessionStorage.getItem('wp_isHost') === 'true';
+
+        if (!tempSocket && storedRoom) {
+            tempSocket = io(import.meta.env.VITE_API_URL);
+            tempSocket.on('connect', () => {
+                tempSocket.emit('join_room', { room: storedRoom, username: storedUser });
+                if (storedIsHost || isHost) {
+                    tempSocket.emit('start_video', { room: storedRoom, type, id, title: document.title });
+                }
+            });
+        } else if (tempSocket && partyRoom) {
+             if (isHost || storedIsHost) {
+                tempSocket.emit('start_video', { room: partyRoom, type, id, title: document.title });
+             }
         }
         
-        return () => {};
-    }, [id, type, partyRoom, isHost]);
+        return () => {
+            if (tempSocket && !socket) tempSocket.disconnect();
+        };
+    }, [id, type, partyRoom, isHost, socket]);
 
     // Host periodic sync
     useEffect(() => {
