@@ -22,13 +22,19 @@ import Auth from './pages/Auth';
 import Feed from './pages/Feed';
 import Music from './pages/Music';
 import NowPlaying from './pages/NowPlaying';
+import LiveF1 from './pages/LiveF1';
+import LiveCricket from './pages/LiveCricket';
+import LiveEsports from './pages/LiveEsports';
+import OttPage from './pages/OttPage';
+import OttHub from './pages/OttHub';
 import { AuthProvider } from './context/AuthContext';
 import { MusicProvider } from './context/MusicContext';
 import MusicPlayer from './components/MusicPlayer';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function AppContent() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isPartyRoom = location.pathname.startsWith('/party/room/');
   const isChannels = location.pathname === '/channels';
@@ -87,6 +93,11 @@ function AppContent() {
             <Route path="/party" element={<WatchPartyLobby />} />
             <Route path="/party/room/:roomCode" element={<PartyRoomWaiting />} />
             <Route path="/watch/:type/:id" element={<Watch />} />
+            <Route path="/live/f1" element={<LiveF1 />} />
+            <Route path="/live/cricket" element={<LiveCricket />} />
+            <Route path="/live/esports" element={<LiveEsports />} />
+            <Route path="/ott" element={<OttHub />} />
+            <Route path="/ott/:id" element={<OttPage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

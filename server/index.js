@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
+const ytSearch = require('yt-search');
 
 const app = express();
 
@@ -39,6 +40,11 @@ const createUser = (name, email, hashedPassword) => {
 };
 
 console.log(`SXRverse DB loaded — ${users.length} users.`);
+
+// ── Root Route ───────────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+    res.send('SXRverse Backend is running');
+});
 
 // ── Auth Routes ───────────────────────────────────────────────────────────────
 app.post('/api/auth/signup', async (req, res) => {
@@ -325,6 +331,21 @@ io.on('connection', (socket) => {
             io.emit('rooms_updated', publicRooms);
         }
     });
+});
+
+// ── YouTube Search API (yt-search) ─────────────────────────────────────────────
+app.get('/api/youtube', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) return res.status(400).json({ error: 'Query string q is required' });
+        
+        const r = await ytSearch(q);
+        const videos = r.videos.slice(0, 16);
+        res.json(videos);
+    } catch (error) {
+        console.error('YouTube Search API Error:', error);
+        res.status(500).json({ error: 'Failed to search YouTube videos' });
+    }
 });
 
 // ── Start ─────────────────────────────────────────────────────────────────────

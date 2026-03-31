@@ -14,5 +14,13 @@
     "password": "$2b$10$yJ4Oug/GgtxEEJauk7qXAOMoHHwQJIVF0MOKvHnjnsUxoNEhZXXai",
     "avatar": "glasses_guy",
     "slogan": "hello there"
+  },
+  {
+    "id": 3,
+    "name": "sainath",
+    "email": "sainathr2411@gmail.com",
+    "password": "$2b$10$CUREml6D1V4vP6Nl0JVZju0iUw7KQwirUmmOjxHF0/6wsN35sIq32",
+    "avatar": "zoro",
+    "slogan": ""
   }
 ]

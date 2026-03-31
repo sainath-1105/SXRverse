@@ -26,33 +26,45 @@ export const getImageUrl = (path, size = 'w342') => {
 };
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-let lastMangaRequestTime = 0;
+
+// Global Queue for Jikan to prevent 429 Parallel Hits
+let jikanQueue = Promise.resolve();
 
 export const fetchManga = async (path, params = {}, retryCount = 0) => {
-    // Global throttle to ensure 400ms between any two Jikan requests
-    const now = Date.now();
-    const timeSinceLast = now - lastMangaRequestTime;
-    if (timeSinceLast < 400) {
-        await delay(400 - timeSinceLast);
-    }
-    lastMangaRequestTime = Date.now();
+    return jikanQueue = jikanQueue.then(async () => {
+        const url = new URL(`https://api.jikan.moe/v4${path}`);
+        Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
 
-    const url = new URL(`https://api.jikan.moe/v4${path}`);
-    Object.keys(params).forEach(key => url.searchParams.set(key, params[key]));
+        try {
+            const res = await fetch(url.toString());
+            
+            // Jikan says 3 req/sec. We wait 600ms to be super safe.
+            await delay(600);
 
-    try {
-        const res = await fetch(url.toString());
-        
-        if (res.status === 429 && retryCount < 3) {
-            console.warn(`Rate Limit Hit. Exponential backoff retry ${retryCount + 1}...`);
-            await delay(2000 * (retryCount + 1)); 
-            return fetchManga(path, params, retryCount + 1);
+            if (res.status === 429 && retryCount < 3) {
+                console.warn(`Rate Limit Hit. Exponential backoff retry ${retryCount + 1}...`);
+                await delay(2000 * (retryCount + 1)); 
+                return fetchManga(path, params, retryCount + 1);
+            }
+
+            const data = await res.json();
+            return data;
+        } catch (error) {
+            console.error('Manga API Error:', error);
+            return null;
         }
+    });
+};
 
+export const fetchYouTube = async (query) => {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+    try {
+        const res = await fetch(`${backendUrl}/api/youtube?q=${encodeURIComponent(query)}`);
+        if (!res.ok) throw new Error('Network response was not ok');
         const data = await res.json();
-        return data;
+        return data || [];
     } catch (error) {
-        console.error('Manga API Error:', error);
-        return null;
+        console.error('YouTube Fetch Error:', error);
+        return [];
     }
 };

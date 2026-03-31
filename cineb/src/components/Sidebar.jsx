@@ -1,7 +1,9 @@
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Home, Tv, Film, Users, LayoutGrid, Heart, History,
-    Settings, LogOut, Radio, MonitorPlay, Zap, BookOpen, Music
+    Settings, LogOut, Radio, MonitorPlay, Zap, BookOpen, Music,
+    Trophy, Gamepad2, Monitor, ChevronDown
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ProfileAvatar } from '../pages/Profile';
@@ -21,6 +23,20 @@ export default function Sidebar({ isOpen, className }) {
                 { name: 'Anime', icon: <MonitorPlay size={20} />, path: '/anime' },
                 { name: 'Manga', icon: <BookOpen size={20} />, path: '/manga' },
                 { name: 'Music', icon: <Music size={20} />, path: '/music' },
+            ]
+        },
+        {
+            title: 'Live',
+            items: [
+                { name: 'F1 Racing', icon: <Radio size={20} />, path: '/live/f1', color: 'text-[#e10600]' },
+                { name: 'Cricket', icon: <Trophy size={20} />, path: '/live/cricket', color: 'text-[#1db954]' },
+                { name: 'Esports', icon: <Gamepad2 size={20} />, path: '/live/esports', color: 'text-purple-400' },
+            ]
+        },
+        {
+            title: 'OTT Channels',
+            items: [
+                { name: 'OTT Hub', icon: <Monitor size={20} />, path: '/ott', color: 'text-[#E50914]' },
             ]
         },
         {
@@ -55,7 +71,7 @@ export default function Sidebar({ isOpen, className }) {
             {/* Navigation Sections */}
             <div className="flex-1 px-5 space-y-8 md:space-y-10 overflow-y-auto custom-scrollbar pb-10 mt-4">
                 {sections.map((section) => (
-                    <div key={section.title}>
+                    <div key={section.title} className="mb-8">
                         <p className="px-5 text-[10px] font-bold text-textMuted/40 uppercase tracking-wider mb-4">
                             {section.title}
                         </p>

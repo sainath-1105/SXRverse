@@ -12,6 +12,7 @@ const SERVERS = [
     { name: 'Embed.su', url: (id, t, s, e, lang = 'en') => t === 'movie' ? `https://embed.su/embed/movie/${id}?audio=${lang}` : `https://embed.su/embed/tv/${id}/${s}/${e}?audio=${lang}` },
 ];
 
+
 import { io } from 'socket.io-client';
 
 let socket;

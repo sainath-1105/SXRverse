@@ -28,26 +28,37 @@ export default function MangaDetails() {
                     const altTitles = data.data.titles?.map(t => cleanTitle(t.title)) || [];
                     
                     let mdId = null;
-                    const searchQueries = [...new Set([mainTitle, japTitle, ...altTitles])].slice(0, 5);
+                    const searchQueries = [...new Set([mainTitle, japTitle, ...altTitles])].filter(t => t && t.length > 1).slice(0, 6);
 
                     for (let t of searchQueries) {
                         try {
-                            const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic`);
+                            const searchRes = await fetch(`https://api.mangadex.org/manga?title=${encodeURIComponent(t)}&limit=1&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includes[]=cover_art`);
                             const searchData = await searchRes.json();
                             if (searchData.data?.length > 0) {
                                 mdId = searchData.data[0].id;
+                                // If the found title is a good enough match, break
                                 break;
                             }
                         } catch (err) { continue; }
                     }
 
                     if (mdId) {
-                        const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`);
-                        const feedData = await feedRes.json();
-                        if (feedData.data) {
-                            // Filter out duplicates and invalid chapter numbers
-                            const unique = feedData.data
+                        const fetchAllChapters = async (offset = 0, accrued = []) => {
+                            // MangaDex feed URL with manual params to avoid encoding issues
+                            const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
+
+                            const feedRes = await fetch(url);
+                            const feedData = await feedRes.json();
+                            if (!feedData.data) return accrued;
+                            const newAccrued = [...accrued, ...feedData.data];
+                            if (feedData.total > offset + 500) return fetchAllChapters(offset + 500, newAccrued);
+                            return newAccrued;
+                        };
+                        const feedData = await fetchAllChapters();
+                        if (feedData) {
+                            const unique = feedData
                                 .filter(ch => ch.attributes && ch.attributes.chapter)
+                                .sort((a,b) => parseFloat(a.attributes.chapter) - parseFloat(b.attributes.chapter))
                                 .filter((v, i, a) => a.findIndex(t => t.attributes.chapter === v.attributes.chapter) === i);
                             setChapters(unique);
                         }
@@ -157,8 +168,20 @@ export default function MangaDetails() {
                                  ))}
                              </div>
                           ) : (
-                             <div className="p-20 text-center bg-white/5 rounded-[2.5rem] border border-white/5 italic">
-                                  <p className="text-white/20 text-[11px] font-black uppercase tracking-[0.5em]">No Chapters Available</p>
+                             <div className="p-20 text-center bg-white/5 rounded-[2.5rem] border border-white/5 space-y-6">
+                                  <p className="text-white/20 text-[11px] font-black uppercase tracking-[0.5em]">No Native Chapters Found</p>
+                                  <div className="flex flex-col items-center gap-4">
+                                       <p className="text-white/40 text-xs font-medium max-w-sm">MangaDex may not host chapters for this title due to licensing. Try searching manually or check external sources.</p>
+                                       <button 
+                                            onClick={() => {
+                                                const manual = prompt("Enter precise Manga Title for MangaDex search:");
+                                                if (manual) window.location.search = `?search=${encodeURIComponent(manual)}`;
+                                            }}
+                                            className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all"
+                                       >
+                                           Try Manual Search
+                                       </button>
+                                  </div>
                              </div>
                           )}
                      </section>

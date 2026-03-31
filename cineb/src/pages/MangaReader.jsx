@@ -48,7 +48,9 @@ export default function MangaReader() {
 
                         // Recursive fetch for chapters
                         const fetchAllChapters = async (offset = 0, accrued = []) => {
-                            const feedRes = await fetch(`https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&includeExternalVol=0`);
+                            const url = `https://api.mangadex.org/manga/${mdId}/feed?translatedLanguage[]=en&limit=500&offset=${offset}&order[chapter]=asc&contentRating[]=safe&contentRating[]=suggestive&contentRating[]=erotica&contentRating[]=pornographic&includeExternalVol=0`;
+
+                            const feedRes = await fetch(url);
                             const feedData = await feedRes.json();
                             if (!feedData.data) return accrued;
                             const newAccrued = [...accrued, ...feedData.data];

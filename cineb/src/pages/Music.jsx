@@ -215,29 +215,33 @@ export default function Music() {
                 {searchResults.map((song, idx) => {
                   const isActive = currentSong?.id === song.id;
                   return (
-                    <button
+                    <div
+                      role="button"
+                      tabIndex={0}
                       key={song.id}
                       onClick={() => handlePlaySong(song, searchResults)}
-                      className={`w-full grid grid-cols-[40px_1fr] md:grid-cols-[40px_1fr_1fr_80px] gap-4 px-4 py-2.5 items-center hover:bg-white/[0.06] transition-all group text-left ${isActive ? 'bg-white/[0.04]' : ''}`}
+                      className={`w-full grid grid-cols-[40px_1fr] md:grid-cols-[40px_1fr_1fr_80px] gap-4 px-4 py-2.5 items-center hover:bg-white/[0.06] transition-all group text-left cursor-pointer ${isActive ? 'bg-white/[0.04]' : ''}`}
                     >
                       <span className="text-sm text-white/30 group-hover:hidden font-mono">{idx + 1}</span>
-                      <span className="hidden group-hover:block">
+                      <span className="hidden group-hover:block pointer-events-none">
                         {isActive && isPlaying 
                           ? <Pause size={14} className="text-[#1db954]" fill="currentColor" />
                           : <Play size={14} className="text-white" fill="currentColor" />
                         }
                       </span>
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex items-center gap-3 min-w-0 pointer-events-none">
                         <img src={getBestImage(song.image)} alt="" className="w-10 h-10 rounded object-cover shrink-0" loading="lazy" />
                         <div className="min-w-0 flex-1">
                           <p className={`text-sm font-medium truncate ${isActive ? 'text-[#1db954]' : 'text-white'}`}>{song.name}</p>
                           <p className="text-xs text-white/40 truncate md:hidden">{song.primaryArtists}</p>
                         </div>
-                        <LikeBtn song={song} />
+                        <div className="pointer-events-auto">
+                           <LikeBtn song={song} />
+                        </div>
                       </div>
-                      <span className="hidden md:block text-sm text-white/40 truncate">{song.primaryArtists}</span>
-                      <span className="hidden md:block text-sm text-white/40 text-right">{song.duration ? `${Math.floor(song.duration/60)}:${String(song.duration%60).padStart(2,'0')}` : '--'}</span>
-                    </button>
+                      <span className="hidden md:block text-sm text-white/40 truncate pointer-events-none">{song.primaryArtists}</span>
+                      <span className="hidden md:block text-sm text-white/40 text-right pointer-events-none">{song.duration ? `${Math.floor(song.duration/60)}:${String(song.duration%60).padStart(2,'0')}` : '--'}</span>
+                    </div>
                   );
                 })}
               </div>
@@ -301,10 +305,12 @@ export default function Music() {
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
                   {recentlyPlayed.slice(0, 12).map((song) => (
-                    <button
+                    <div
+                      role="button"
+                      tabIndex={0}
                       key={'recent-'+song.id}
                       onClick={() => handlePlaySong(song, recentlyPlayed)}
-                      className="group text-left relative bg-white/[0.03] hover:bg-white/[0.08] rounded-lg p-3 md:p-4 transition-all duration-300"
+                      className="group text-left relative bg-white/[0.03] hover:bg-white/[0.08] rounded-lg p-3 md:p-4 transition-all duration-300 cursor-pointer"
                     >
                       <AddMenu song={song} />
                       <div className="relative aspect-square rounded-md overflow-hidden mb-3 shadow-lg shadow-black/30">
@@ -319,7 +325,7 @@ export default function Music() {
                       </div>
                       <p className="text-sm font-bold text-white truncate">{song.name}</p>
                       <p className="text-xs text-white/40 truncate mt-1">{song.primaryArtists || 'Unknown Artist'}</p>
-                    </button>
+                    </div>
                   ))}
                 </div>
               </section>
@@ -395,10 +401,12 @@ export default function Music() {
                     {playlist.songs?.slice(0, 12).map((song) => {
                       const isActive = currentSong?.id === song.id;
                       return (
-                        <button
+                        <div
+                          role="button"
+                          tabIndex={0}
                           key={song.id}
                           onClick={() => handlePlaySong(song, playlist.songs)}
-                          className="group text-left relative bg-white/[0.03] hover:bg-white/[0.08] rounded-lg p-3 md:p-4 transition-all duration-300"
+                          className="group text-left relative bg-white/[0.03] hover:bg-white/[0.08] rounded-lg p-3 md:p-4 transition-all duration-300 cursor-pointer"
                         >
                           <AddMenu song={song} />
                           <div className="relative aspect-square rounded-md overflow-hidden mb-3 shadow-lg shadow-black/30">
@@ -416,7 +424,7 @@ export default function Music() {
                           </div>
                           <p className={`text-sm font-bold truncate ${isActive ? 'text-[#1db954]' : 'text-white'}`}>{song.name}</p>
                           <p className="text-xs text-white/40 truncate mt-1">{song.primaryArtists || 'Unknown Artist'}</p>
-                        </button>
+                        </div>
                       );
                     })}
                   </div>
